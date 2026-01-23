@@ -807,6 +807,18 @@ html, body {
 }
 
 /* Sidebar */
+/* .sidebar {
+  width: 280px;
+  background: var(--sidebar-bg);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 20px var(--shadow);
+  transition: all 0.3s ease;
+  position: relative;
+} */
+
+/* Sidebar */
 .sidebar {
   width: 280px;
   background: var(--sidebar-bg);
@@ -816,6 +828,28 @@ html, body {
   box-shadow: 4px 0 20px var(--shadow);
   transition: all 0.3s ease;
   position: relative;
+  /* ADD THESE LINES */
+  height: calc(100vh - 90px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ADD THIS NEW RULE */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .sidebar-profile {
@@ -1030,11 +1064,40 @@ html, body {
 }
 
 /* Dashboard Content */
-.dashboard-content {
+/* .dashboard-content {
   flex: 1;
   padding: 2.5rem;
   overflow-y: auto;
   background: var(--bg-primary);
+} */
+
+/* Dashboard Content */
+.dashboard-content {
+  flex: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg-primary);
+  /* ADD THESE LINES */
+  height: calc(100vh - 90px);
+}
+
+/* ADD THIS NEW RULE */
+.dashboard-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 10px;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover {
+  background: var(--hover-bg);
 }
 
 .section-title {
@@ -1068,7 +1131,7 @@ html, body {
   padding: 1rem 0;
 }
 
-.cards-track {
+/*.cards-track {
   display: flex;
   gap: 2rem;
   animation: scrollCards 40s linear infinite;
@@ -1081,8 +1144,24 @@ html, body {
   100% {
     transform: translateX(-50%);
   }
+}*/
+
+.cards-track {
+  display: flex;
+  gap: 2rem;
+  animation: scrollCards 40s linear infinite;
+  /* ADD THIS LINE */
+  width: max-content;
 }
 
+@keyframes scrollCards {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 2));
+  }
+}
 .cards-track:hover {
   animation-play-state: paused;
 }
@@ -1195,15 +1274,62 @@ border-radius: 20px;
 box-shadow: 0 10px 40px var(--shadow);
 overflow: hidden;
 }
+
+
+/* .task-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 2fr;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+} */
+
+
+/* :root[data-theme="light"] .task-table-header {
+  background: linear-gradient(135deg, #34495E 0%, #2C3E50 100%);
+  color: #ffffff;
+} */
+
+/* Light Theme Fix for Task Table Headers */
+/* :root[data-theme="light"] .task-table-header {
+  background: #2C3E50 !important;
+  color: #ffffff !important;
+}
+
 .task-table-header {
-display: grid;
-grid-template-columns: 2fr 1.5fr 2fr;
-gap: 1rem;
-padding: 1.5rem 2rem;
-background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
-color: white;
-font-weight: 700;
-font-size: 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 2fr;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
+  color: white !important; 
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+} */
+
+.task-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 2fr;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: #2C3E50;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
+}
+
+/* Ensure white text in all themes */
+.task-table-header div {
+  color: #ffffff !important;
 }
 .task-table-body {
 max-height: 300px;
@@ -1291,12 +1417,13 @@ z-index: 1;
 .footer-icons-container {
 display: flex;
 justify-content: center;
-gap: 2rem;
-padding: 2rem;
+gap: 7rem;
+padding: 1rem;
 background: var(--card-bg);
 border-radius: 20px;
 box-shadow: 0 10px 40px var(--shadow);
-margin-top: 2rem;
+margin-top: 1rem;
+margin-bottom: -2rem;
 }
 .footer-icon-wrapper {
 position: relative;
@@ -1448,7 +1575,8 @@ padding: 1.2rem 1rem;
 font-size: 0.85rem;
 }
 .footer-icons-container {
-gap: 1.2rem;
+gap: 4rem;
+padding: 0.8rem;
 }
 .footer-icon-btn {
 width: 60px;
@@ -1509,8 +1637,8 @@ gap: 0.5rem;
 padding-left: 2.1rem;
 }
 .footer-icons-container {
-gap: 1rem;
-padding: 1.5rem;
+gap: 2.5rem;
+padding: 0.6rem;
 }
 .footer-icon-btn {
 width: 55px;
