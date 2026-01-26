@@ -1,3 +1,5 @@
+
+
 // import React from 'react';
 
 // const DashboardCards = () => {
@@ -53,15 +55,18 @@
 //     }
 //   ];
 
+//   // Duplicate cards for seamless infinite loop
+//   const duplicatedCards = [...cards, ...cards];
+
 //   return (
 //     <div className="dashboard-cards-section">
 //       <h2 className="section-title">Quick Actions</h2>
       
 //       <div className="cards-scroll-container">
 //         <div className="cards-track">
-//           {[...cards, ...cards].map((card, index) => (
+//           {duplicatedCards.map((card, index) => (
 //             <div 
-//               key={`${card.id}-${index}`}
+//               key={`card-${card.id}-${index}`}
 //               className="dashboard-card"
 //               style={{ background: card.gradient }}
 //             >
@@ -81,11 +86,16 @@
 //   );
 // };
 
-// export default DashboardCards;
 
-import React from 'react';
+//export default DashboardCards;
+
+import React, { useRef, useEffect } from 'react';
 
 const DashboardCards = () => {
+  const trackRef = useRef(null);
+  const animationRef = useRef(null);
+  const scrollPositionRef = useRef(0);
+
   const cards = [
     {
       id: 1,
@@ -138,15 +148,72 @@ const DashboardCards = () => {
     }
   ];
 
-  // Duplicate cards for seamless infinite loop
-  const duplicatedCards = [...cards, ...cards];
+  const duplicatedCards = [...cards, ...cards, ...cards];
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let isScrolling = false;
+    let scrollTimeout;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      isScrolling = true;
+      
+      // Manual scroll
+      scrollPositionRef.current += e.deltaX || e.deltaY;
+      
+      // Keep scroll position in bounds
+      const maxScroll = track.scrollWidth / 3;
+      if (scrollPositionRef.current < 0) {
+        scrollPositionRef.current += maxScroll;
+      } else if (scrollPositionRef.current >= maxScroll) {
+        scrollPositionRef.current -= maxScroll;
+      }
+      
+      track.style.transform = `translateX(-${scrollPositionRef.current}px)`;
+      
+      // Resume animation after scrolling stops
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+      }, 150);
+    };
+
+    // Infinite animation
+    const animate = () => {
+      if (!isScrolling && track) {
+        scrollPositionRef.current += 0.5;
+        
+        const maxScroll = track.scrollWidth / 3;
+        if (scrollPositionRef.current >= maxScroll) {
+          scrollPositionRef.current = 0;
+        }
+        
+        track.style.transform = `translateX(-${scrollPositionRef.current}px)`;
+      }
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+    track.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      track.removeEventListener('wheel', handleWheel);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
 
   return (
     <div className="dashboard-cards-section">
       <h2 className="section-title">Quick Actions</h2>
       
-      <div className="cards-scroll-container">
-        <div className="cards-track">
+      <div className="cards-scroll-container-manual">
+        <div className="cards-track-manual" ref={trackRef}>
           {duplicatedCards.map((card, index) => (
             <div 
               key={`card-${card.id}-${index}`}
