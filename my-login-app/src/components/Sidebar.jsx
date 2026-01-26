@@ -1,9 +1,12 @@
+
+
 // import React, { useState } from 'react';
 
 // const Sidebar = ({ userRole, username, onLogout }) => {
 //   const [activeMenu, setActiveMenu] = useState('home');
 //   const [profileImage, setProfileImage] = useState(null);
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+//   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
 //   const handleImageUpload = (e) => {
 //     const file = e.target.files[0];
@@ -15,9 +18,15 @@
 //       };
 //       reader.readAsDataURL(file);
 //     }
+//     setShowProfileMenu(false);
 //   };
 
-//   // Load profile image from localStorage
+//   const handleRemoveProfile = () => {
+//     setProfileImage(null);
+//     localStorage.removeItem('profileImage');
+//     setShowProfileMenu(false);
+//   };
+
 //   React.useEffect(() => {
 //     const savedImage = localStorage.getItem('profileImage');
 //     if (savedImage) {
@@ -34,7 +43,6 @@
 
 //   return (
 //     <>
-//       {/* Mobile Menu Toggle */}
 //       <button 
 //         className="mobile-menu-toggle"
 //         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -42,7 +50,6 @@
 //         <i className='bx bx-menu'></i>
 //       </button>
 
-//       {/* Sidebar Overlay for Mobile */}
 //       {isSidebarOpen && (
 //         <div 
 //           className="sidebar-overlay"
@@ -50,34 +57,45 @@
 //         ></div>
 //       )}
 
-//       {/* Sidebar */}
 //       <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-//         {/* Profile Section */}
 //         <div className="sidebar-profile">
+//           <span className="user-role-badge">{userRole}</span>
+          
 //           <div className="profile-image-wrapper">
-//             <div className="profile-image">
+//             <div 
+//               className="profile-image"
+//               onClick={() => setShowProfileMenu(!showProfileMenu)}
+//             >
 //               {profileImage ? (
 //                 <img src={profileImage} alt="Profile" />
 //               ) : (
 //                 <i className='bx bx-user'></i>
 //               )}
-//               <label htmlFor="profile-upload" className="upload-icon">
-//                 <i className='bx bx-camera'></i>
-//               </label>
-//               <input 
-//                 type="file" 
-//                 id="profile-upload"
-//                 accept="image/*"
-//                 onChange={handleImageUpload}
-//                 style={{ display: 'none' }}
-//               />
 //             </div>
+            
+//             {showProfileMenu && (
+//               <div className="profile-menu">
+//                 <label htmlFor="profile-upload" className="profile-menu-item">
+//                   <i className='bx bx-edit'></i>
+//                   <span>Edit Profile</span>
+//                 </label>
+//                 <button className="profile-menu-item" onClick={handleRemoveProfile}>
+//                   <i className='bx bx-trash'></i>
+//                   <span>Remove Picture</span>
+//                 </button>
+//               </div>
+//             )}
+//             <input 
+//               type="file" 
+//               id="profile-upload"
+//               accept="image/*"
+//               onChange={handleImageUpload}
+//               style={{ display: 'none' }}
+//             />
 //           </div>
 //           <h3 className="username">{username}</h3>
-//           <span className="user-role">{userRole}</span>
 //         </div>
 
-//         {/* Navigation Menu */}
 //         <nav className="sidebar-nav">
 //           {menuItems.map(item => (
 //             <button
@@ -87,11 +105,11 @@
 //             >
 //               <i className={`bx ${item.icon}`}></i>
 //               <span>{item.label}</span>
+//               <div className="nav-indicator"></div>
 //             </button>
 //           ))}
 //         </nav>
 
-//         {/* Logout Button */}
 //         <div className="sidebar-footer">
 //           <button className="logout-btn" onClick={onLogout}>
 //             <i className='bx bx-log-out'></i>
@@ -104,10 +122,9 @@
 // };
 
 // export default Sidebar;
-
 import React, { useState } from 'react';
 
-const Sidebar = ({ userRole, username, onLogout }) => {
+const Sidebar = ({ userRole, username, onLogout, onNavigate }) => {
   const [activeMenu, setActiveMenu] = useState('home');
   const [profileImage, setProfileImage] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -145,6 +162,15 @@ const Sidebar = ({ userRole, username, onLogout }) => {
     { id: 'about', icon: 'bx-info-circle', label: 'About' },
     { id: 'profile', icon: 'bx-user', label: 'Profile' }
   ];
+
+  const handleMenuClick = (menuId) => {
+    setActiveMenu(menuId);
+    if (menuId === 'profile' && onNavigate) {
+      onNavigate('profile');
+    } else if (menuId === 'home' && onNavigate) {
+      onNavigate('dashboard');
+    }
+  };
 
   return (
     <>
@@ -206,7 +232,7 @@ const Sidebar = ({ userRole, username, onLogout }) => {
             <button
               key={item.id}
               className={`nav-item ${activeMenu === item.id ? 'active' : ''}`}
-              onClick={() => setActiveMenu(item.id)}
+              onClick={() => handleMenuClick(item.id)}
             >
               <i className={`bx ${item.icon}`}></i>
               <span>{item.label}</span>
