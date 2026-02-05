@@ -973,3 +973,93 @@ body {
     padding: 10px 8px;
   }
 }
+
+/* Login Role Selection Styles */
+.form-box.login .role-selection {
+  margin: 20px 0 15px 0;
+  text-align: left;
+}
+
+.form-box.login .role-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.form-box.login .role-options {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.form-box.login .radio-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 10px 8px;
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.form-box.login .radio-option:hover {
+  background: #f0f0f0;
+  border-color: #9ca3af;
+}
+
+.form-box.login .radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.form-box.login .radio-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #9ca3af;
+  border-radius: 50%;
+  margin-right: 6px;
+  position: relative;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.form-box.login .radio-option input[type="radio"]:checked ~ .radio-custom {
+  background: #9ca3af;
+  border-color: #6b7280;
+}
+
+.form-box.login .radio-option input[type="radio"]:checked ~ .radio-custom::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.form-box.login .radio-option input[type="radio"]:checked ~ .role-text {
+  color: #333;
+  font-weight: 600;
+}
+
+.form-box.login .role-text {
+  font-size: 12px;
+  color: #666;
+  transition: all 0.3s;
+}
+
+/* Mobile responsive for login roles */
+@media screen and (max-width: 650px) {
+  .form-box.login .role-options {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

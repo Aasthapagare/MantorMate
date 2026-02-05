@@ -1,17 +1,21 @@
 
-// export default App;
 
 // import React, { useState } from 'react';
 // import LoginForm from './components/LoginForm';
 // import RegisterForm from './components/RegisterForm';
 // import TogglePanel from './components/TogglePanel';
 // import Dashboard from './components/Dashboard';
+// import ProfilePage from './components/ProfilePage';
+// import AdminPanel from './components/AdminPanel';
 // import './styles/style.css';
 // import './styles/dashboard.css';
+// import './styles/profile.css';
+// import './styles/admin.css';
 
 // const App = () => {
 //   const [isActive, setIsActive] = useState(false);
 //   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//   const [currentPage, setCurrentPage] = useState('dashboard');
 //   const [userData, setUserData] = useState({
 //     username: '',
 //     role: ''
@@ -29,66 +33,118 @@
 //     setIsActive(false);
 //   };
 
-//   const handleLoginSuccess = (username) => {
+//   const handleLoginSuccess = (username, role) => {
+//     console.log('Login Success - Username:', username, 'Role:', role);
 //     setUserData({
 //       username: username,
-//       role: 'Student' // You can get this from login form
+//       role: role
 //     });
 //     setIsLoggedIn(true);
+    
+//     // Set initial page based on role
+//     if (role === 'Admin') {
+//       setCurrentPage('admin');
+//     } else {
+//       setCurrentPage('dashboard');
+//     }
 //   };
 
 //   const handleLogout = () => {
 //     setIsLoggedIn(false);
 //     setUserData({ username: '', role: '' });
+//     setCurrentPage('dashboard');
 //   };
 
-//   // If logged in, show Dashboard
+//   const handleNavigation = (page) => {
+//     setCurrentPage(page);
+//   };
+
 //   if (isLoggedIn) {
+//     // Admin Panel - Check both role and page
+//     if (userData.role === 'Admin') {
+//       return (
+//         <AdminPanel 
+//           userRole={userData.role}
+//           username={userData.username}
+//           onLogout={handleLogout}
+//           onNavigate={handleNavigation}
+//         />
+//       );
+//     }
+
+//     // Profile Page
+//     if (currentPage === 'profile') {
+//       return (
+//         <ProfilePage 
+//           userRole={userData.role}
+//           username={userData.username}
+//           onLogout={handleLogout}
+//           onNavigate={handleNavigation}
+//         />
+//       );
+//     }
+    
+//     // Dashboard (Student/Teacher)
 //     return (
 //       <Dashboard 
 //         userRole={userData.role}
 //         username={userData.username}
 //         onLogout={handleLogout}
+//         onNavigate={handleNavigation}
 //       />
 //     );
 //   }
 
-//   // Otherwise show Login/Register
 //   return (
-//     <div className={`container ${isActive ? 'active' : ''}`}>
-//       <LoginForm onLoginSuccess={handleLoginSuccess} />
-//       <RegisterForm 
-//         onRegisterSuccess={handleRegisterSuccess} 
-//         isActive={isActive}
+//     <>
+//       <link 
+//         href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
+//         rel='stylesheet'
 //       />
-//       <TogglePanel 
-//         onRegisterClick={handleRegisterClick}
-//         onLoginClick={handleLoginClick}
-//       />
-//     </div>
+//       <div className={`container ${isActive ? 'active' : ''}`}>
+//         <LoginForm onLoginSuccess={handleLoginSuccess} />
+//         <RegisterForm 
+//           onRegisterSuccess={handleRegisterSuccess} 
+//           isActive={isActive}
+//         />
+//         <TogglePanel 
+//           onRegisterClick={handleRegisterClick}
+//           onLoginClick={handleLoginClick}
+//         />
+//       </div>
+//     </>
 //   );
 // };
 
 // export default App;
 
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import TogglePanel from './components/TogglePanel';
 import Dashboard from './components/Dashboard';
 import ProfilePage from './components/ProfilePage';
+import AdminPanel from './components/AdminPanel';
 import './styles/style.css';
 import './styles/dashboard.css';
 import './styles/profile.css';
+import './styles/admin.css';
 
 const App = () => {
   const [isActive, setIsActive] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentPage, setCurrentPage] = useState('dashboard'); // 'dashboard' or 'profile'
+  const [currentPage, setCurrentPage] = useState('dashboard');
   const [userData, setUserData] = useState({
     username: '',
     role: ''
   });
+
+  // Apply theme on app mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
 
   const handleRegisterClick = () => {
     setIsActive(true);
@@ -102,13 +158,25 @@ const App = () => {
     setIsActive(false);
   };
 
-  const handleLoginSuccess = (username) => {
+  const handleLoginSuccess = (username, role) => {
+    console.log('Login Success - Username:', username, 'Role:', role);
+    
+    // Apply saved theme immediately on login
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
     setUserData({
       username: username,
-      role: 'Student'
+      role: role
     });
     setIsLoggedIn(true);
-    setCurrentPage('dashboard');
+    
+    // Set initial page based on role
+    if (role === 'Admin') {
+      setCurrentPage('admin');
+    } else {
+      setCurrentPage('dashboard');
+    }
   };
 
   const handleLogout = () => {
@@ -122,6 +190,19 @@ const App = () => {
   };
 
   if (isLoggedIn) {
+    // Admin Panel - Check both role and page
+    if (userData.role === 'Admin') {
+      return (
+        <AdminPanel 
+          userRole={userData.role}
+          username={userData.username}
+          onLogout={handleLogout}
+          onNavigate={handleNavigation}
+        />
+      );
+    }
+
+    // Profile Page
     if (currentPage === 'profile') {
       return (
         <ProfilePage 
@@ -133,6 +214,7 @@ const App = () => {
       );
     }
     
+    // Dashboard (Student/Teacher)
     return (
       <Dashboard 
         userRole={userData.role}

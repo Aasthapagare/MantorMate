@@ -1,8 +1,7 @@
 
-
 // import React, { useState } from 'react';
 
-// const Sidebar = ({ userRole, username, onLogout, onNavigate }) => {
+// const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) => {
 //   const [activeMenu, setActiveMenu] = useState('home');
 //   const [profileImage, setProfileImage] = useState(null);
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,6 +35,7 @@
 
 //   const menuItems = [
 //     { id: 'home', icon: 'bx-home', label: 'Home' },
+//     { id: 'search', icon: 'bx-search', label: 'Search' },
 //     { id: 'notification', icon: 'bx-bell', label: 'Notification' },
 //     { id: 'about', icon: 'bx-info-circle', label: 'About' },
 //     { id: 'profile', icon: 'bx-user', label: 'Profile' }
@@ -43,10 +43,40 @@
 
 //   const handleMenuClick = (menuId) => {
 //     setActiveMenu(menuId);
-//     if (menuId === 'profile' && onNavigate) {
+    
+//     if (menuId === 'home') {
+//       if (onNavigate) {
+//         onNavigate('dashboard');
+//       }
+//       // Scroll to top
+//       window.scrollTo({ top: 0, behavior: 'smooth' });
+//       const mainContent = document.querySelector('.dashboard-content');
+//       if (mainContent) {
+//         mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+//       }
+//       // Hide search bar
+//       if (onSearchToggle) {
+//         onSearchToggle(false);
+//       }
+//     } else if (menuId === 'search') {
+//       // Show search bar on dashboard
+//       if (onNavigate) {
+//         onNavigate('dashboard');
+//       }
+//       if (onSearchToggle) {
+//         onSearchToggle(true);
+//       }
+//       // Scroll to top to see search bar
+//       window.scrollTo({ top: 0, behavior: 'smooth' });
+//       const mainContent = document.querySelector('.dashboard-content');
+//       if (mainContent) {
+//         mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+//       }
+//     } else if (menuId === 'profile' && onNavigate) {
 //       onNavigate('profile');
-//     } else if (menuId === 'home' && onNavigate) {
-//       onNavigate('dashboard');
+//       if (onSearchToggle) {
+//         onSearchToggle(false);
+//       }
 //     }
 //   };
 
@@ -131,9 +161,12 @@
 // };
 
 // export default Sidebar;
+
+
+
 import React, { useState } from 'react';
 
-const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) => {
+const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onAdminHomeClick, isAdminPanel }) => {
   const [activeMenu, setActiveMenu] = useState('home');
   const [profileImage, setProfileImage] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -177,18 +210,23 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) =
     setActiveMenu(menuId);
     
     if (menuId === 'home') {
-      if (onNavigate) {
-        onNavigate('dashboard');
-      }
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      const mainContent = document.querySelector('.dashboard-content');
-      if (mainContent) {
-        mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      // Hide search bar
-      if (onSearchToggle) {
-        onSearchToggle(false);
+      // Check if Admin Panel
+      if (isAdminPanel && onAdminHomeClick) {
+        onAdminHomeClick();
+      } else {
+        if (onNavigate) {
+          onNavigate('dashboard');
+        }
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainContent = document.querySelector('.dashboard-content');
+        if (mainContent) {
+          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        // Hide search bar
+        if (onSearchToggle) {
+          onSearchToggle(false);
+        }
       }
     } else if (menuId === 'search') {
       // Show search bar on dashboard

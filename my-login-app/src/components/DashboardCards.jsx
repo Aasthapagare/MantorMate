@@ -1,8 +1,14 @@
 
 
-// import React from 'react';
+
+// import React, { useRef, useEffect, useState } from 'react';
 
 // const DashboardCards = () => {
+//   const trackRef = useRef(null);
+//   const animationRef = useRef(null);
+//   const scrollPositionRef = useRef(0);
+//   const [isPaused, setIsPaused] = useState(false);
+
 //   const cards = [
 //     {
 //       id: 1,
@@ -55,20 +61,49 @@
 //     }
 //   ];
 
-//   // Duplicate cards for seamless infinite loop
-//   const duplicatedCards = [...cards, ...cards];
+//   const duplicatedCards = [...cards, ...cards, ...cards];
+
+//   useEffect(() => {
+//     const track = trackRef.current;
+//     if (!track) return;
+
+//     // Infinite animation with increased speed
+//     const animate = () => {
+//       if (!isPaused && track) {
+//         scrollPositionRef.current += 1; // Increased from 0.5 to 1 for faster speed
+        
+//         const maxScroll = track.scrollWidth / 3;
+//         if (scrollPositionRef.current >= maxScroll) {
+//           scrollPositionRef.current = 0;
+//         }
+        
+//         track.style.transform = `translateX(-${scrollPositionRef.current}px)`;
+//       }
+//       animationRef.current = requestAnimationFrame(animate);
+//     };
+
+//     animate();
+
+//     return () => {
+//       if (animationRef.current) {
+//         cancelAnimationFrame(animationRef.current);
+//       }
+//     };
+//   }, [isPaused]);
 
 //   return (
 //     <div className="dashboard-cards-section">
 //       <h2 className="section-title">Quick Actions</h2>
       
-//       <div className="cards-scroll-container">
-//         <div className="cards-track">
+//       <div className="cards-scroll-container-manual">
+//         <div className="cards-track-manual" ref={trackRef}>
 //           {duplicatedCards.map((card, index) => (
 //             <div 
 //               key={`card-${card.id}-${index}`}
 //               className="dashboard-card"
 //               style={{ background: card.gradient }}
+//               onMouseEnter={() => setIsPaused(true)}
+//               onMouseLeave={() => setIsPaused(false)}
 //             >
 //               <div className="card-icon">
 //                 <i className={`bx ${card.icon}`}></i>
@@ -86,15 +121,17 @@
 //   );
 // };
 
+// export default DashboardCards;
 
-//export default DashboardCards;
 
-import React, { useRef, useEffect } from 'react';
+
+import React, { useRef, useEffect, useState } from 'react';
 
 const DashboardCards = () => {
   const trackRef = useRef(null);
   const animationRef = useRef(null);
   const scrollPositionRef = useRef(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const cards = [
     {
@@ -154,37 +191,26 @@ const DashboardCards = () => {
     const track = trackRef.current;
     if (!track) return;
 
-    let isScrolling = false;
-    let scrollTimeout;
-
+    // Handle manual scroll via wheel/touchpad
     const handleWheel = (e) => {
       e.preventDefault();
-      isScrolling = true;
       
-      // Manual scroll
-      scrollPositionRef.current += e.deltaX || e.deltaY;
+      // Apply manual scroll offset to current position
+      scrollPositionRef.current += e.deltaX || e.deltaY * 0.5;
       
-      // Keep scroll position in bounds
+      // Keep position within valid bounds (infinite loop range)
       const maxScroll = track.scrollWidth / 3;
       if (scrollPositionRef.current < 0) {
         scrollPositionRef.current += maxScroll;
       } else if (scrollPositionRef.current >= maxScroll) {
         scrollPositionRef.current -= maxScroll;
       }
-      
-      track.style.transform = `translateX(-${scrollPositionRef.current}px)`;
-      
-      // Resume animation after scrolling stops
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        isScrolling = false;
-      }, 150);
     };
 
-    // Infinite animation
+    // Infinite auto-scroll animation
     const animate = () => {
-      if (!isScrolling && track) {
-        scrollPositionRef.current += 0.5;
+      if (!isPaused && track) {
+        scrollPositionRef.current += 1; 
         
         const maxScroll = track.scrollWidth / 3;
         if (scrollPositionRef.current >= maxScroll) {
@@ -196,7 +222,10 @@ const DashboardCards = () => {
       animationRef.current = requestAnimationFrame(animate);
     };
 
+    // Start animation
     animate();
+    
+    // Add wheel listener
     track.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
@@ -204,9 +233,8 @@ const DashboardCards = () => {
         cancelAnimationFrame(animationRef.current);
       }
       track.removeEventListener('wheel', handleWheel);
-      clearTimeout(scrollTimeout);
     };
-  }, []);
+  }, [isPaused]);
 
   return (
     <div className="dashboard-cards-section">
@@ -219,6 +247,8 @@ const DashboardCards = () => {
               key={`card-${card.id}-${index}`}
               className="dashboard-card"
               style={{ background: card.gradient }}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
             >
               <div className="card-icon">
                 <i className={`bx ${card.icon}`}></i>
