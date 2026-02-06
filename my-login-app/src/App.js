@@ -130,6 +130,7 @@ import './styles/style.css';
 import './styles/dashboard.css';
 import './styles/profile.css';
 import './styles/admin.css';
+import './styles/chatpage.css';
 
 const App = () => {
   const [isActive, setIsActive] = useState(false);

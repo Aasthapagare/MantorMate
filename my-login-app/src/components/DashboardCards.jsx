@@ -129,6 +129,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
 const DashboardCards = () => {
   const trackRef = useRef(null);
+  const containerRef = useRef(null);
   const animationRef = useRef(null);
   const scrollPositionRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -189,14 +190,23 @@ const DashboardCards = () => {
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    const container = containerRef.current;
+    if (!track || !container) return;
 
     // Handle manual scroll via wheel/touchpad
     const handleWheel = (e) => {
-      e.preventDefault();
+      // Check if scroll is more horizontal or vertical
+      const isHorizontalScroll = Math.abs(e.deltaX) > Math.abs(e.deltaY);
       
-      // Apply manual scroll offset to current position
-      scrollPositionRef.current += e.deltaX || e.deltaY * 0.5;
+      if (isHorizontalScroll || e.shiftKey) {
+        e.preventDefault();
+        // Horizontal scroll
+        scrollPositionRef.current += e.deltaX;
+      } else {
+        // Vertical scroll - convert to horizontal
+        e.preventDefault();
+        scrollPositionRef.current += e.deltaY;
+      }
       
       // Keep position within valid bounds (infinite loop range)
       const maxScroll = track.scrollWidth / 3;
@@ -207,10 +217,13 @@ const DashboardCards = () => {
       }
     };
 
-    // Infinite auto-scroll animation
+    // Infinite auto-scroll animation (unchanged)
     const animate = () => {
-      if (!isPaused && track) {
-        scrollPositionRef.current += 1; 
+      if (track) {
+        // Auto-scroll only when not paused
+        if (!isPaused) {
+          scrollPositionRef.current += 1;
+        }
         
         const maxScroll = track.scrollWidth / 3;
         if (scrollPositionRef.current >= maxScroll) {
@@ -225,14 +238,14 @@ const DashboardCards = () => {
     // Start animation
     animate();
     
-    // Add wheel listener
-    track.addEventListener('wheel', handleWheel, { passive: false });
+    // Add wheel listener to container
+    container.addEventListener('wheel', handleWheel, { passive: false });
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      track.removeEventListener('wheel', handleWheel);
+      container.removeEventListener('wheel', handleWheel);
     };
   }, [isPaused]);
 
@@ -240,7 +253,11 @@ const DashboardCards = () => {
     <div className="dashboard-cards-section">
       <h2 className="section-title">Quick Actions</h2>
       
-      <div className="cards-scroll-container-manual">
+      <div 
+        className="cards-scroll-container-manual" 
+        ref={containerRef}
+        style={{ cursor: 'grab' }}
+      >
         <div className="cards-track-manual" ref={trackRef}>
           {duplicatedCards.map((card, index) => (
             <div 

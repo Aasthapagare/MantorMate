@@ -48,7 +48,13 @@ html, body {
   --shadow: rgba(0, 0, 0, 0.3);
   --hover-bg: #2C3E50;
 }
+/* :root[data-theme="light"] .dashboard-header {
+  background: #34495E; 
+}*/
 
+:root[data-theme="light"] .project-name {
+  color: #ffffff; 
+} 
 * {
   margin: 0;
   padding: 0;
