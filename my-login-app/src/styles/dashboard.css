@@ -54,7 +54,8 @@ html, body {
 
 :root[data-theme="light"] .project-name {
   color: #ffffff; 
-} 
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -2078,4 +2079,20 @@ min-width: 240px;
   .no-project-card i {
     font-size: 4rem;
   }
+}
+
+/* Light Theme Fix for Assigned Project Name */
+/* :root[data-theme="light"] .project-name {
+  color: #2C3E50 !important;
+} */
+
+:root[data-theme="default"] .project-name {
+  color: #2d3748 !important;
+}
+
+:root[data-theme="dark"] .project-name {
+  color: #f7fafc !important;
+}
+.dashboard-header .project-name {
+  color: #ffffff !important;
 }
