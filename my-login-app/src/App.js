@@ -70,7 +70,7 @@
 // };
 
 // export default App;
-
+import MeetingRoom from "./components/MeetingRoom";
 import React, { useState } from 'react';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
@@ -103,12 +103,14 @@ const App = () => {
   };
 
   const handleLoginSuccess = (username) => {
+    console.log('Login success! Username:', username);
     setUserData({
       username: username,
       role: 'Student'
     });
     setIsLoggedIn(true);
     setCurrentPage('dashboard');
+    console.log('isLoggedIn set to true');
   };
 
   const handleLogout = () => {
@@ -121,20 +123,11 @@ const App = () => {
     setCurrentPage(page);
   };
 
-  if (isLoggedIn) {
-    if (currentPage === 'profile') {
-      return (
-        <ProfilePage 
-          userRole={userData.role}
-          username={userData.username}
-          onLogout={handleLogout}
-          onNavigate={handleNavigation}
-        />
-      );
-    }
-    
+if (isLoggedIn) {
+
+  if (currentPage === "profile") {
     return (
-      <Dashboard 
+      <ProfilePage
         userRole={userData.role}
         username={userData.username}
         onLogout={handleLogout}
@@ -142,6 +135,27 @@ const App = () => {
       />
     );
   }
+
+  if (currentPage === "meeting") {
+    return (
+      <MeetingRoom
+        username={userData.username}
+        onNavigate={handleNavigation}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  return (
+    <Dashboard
+      userRole={userData.role}
+      username={userData.username}
+      onLogout={handleLogout}
+      onNavigate={handleNavigation}
+    />
+  );
+}
+
 
   return (
     <>

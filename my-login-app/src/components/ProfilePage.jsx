@@ -356,7 +356,7 @@ const ProfilePage = ({ userRole, username, onLogout, onNavigate }) => {
     domain: 'Web Development'
   });
 
-  const [achievements, setAchievements] = useState([
+  const [achievements] = useState([
     { id: 1, title: 'Hackathon Winner 2025', date: 'Jan 15, 2026' },
     { id: 2, title: 'Research Paper Published', date: 'Dec 20, 2025' },
     { id: 3, title: 'Best Project Award', date: 'Nov 10, 2025' }

@@ -243,7 +243,7 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
       const list = searchType === 'faculty' ? facultyList : studentList;
       setFilteredResults(list);
     }
-  }, [searchQuery, searchType]);
+  }, [searchQuery, searchType, facultyList, studentList]);
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
@@ -407,6 +407,13 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
                 </div>
               </div>
             )}
+          <button
+  className="start-meeting-btn"
+ onClick={() => onNavigate?.("meeting")}
+
+>
+  Start Meeting
+</button>
 
             <DashboardCards />
             <TaskTable />
