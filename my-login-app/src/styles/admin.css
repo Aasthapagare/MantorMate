@@ -1,0 +1,362 @@
+/* Admin Panel Styles */
+.admin-dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.admin-card {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  transition: all 0.5s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 50px var(--shadow);
+}
+
+.admin-card:hover::before {
+  top: -10%;
+  right: -10%;
+}
+
+.admin-card-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  transition: all 0.4s ease;
+}
+
+.admin-card:hover .admin-card-icon {
+  transform: scale(1.15) rotate(360deg);
+}
+
+.admin-card-icon i {
+  font-size: 3rem;
+  color: white;
+}
+
+.admin-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.8rem;
+}
+
+.admin-card-count {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Section Header */
+.section-header-admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.upload-btn {
+  background: var(--accent-color);
+  color: white;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.upload-btn:hover {
+  background: var(--hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow);
+}
+
+.back-btn {
+  background: rgba(44, 62, 80, 0.1);
+  color: var(--text-primary);
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+  border: 2px solid var(--accent-color);
+}
+
+.back-btn:hover {
+  background: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Admin Tables */
+.admin-table-container {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px var(--shadow);
+  overflow: hidden;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
+}
+
+.admin-table thead tr th {
+  padding: 1.5rem 1.5rem;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: var(--bg-primary);
+  transform: translateX(5px);
+}
+
+.admin-table tbody tr td {
+  padding: 1.3rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.attendance-present {
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.attendance-absent {
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+.percentage-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.percentage-badge.good {
+  background: rgba(39, 174, 96, 0.15);
+  color: #27ae60;
+}
+
+.percentage-badge.low {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
+/* Projects Grid */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px var(--shadow);
+  transition: all 0.4s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 50px var(--shadow);
+}
+
+.project-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.project-card-header i {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.submitted {
+  background: rgba(39, 174, 96, 0.15);
+  color: #27ae60;
+}
+
+.status-badge.pending {
+  background: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+}
+
+.project-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.project-details {
+  margin-bottom: 1.5rem;
+}
+
+.project-details p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.project-details strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.view-project-btn {
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+}
+
+.view-project-btn:hover {
+  background: var(--hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px var(--shadow);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .admin-dashboard-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .section-header-admin {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .upload-btn,
+  .back-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-table-container {
+    overflow-x: auto;
+  }
+
+  .admin-table {
+    min-width: 600px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .admin-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .admin-card-icon {
+    width: 75px;
+    height: 75px;
+  }
+
+  .admin-card-icon i {
+    font-size: 2.5rem;
+  }
+
+  .admin-card-title {
+    font-size: 1.3rem;
+  }
+
+  .admin-table thead tr th,
+  .admin-table tbody tr td {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .project-card {
+    padding: 1.5rem;
+  }
+}

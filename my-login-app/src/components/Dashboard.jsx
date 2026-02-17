@@ -1,202 +1,12 @@
-// import React, { useState, useEffect } from 'react';
-// import Sidebar from './Sidebar';
-// import DashboardCards from './DashboardCards';
-// import TaskTable from './TaskTable';
-// import UploadedFiles from './UploadedFiles';
-// import FooterIcons from './FooterIcons';
-
-// const Dashboard = ({ userRole, username, onLogout }) => {
-//   const [theme, setTheme] = useState('default');
-//   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
-
-//   useEffect(() => {
-//     const savedTheme = localStorage.getItem('theme') || 'default';
-//     setTheme(savedTheme);
-//     document.documentElement.setAttribute('data-theme', savedTheme);
-//   }, []);
-
-//   const handleThemeChange = (newTheme) => {
-//     setTheme(newTheme);
-//     localStorage.setItem('theme', newTheme);
-//     document.documentElement.setAttribute('data-theme', newTheme);
-//     setShowThemeDropdown(false);
-//   };
-
-//   return (
-//     <>
-//       <link 
-//         href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
-//         rel='stylesheet'
-//       />
-//       <div className="dashboard-wrapper">
-//         <header className="dashboard-header">
-//           <div className="header-left">
-//             <div className="logo-container">
-//               <div className="logo-circle">
-//                 <i className='bx bxs-graduation'></i>
-//               </div>
-//               <h1 className="project-name">MentorMate</h1>
-//             </div>
-//           </div>
-//           <div className="header-right">
-//             <div className="theme-selector">
-//               <button 
-//                 className="theme-btn"
-//                 onClick={() => setShowThemeDropdown(!showThemeDropdown)}
-//               >
-//                 <i className='bx bx-palette'></i>
-//                 <span>Theme</span>
-//               </button>
-//               {showThemeDropdown && (
-//                 <div className="theme-dropdown">
-//                   <button 
-//                     className={theme === 'light' ? 'active' : ''}
-//                     onClick={() => handleThemeChange('light')}
-//                   >
-//                     <i className='bx bx-sun'></i> Light
-//                   </button>
-//                   <button 
-//                     className={theme === 'dark' ? 'active' : ''}
-//                     onClick={() => handleThemeChange('dark')}
-//                   >
-//                     <i className='bx bx-moon'></i> Dark
-//                   </button>
-//                   <button 
-//                     className={theme === 'default' ? 'active' : ''}
-//                     onClick={() => handleThemeChange('default')}
-//                   >
-//                     <i className='bx bx-brush'></i> Default
-//                   </button>
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-//         </header>
-
-//         <div className="dashboard-container">
-//           <Sidebar 
-//             userRole={userRole} 
-//             username={username}
-//             onLogout={onLogout}
-//           />
-
-//           <main className="dashboard-content">
-//             <DashboardCards />
-//             <TaskTable />
-//             <UploadedFiles />
-//             <FooterIcons />
-//           </main>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Dashboard;
-
-// import React, { useState, useEffect } from 'react';
-// import Sidebar from './Sidebar';
-// import DashboardCards from './DashboardCards';
-// import TaskTable from './TaskTable';
-// import UploadedFiles from './UploadedFiles';
-// import FooterIcons from './FooterIcons';
-
-// const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
-//   const [theme, setTheme] = useState('default');
-//   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
-
-//   useEffect(() => {
-//     const savedTheme = localStorage.getItem('theme') || 'default';
-//     setTheme(savedTheme);
-//     document.documentElement.setAttribute('data-theme', savedTheme);
-//   }, []);
-
-//   const handleThemeChange = (newTheme) => {
-//     setTheme(newTheme);
-//     localStorage.setItem('theme', newTheme);
-//     document.documentElement.setAttribute('data-theme', newTheme);
-//     setShowThemeDropdown(false);
-//   };
-
-//   return (
-//     <>
-//       <link 
-//         href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
-//         rel='stylesheet'
-//       />
-//       <div className="dashboard-wrapper">
-//         <header className="dashboard-header">
-//           <div className="header-left">
-//             <div className="logo-container">
-//               <div className="logo-circle">
-//                 <i className='bx bxs-graduation'></i>
-//               </div>
-//               <h1 className="project-name">MentorMate</h1>
-//             </div>
-//           </div>
-//           <div className="header-right">
-//             <div className="theme-selector">
-//               <button 
-//                 className="theme-btn"
-//                 onClick={() => setShowThemeDropdown(!showThemeDropdown)}
-//               >
-//                 <i className='bx bx-palette'></i>
-//                 <span>Theme</span>
-//               </button>
-//               {showThemeDropdown && (
-//                 <div className="theme-dropdown">
-//                   <button 
-//                     className={theme === 'light' ? 'active' : ''}
-//                     onClick={() => handleThemeChange('light')}
-//                   >
-//                     <i className='bx bx-sun'></i> Light
-//                   </button>
-//                   <button 
-//                     className={theme === 'dark' ? 'active' : ''}
-//                     onClick={() => handleThemeChange('dark')}
-//                   >
-//                     <i className='bx bx-moon'></i> Dark
-//                   </button>
-//                   <button 
-//                     className={theme === 'default' ? 'active' : ''}
-//                     onClick={() => handleThemeChange('default')}
-//                   >
-//                     <i className='bx bx-brush'></i> Default
-//                   </button>
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-//         </header>
-
-//         <div className="dashboard-container">
-//           <Sidebar 
-//             userRole={userRole} 
-//             username={username}
-//             onLogout={onLogout}
-//             onNavigate={onNavigate}
-//           />
-
-//           <main className="dashboard-content">
-//             <DashboardCards />
-//             <TaskTable />
-//             <UploadedFiles />
-//             <FooterIcons />
-//           </main>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Dashboard;
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import DashboardCards from './DashboardCards';
 import TaskTable from './TaskTable';
+import ProjectStatus from './ProjectStatus';
+import AssignedProject from './AssignedProject';
 import UploadedFiles from './UploadedFiles';
 import FooterIcons from './FooterIcons';
+import ChatPage from './ChatPage';
 
 const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
   const [theme, setTheme] = useState('default');
@@ -206,24 +16,52 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
   const [searchType, setSearchType] = useState('student');
   const [filteredResults, setFilteredResults] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [showChatBox, setShowChatBox] = useState(false);
+  const [showChatPage, setShowChatPage] = useState(false);
 
   // Sample data
   const facultyList = [
-    { id: 1, name: 'Dr. Rajesh Kumar', department: 'Computer Science', expertise: 'AI & ML' },
-    { id: 2, name: 'Prof. Anjali Sharma', department: 'Electronics', expertise: 'IoT' },
-    { id: 3, name: 'Dr. Vikram Singh', department: 'Mechanical', expertise: 'Robotics' },
-    { id: 4, name: 'Prof. Priya Mehta', department: 'Computer Science', expertise: 'Web Development' },
-    { id: 5, name: 'Dr. Amit Patel', department: 'Information Technology', expertise: 'Cybersecurity' }
+    { id: 1, name: 'Dr. Rajesh Kumar', email: 'rajesh@example.com', department: 'Computer Science', expertise: 'AI & ML' },
+    { id: 2, name: 'Prof. Anjali Sharma', email: 'anjali@example.com', department: 'Electronics', expertise: 'IoT' },
+    { id: 3, name: 'Dr. Vikram Singh', email: 'vikram@example.com', department: 'Mechanical', expertise: 'Robotics' },
+    { id: 4, name: 'Prof. Priya Mehta', email: 'priya@example.com', department: 'Computer Science', expertise: 'Web Development' },
+    { id: 5, name: 'Dr. Amit Patel', email: 'amit@example.com', department: 'Information Technology', expertise: 'Cybersecurity' }
   ];
 
   const studentList = [
-    { id: 1, name: 'Arjun Verma', course: 'B.Tech CS', year: '3rd Year', domain: 'Web Development' },
-    { id: 2, name: 'Sneha Reddy', course: 'B.Tech IT', year: '2nd Year', domain: 'Data Science' },
-    { id: 3, name: 'Rahul Joshi', course: 'B.Tech EC', year: '4th Year', domain: 'IoT' },
-    { id: 4, name: 'Priya Desai', course: 'B.Tech CS', year: '3rd Year', domain: 'AI & ML' },
-    { id: 5, name: 'Karan Malhotra', course: 'B.Tech ME', year: '2nd Year', domain: 'Robotics' }
+    { id: 1, name: 'Arjun Verma', email: 'arjun@example.com', course: 'B.Tech CS', year: '3rd Year', domain: 'Web Development' },
+    { id: 2, name: 'Sneha Reddy', email: 'sneha@example.com', course: 'B.Tech IT', year: '2nd Year', domain: 'Data Science' },
+    { id: 3, name: 'Rahul Joshi', email: 'rahul@example.com', course: 'B.Tech EC', year: '4th Year', domain: 'IoT' },
+    { id: 4, name: 'Priya Desai', email: 'priya@example.com', course: 'B.Tech CS', year: '3rd Year', domain: 'AI & ML' },
+    { id: 5, name: 'Karan Malhotra', email: 'karan@example.com', course: 'B.Tech ME', year: '2nd Year', domain: 'Robotics' }
   ];
+
+  // FIX: Single useEffect to handle navigation flags - prevents race condition
+  useEffect(() => {
+    const openSearch = localStorage.getItem('openSearch');
+    const openChat = localStorage.getItem('openChat');
+    
+    // Clear flags immediately to prevent duplicate execution
+    if (openSearch === 'true') {
+      localStorage.removeItem('openSearch');
+    }
+    if (openChat === 'true') {
+      localStorage.removeItem('openChat');
+    }
+    
+    // Execute only ONE action based on priority (Search takes precedence)
+    if (openSearch === 'true') {
+      handleSearchToggle(true);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainContent = document.querySelector('.dashboard-content');
+        if (mainContent) {
+          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
+    } else if (openChat === 'true') {
+      handleOpenChatPage();
+    }
+  }, []);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'default';
@@ -232,7 +70,6 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
   }, []);
 
   useEffect(() => {
-    // Filter results based on search query
     if (searchQuery.trim()) {
       const list = searchType === 'faculty' ? facultyList : studentList;
       const filtered = list.filter(item => 
@@ -258,13 +95,41 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
       setSearchQuery('');
       setSearchType('student');
       setFilteredResults(studentList);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const mainContent = document.querySelector('.dashboard-content');
+      if (mainContent) {
+        mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
+  const handleFooterSearch = () => {
+    handleSearchToggle(true);
+  };
+  
   const handlePersonSelect = (person) => {
     setSelectedPerson(person);
-    setShowChatBox(true);
+    setShowChatPage(true);
   };
+
+  const handleOpenChatPage = () => {
+    setSelectedPerson(null);
+    setShowChatPage(true);
+  };
+
+  const handleCloseChatPage = () => {
+    setShowChatPage(false);
+    setSelectedPerson(null);
+  };
+
+  if (showChatPage) {
+    return (
+      <ChatPage 
+        onClose={handleCloseChatPage} 
+        preSelectedPerson={selectedPerson}
+      />
+    );
+  }
 
   return (
     <>
@@ -324,10 +189,11 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
             onLogout={onLogout}
             onNavigate={onNavigate}
             onSearchToggle={handleSearchToggle}
+            currentPage="dashboard"
+            isSearchOpen={showSearchBar}
           />
 
           <main className="dashboard-content">
-            {/* Search Bar - Only visible when Search is clicked */}
             {showSearchBar && (
               <div className="dashboard-search-section">
                 <div className="search-bar-container">
@@ -351,7 +217,6 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
                   </select>
                 </div>
 
-                {/* Search Results */}
                 <div className="search-results-container">
                   {filteredResults.map(person => (
                     <div 
@@ -378,6 +243,7 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
               </div>
             )}
 
+<<<<<<< HEAD
             {/* Chat Box */}
             {showChatBox && selectedPerson && (
               <div className="chat-box-overlay" onClick={() => setShowChatBox(false)}>
@@ -415,10 +281,18 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
   Start Meeting
 </button>
 
+=======
+>>>>>>> f55fe09f39fc2dafa81e0b9a901d34caad48c816
             <DashboardCards />
             <TaskTable />
+            <ProjectStatus />
+            <AssignedProject />
             <UploadedFiles />
-            <FooterIcons />
+            <FooterIcons 
+              onOpenChat={handleOpenChatPage} 
+              onOpenSearch={handleFooterSearch}
+              onNavigate={onNavigate}
+            />
           </main>
         </div>
       </div>

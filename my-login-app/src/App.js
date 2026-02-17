@@ -1,94 +1,30 @@
-
-// export default App;
-
-// import React, { useState } from 'react';
-// import LoginForm from './components/LoginForm';
-// import RegisterForm from './components/RegisterForm';
-// import TogglePanel from './components/TogglePanel';
-// import Dashboard from './components/Dashboard';
-// import './styles/style.css';
-// import './styles/dashboard.css';
-
-// const App = () => {
-//   const [isActive, setIsActive] = useState(false);
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [userData, setUserData] = useState({
-//     username: '',
-//     role: ''
-//   });
-
-//   const handleRegisterClick = () => {
-//     setIsActive(true);
-//   };
-
-//   const handleLoginClick = () => {
-//     setIsActive(false);
-//   };
-
-//   const handleRegisterSuccess = () => {
-//     setIsActive(false);
-//   };
-
-//   const handleLoginSuccess = (username) => {
-//     setUserData({
-//       username: username,
-//       role: 'Student' // You can get this from login form
-//     });
-//     setIsLoggedIn(true);
-//   };
-
-//   const handleLogout = () => {
-//     setIsLoggedIn(false);
-//     setUserData({ username: '', role: '' });
-//   };
-
-//   // If logged in, show Dashboard
-//   if (isLoggedIn) {
-//     return (
-//       <Dashboard 
-//         userRole={userData.role}
-//         username={userData.username}
-//         onLogout={handleLogout}
-//       />
-//     );
-//   }
-
-//   // Otherwise show Login/Register
-//   return (
-//     <div className={`container ${isActive ? 'active' : ''}`}>
-//       <LoginForm onLoginSuccess={handleLoginSuccess} />
-//       <RegisterForm 
-//         onRegisterSuccess={handleRegisterSuccess} 
-//         isActive={isActive}
-//       />
-//       <TogglePanel 
-//         onRegisterClick={handleRegisterClick}
-//         onLoginClick={handleLoginClick}
-//       />
-//     </div>
-//   );
-// };
-
-// export default App;
-import MeetingRoom from "./components/MeetingRoom";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import TogglePanel from './components/TogglePanel';
 import Dashboard from './components/Dashboard';
 import ProfilePage from './components/ProfilePage';
+import AdminPanel from './components/AdminPanel';
 import './styles/style.css';
 import './styles/dashboard.css';
 import './styles/profile.css';
+import './styles/admin.css';
+import './styles/chatpage.css';
 
 const App = () => {
   const [isActive, setIsActive] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentPage, setCurrentPage] = useState('dashboard'); // 'dashboard' or 'profile'
+  const [currentPage, setCurrentPage] = useState('dashboard');
   const [userData, setUserData] = useState({
     username: '',
     role: ''
   });
+
+  // Apply theme on app mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
 
   const handleRegisterClick = () => {
     setIsActive(true);
@@ -104,9 +40,10 @@ const App = () => {
 
   const handleLoginSuccess = (username) => {
     console.log('Login success! Username:', username);
+
     setUserData({
       username: username,
-      role: 'Student'
+      role: ''
     });
     setIsLoggedIn(true);
     setCurrentPage('dashboard');
@@ -123,11 +60,31 @@ const App = () => {
     setCurrentPage(page);
   };
 
-if (isLoggedIn) {
+  if (isLoggedIn) {
 
-  if (currentPage === "profile") {
+    if (currentPage === "profile") {
+      return (
+        <ProfilePage
+          userRole={userData.role}
+          username={userData.username}
+          onLogout={handleLogout}
+          onNavigate={handleNavigation}
+        />
+      );
+    }
+
+    if (currentPage === "meeting") {
+      return (
+        <MeetingRoom
+          username={userData.username}
+          onNavigate={handleNavigation}
+          onLogout={handleLogout}
+        />
+      );
+    }
+
     return (
-      <ProfilePage
+      <Dashboard
         userRole={userData.role}
         username={userData.username}
         onLogout={handleLogout}
@@ -135,27 +92,6 @@ if (isLoggedIn) {
       />
     );
   }
-
-  if (currentPage === "meeting") {
-    return (
-      <MeetingRoom
-        username={userData.username}
-        onNavigate={handleNavigation}
-        onLogout={handleLogout}
-      />
-    );
-  }
-
-  return (
-    <Dashboard
-      userRole={userData.role}
-      username={userData.username}
-      onLogout={handleLogout}
-      onNavigate={handleNavigation}
-    />
-  );
-}
-
 
   return (
     <>

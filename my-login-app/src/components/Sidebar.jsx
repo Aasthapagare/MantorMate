@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 
 const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) => {
 
+=======
+
+import React, { useState } from 'react';
+
+const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onAdminHomeClick, isAdminPanel, currentPage, isSearchOpen }) => {
+>>>>>>> f55fe09f39fc2dafa81e0b9a901d34caad48c816
   const [activeMenu, setActiveMenu] = useState('home');
   const [profileImage, setProfileImage] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -33,6 +40,28 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) =
     setShowProfileMenu(false);
   };
 
+<<<<<<< HEAD
+=======
+  React.useEffect(() => {
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+  }, []);
+
+  // FIX 3: Sync activeMenu with currentPage prop and search state
+  React.useEffect(() => {
+    if (isSearchOpen) {
+      // When search is open, highlight search
+      setActiveMenu('search');
+    } else if (currentPage === 'dashboard') {
+      setActiveMenu('home');
+    } else if (currentPage === 'profile') {
+      setActiveMenu('profile');
+    }
+  }, [currentPage, isSearchOpen]);
+
+>>>>>>> f55fe09f39fc2dafa81e0b9a901d34caad48c816
   const menuItems = [
     { id: 'home', icon: 'bx-home', label: 'Home' },
     { id: 'search', icon: 'bx-search', label: 'Search' },
@@ -47,6 +76,7 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) =
     setActiveMenu(menuId);
 
     if (menuId === 'home') {
+<<<<<<< HEAD
       onNavigate?.('dashboard');
       onSearchToggle?.(false);
     }
@@ -61,6 +91,44 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) =
     else if (menuId === 'profile') {
       onNavigate?.('profile');
       onSearchToggle?.(false);
+=======
+      if (isAdminPanel && onAdminHomeClick) {
+        onAdminHomeClick();
+      } else {
+        if (onNavigate) {
+          onNavigate('dashboard');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainContent = document.querySelector('.dashboard-content');
+        if (mainContent) {
+          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (onSearchToggle) {
+          onSearchToggle(false);
+        }
+      }
+    } else if (menuId === 'search') {
+      if (onNavigate) {
+        onNavigate('dashboard');
+      }
+      
+      if (onSearchToggle) {
+        onSearchToggle(true);
+      }
+      
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainContent = document.querySelector('.dashboard-content');
+        if (mainContent) {
+          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
+    } else if (menuId === 'profile' && onNavigate) {
+      onNavigate('profile');
+      if (onSearchToggle) {
+        onSearchToggle(false);
+      }
+>>>>>>> f55fe09f39fc2dafa81e0b9a901d34caad48c816
     }
   };
 

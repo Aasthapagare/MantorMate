@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 
-const FooterIcons = () => {
+const FooterIcons = ({ onOpenChat, onOpenSearch, onNavigate }) => {
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const footerItems = [
@@ -9,6 +10,15 @@ const FooterIcons = () => {
     { id: 'schedule', icon: 'bx-calendar', label: 'Schedule Meeting' },
     { id: 'join', icon: 'bx-video', label: 'Join Meeting' }
   ];
+
+  const handleIconClick = (iconId) => {
+    // FIX: Simply call the handlers - they will handle navigation
+    if (iconId === 'chat' && onOpenChat) {
+      onOpenChat();
+    } else if (iconId === 'search' && onOpenSearch) {
+      onOpenSearch();
+    }
+  };
 
   return (
     <div className="footer-icons-container">
@@ -19,7 +29,10 @@ const FooterIcons = () => {
           onMouseEnter={() => setHoveredIcon(item.id)}
           onMouseLeave={() => setHoveredIcon(null)}
         >
-          <button className="footer-icon-btn">
+          <button 
+            className="footer-icon-btn"
+            onClick={() => handleIconClick(item.id)}
+          >
             <i className={`bx ${item.icon}`}></i>
           </button>
           {hoveredIcon === item.id && (
