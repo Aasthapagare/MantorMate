@@ -9,6 +9,7 @@ import FooterIcons from './FooterIcons';
 import ChatPage from './ChatPage';
 
 const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
+  const [showChatBox, setShowChatBox] = useState(false);
   const [theme, setTheme] = useState('default');
   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -243,7 +244,6 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
               </div>
             )}
 
-<<<<<<< HEAD
             {/* Chat Box */}
             {showChatBox && selectedPerson && (
               <div className="chat-box-overlay" onClick={() => setShowChatBox(false)}>
@@ -281,8 +281,6 @@ const Dashboard = ({ userRole, username, onLogout, onNavigate }) => {
   Start Meeting
 </button>
 
-=======
->>>>>>> f55fe09f39fc2dafa81e0b9a901d34caad48c816
             <DashboardCards />
             <TaskTable />
             <ProjectStatus />
