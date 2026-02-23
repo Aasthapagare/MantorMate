@@ -4,6 +4,7 @@ import RegisterForm from './components/RegisterForm';
 import TogglePanel from './components/TogglePanel';
 import Dashboard from './components/Dashboard';
 import ProfilePage from './components/ProfilePage';
+import ProjectManagement from './components/ProjectManagement';
 import AdminPanel from './components/AdminPanel';
 import './styles/style.css';
 import './styles/dashboard.css';
@@ -73,15 +74,27 @@ const App = () => {
       );
     }
 
-    if (currentPage === "meeting") {
-      return (
-        <MeetingRoom
-          username={userData.username}
-          onNavigate={handleNavigation}
-          onLogout={handleLogout}
-        />
-      );
-    }
+if (currentPage === "projectManagement") {
+  return (
+    <ProjectManagement
+      userRole={userData.role}
+      username={userData.username}
+      onLogout={handleLogout}
+      onNavigate={handleNavigation}
+    />
+  );
+}
+    
+
+    // if (currentPage === "meeting") {
+    //   return (
+    //     <MeetingRoom
+    //       username={userData.username}
+    //       onNavigate={handleNavigation}
+    //       onLogout={handleLogout}
+    //     />
+    //   );
+    // }
 
     return (
       <Dashboard
