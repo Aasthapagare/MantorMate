@@ -357,7 +357,20 @@ html, body {
 .sidebar-nav {
   flex: 1;
 }
+/* Fix for nav-item text - prevent wrapping and ensure left alignment */
+.nav-item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  text-align: left;
+}
 
+/* Ensure nav-item stays left-aligned */
+.nav-item {
+  justify-content: flex-start;
+  text-align: left;
+}
 .nav-item {
   width: 100%;
   padding: 1.1rem 1.3rem;

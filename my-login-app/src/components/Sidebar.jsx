@@ -279,7 +279,7 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
       if (onNavigate) {
         onNavigate('dashboard');
       }
-      
+      localStorage.setItem('openSearch', 'true');
       if (onSearchToggle) {
         onSearchToggle(true);
       }
