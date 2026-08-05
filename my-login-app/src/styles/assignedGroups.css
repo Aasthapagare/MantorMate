@@ -1,0 +1,268 @@
+/* ============================================================
+   ASSIGNED GROUPS — Premium Redesign
+   MentorMate | #2C3E50 palette
+   ============================================================ */
+
+.assigned-groups-container {
+  padding: 2.25rem 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Section Header ────────────────────────── */
+.groups-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.groups-header h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.3px;
+}
+
+.groups-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.groups-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: rgba(44,62,80,0.09);
+  color: var(--accent-color);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+:root[data-theme="dark"] .groups-count-badge { background: rgba(255,255,255,0.08); color: #94a3b8; }
+
+/* ── Table Wrapper ─────────────────────────── */
+.groups-table-wrapper {
+  background: var(--card-bg);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 28px var(--shadow);
+  border: 1px solid rgba(44,62,80,0.08);
+}
+
+:root[data-theme="light"] .groups-table-wrapper { background: #fff; border-color: #e2e8f0; }
+
+/* ── Table ─────────────────────────────────── */
+.groups-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 580px;
+}
+
+.groups-table thead {
+  background: linear-gradient(90deg, #2C3E50, #34495E);
+}
+
+.groups-table th {
+  text-align: left;
+  padding: 1rem 1.5rem;
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.groups-table tbody tr {
+  border-bottom: 1px solid rgba(44,62,80,0.06);
+  transition: background 0.15s;
+}
+
+:root[data-theme="dark"] .groups-table tbody tr { border-bottom-color: rgba(255,255,255,0.04); }
+.groups-table tbody tr:last-child { border-bottom: none; }
+.groups-table tbody tr:hover { background: rgba(44,62,80,0.04); }
+:root[data-theme="light"] .groups-table tbody tr:hover { background: #f1f5f9; }
+
+.groups-table td {
+  padding: 1.05rem 1.5rem;
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+/* ── Group Name ────────────────────────────── */
+.group-name {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-weight: 700;
+}
+
+.group-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.group-name-text { font-size: 0.95rem; font-weight: 700; }
+
+/* Project Title */
+.project-title {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* ── Status Badge ──────────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-approved {
+  background: rgba(39,174,96,0.12);
+  color: #27ae60;
+  border: 1px solid rgba(39,174,96,0.22);
+}
+
+.status-pending {
+  background: rgba(243,156,18,0.12);
+  color: #e67e22;
+  border: 1px solid rgba(243,156,18,0.22);
+}
+
+.status-review {
+  background: rgba(52,152,219,0.12);
+  color: #2980b9;
+  border: 1px solid rgba(52,152,219,0.22);
+}
+
+/* ── View Details Button ───────────────────── */
+.view-details-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1.1rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.25);
+  letter-spacing: 0.1px;
+}
+
+.view-details-btn:hover {
+  background: linear-gradient(135deg, #1a2a3a, #2C3E50);
+  transform: translateX(3px);
+  box-shadow: 0 4px 14px rgba(44,62,80,0.35);
+}
+
+.view-details-btn i {
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.view-details-btn:hover i { transform: translateX(3px); }
+
+/* ── State Views ───────────────────────────── */
+.loading-state, .error-state, .empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(44,62,80,0.1);
+  border-top-color: #2C3E50;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-state p, .empty-state p, .error-state p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0.75rem 0 0;
+}
+
+.error-state i {
+  font-size: 3rem; color: #e74c3c; display: block; margin-bottom: 0.5rem;
+}
+
+.empty-state i {
+  font-size: 3rem; color: var(--text-secondary); opacity: 0.3;
+  display: block; margin-bottom: 0.5rem;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .assigned-groups-container { padding: 1.25rem; }
+  .groups-table th, .groups-table td { padding: 0.85rem 1rem; font-size: 0.85rem; }
+  .view-details-btn { padding: 0.45rem 0.9rem; font-size: 0.8rem; }
+}
+
+/* ── Dark / Default theme explicit fixes ─── */
+:root[data-theme="dark"] .assigned-groups-container {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+:root[data-theme="dark"] .groups-header h2 {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .groups-header p {
+  color: #cbd5e0;
+}
+
+:root[data-theme="dark"] .groups-table td {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .project-title {
+  color: #cbd5e0;
+}
+
+:root[data-theme="dark"] .group-name-text {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .groups-table-wrapper {
+  background: #2d2d2d;
+  border-color: rgba(255,255,255,0.07);
+}
+
+:root[data-theme="dark"] .groups-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.02);
+}
+
+:root[data-theme="dark"] .groups-table tbody tr:hover {
+  background: rgba(255,255,255,0.05) !important;
+}

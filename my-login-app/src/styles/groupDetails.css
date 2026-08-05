@@ -1,0 +1,257 @@
+/* ============================================================
+   GROUP DETAILS — Premium Redesign
+   MentorMate | #2C3E50 palette
+   ============================================================ */
+
+.group-details-container {
+  padding: 2.25rem 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Header ────────────────────────────────── */
+.details-header {
+  margin-bottom: 2rem;
+}
+
+.details-header h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem;
+  letter-spacing: -0.3px;
+}
+
+.details-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Detail Card ───────────────────────────── */
+.detail-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 24px var(--shadow);
+  border: 1px solid rgba(44,62,80,0.07);
+  overflow: hidden;
+  transition: box-shadow 0.22s;
+}
+
+:root[data-theme="light"] .detail-card { background: #fff; border-color: #e2e8f0; }
+.detail-card:hover { box-shadow: 0 8px 36px rgba(44,62,80,0.14); }
+
+/* ── Card Header ───────────────────────────── */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 1.75rem;
+  background: linear-gradient(90deg, rgba(44,62,80,0.05), transparent);
+  border-bottom: 1.5px solid rgba(44,62,80,0.07);
+}
+
+:root[data-theme="dark"] .card-header {
+  background: rgba(255,255,255,0.03);
+  border-bottom-color: rgba(255,255,255,0.06);
+}
+
+.card-header i {
+  font-size: 1.4rem;
+  color: #2C3E50;
+  opacity: 0.8;
+  width: 32px;
+  height: 32px;
+  background: rgba(44,62,80,0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+:root[data-theme="dark"] .card-header i { color: #94a3b8; background: rgba(255,255,255,0.08); }
+
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.1px;
+}
+
+/* ── Card Content ──────────────────────────── */
+.card-content {
+  padding: 1.75rem;
+  color: var(--text-primary);
+}
+
+.group-name-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.4px;
+}
+
+/* ── Students Grid ─────────────────────────── */
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.student-item {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1rem 1.1rem;
+  background: rgba(44,62,80,0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(44,62,80,0.07);
+  transition: all 0.2s ease;
+}
+
+:root[data-theme="light"] .student-item { background: #f8fafc; border-color: #e2e8f0; }
+:root[data-theme="dark"] .student-item { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+
+.student-item:hover {
+  background: rgba(44,62,80,0.07);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 16px rgba(44,62,80,0.1);
+}
+
+:root[data-theme="light"] .student-item:hover { background: #eef2f7; }
+
+.student-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(44,62,80,0.25);
+}
+
+.student-info { flex: 1; min-width: 0; }
+
+.student-info h4 {
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
+}
+
+.student-info .enrollment {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+}
+
+.student-info .email {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── No Data ───────────────────────────────── */
+.no-data { text-align: center; padding: 2.5rem; color: var(--text-secondary); }
+.no-data i { font-size: 2.5rem; opacity: 0.3; display: block; margin-bottom: 0.5rem; }
+.no-data p { font-size: 0.93rem; margin: 0; }
+
+/* ── Project Details ───────────────────────── */
+.project-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.3px;
+}
+
+.project-description { margin-bottom: 1.5rem; }
+
+.project-description h5 {
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin: 0 0 0.6rem;
+}
+
+.project-description p {
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  line-height: 1.75;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* ── Project Meta ──────────────────────────── */
+.project-meta {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-top: 1.25rem;
+  border-top: 1.5px solid rgba(44,62,80,0.07);
+}
+
+:root[data-theme="dark"] .project-meta { border-top-color: rgba(255,255,255,0.06); }
+
+.meta-item { display: flex; align-items: center; gap: 0.6rem; }
+
+.meta-label { font-size: 0.83rem; font-weight: 700; color: var(--text-secondary); }
+
+.meta-value { font-size: 0.9rem; color: var(--text-primary); font-weight: 600; }
+
+/* ── Status Badges ─────────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.status-approved { background: rgba(39,174,96,0.12); color: #27ae60; border: 1px solid rgba(39,174,96,0.22); }
+.status-pending { background: rgba(243,156,18,0.12); color: #e67e22; border: 1px solid rgba(243,156,18,0.22); }
+.status-under-review { background: rgba(52,152,219,0.12); color: #2980b9; border: 1px solid rgba(52,152,219,0.22); }
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .group-details-container { padding: 1.25rem; }
+  .card-content { padding: 1.25rem; }
+  .students-grid { grid-template-columns: 1fr; }
+  .project-meta { flex-direction: column; gap: 0.85rem; }
+}
+
+/* ── Dark theme explicit fixes ──────────── */
+:root[data-theme="dark"] .group-details-container {
+  background: var(--bg-primary);
+}
+
+:root[data-theme="dark"] .group-details-title,
+:root[data-theme="dark"] .card-title,
+:root[data-theme="dark"] .student-name,
+:root[data-theme="dark"] .detail-value,
+:root[data-theme="dark"] .detail-label {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .student-meta,
+:root[data-theme="dark"] .detail-secondary {
+  color: #cbd5e0;
+}

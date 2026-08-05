@@ -1,0 +1,176 @@
+/* ============================================================
+   ATTENDANCE PAGE — Premium Redesign
+   MentorMate | #2C3E50 palette | Refined + Professional
+   ============================================================ */
+
+.attendance-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg-primary);
+}
+
+/* ── Close Button ─────────────────────────── */
+.attendance-close-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.75rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.2s ease;
+}
+
+.attendance-close-btn:hover {
+  background: rgba(255,255,255,0.28);
+  transform: rotate(90deg);
+}
+
+/* ── Header ───────────────────────────────── */
+.attendance-header {
+  background: linear-gradient(135deg, #2C3E50 0%, #1a2a3a 100%);
+  padding: 2.75rem 2.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.attendance-header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+.attendance-header::after {
+  content: '';
+  position: absolute;
+  bottom: 20px; left: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  pointer-events: none;
+}
+
+.attendance-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 2rem;
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Tabs ─────────────────────────────────── */
+.attendance-tabs {
+  display: flex;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.9rem 2rem;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+  margin-right: 4px;
+  position: relative;
+}
+
+.tab-button:hover {
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.9);
+}
+
+.tab-button.active {
+  background: var(--bg-primary);
+  color: #2C3E50;
+  font-weight: 700;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+}
+
+:root[data-theme="dark"] .tab-button.active {
+  background: var(--bg-primary);
+  color: #f0f4f8;
+}
+
+.tab-button i {
+  font-size: 1.2rem;
+}
+
+/* ── Content ──────────────────────────────── */
+.attendance-content {
+  flex: 1;
+  background: var(--bg-primary);
+  overflow-y: auto;
+}
+
+.tab-content { max-width: 1400px; margin: 0 auto; }
+
+/* ── Placeholder ──────────────────────────── */
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  margin: 2.5rem;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px var(--shadow);
+  border: 1px dashed rgba(44,62,80,0.15);
+  text-align: center;
+}
+
+:root[data-theme="light"] .placeholder-content { background: #fff; }
+
+.placeholder-content i {
+  font-size: 4rem;
+  color: var(--accent-color);
+  opacity: 0.2;
+  margin-bottom: 1.25rem;
+}
+
+.placeholder-content h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.placeholder-content p {
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .attendance-header { padding: 2rem 1.25rem 0; }
+  .attendance-title { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .tab-button { padding: 0.75rem 1.25rem; font-size: 0.87rem; }
+}

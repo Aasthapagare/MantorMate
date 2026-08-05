@@ -1,0 +1,401 @@
+/* ============================================================
+   ABOUT PAGE — MentorMate
+   Consistent with existing theme | #2C3E50 palette
+   ============================================================ */
+
+.about-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 0 3rem;
+}
+
+/* ── Hero ─────────────────────────────────── */
+.about-hero {
+  text-align: center;
+  padding: 3.5rem 2rem 3rem;
+  background: linear-gradient(135deg, #2C3E50 0%, #1a2a3a 100%);
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.3);
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+.about-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 10%;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  pointer-events: none;
+}
+
+.about-hero-icon {
+  width: 72px; height: 72px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.25rem;
+  position: relative; z-index: 1;
+}
+
+.about-hero-icon i { font-size: 2.5rem; color: white; }
+
+.about-hero-title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: white;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.5px;
+  position: relative; z-index: 1;
+}
+
+.about-hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.7);
+  margin: 0 0 1.25rem;
+  font-weight: 500;
+  position: relative; z-index: 1;
+}
+
+.about-hero-desc {
+  max-width: 680px;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+  position: relative; z-index: 1;
+}
+
+/* ── Section Card ─────────────────────────── */
+.about-section-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 4px 24px var(--shadow);
+  border: 1px solid rgba(44,62,80,0.08);
+  margin-bottom: 1.75rem;
+}
+
+:root[data-theme="light"] .about-section-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+:root[data-theme="dark"] .about-section-card {
+  background: #2d2d2d;
+  border-color: rgba(255,255,255,0.07);
+}
+
+/* Section Head */
+.about-section-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1.5px solid rgba(44,62,80,0.07);
+}
+
+:root[data-theme="dark"] .about-section-head {
+  border-bottom-color: rgba(255,255,255,0.06);
+}
+
+.about-section-icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.about-section-icon-wrap i { font-size: 1.6rem; }
+
+.about-section-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
+  letter-spacing: -0.2px;
+}
+
+.about-section-sub {
+  font-size: 0.87rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Problem Grid ─────────────────────────── */
+.about-problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.about-problem-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  background: rgba(231,76,60,0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(231,76,60,0.1);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.about-problem-item i {
+  font-size: 1.3rem;
+  color: #e74c3c;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Solution Text ────────────────────────── */
+.about-solution-text {
+  font-size: 0.97rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  margin: 0;
+}
+
+.about-solution-text strong { color: var(--text-primary); font-weight: 700; }
+
+/* ── Features Grid ────────────────────────── */
+.about-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.about-feature-card {
+  padding: 1.4rem;
+  background: var(--bg-primary);
+  border-radius: 14px;
+  border: 1.5px solid rgba(44,62,80,0.08);
+  transition: all 0.22s ease;
+}
+
+:root[data-theme="light"] .about-feature-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+:root[data-theme="dark"] .about-feature-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.07);
+}
+
+.about-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(44,62,80,0.14);
+  border-color: rgba(44,62,80,0.2);
+}
+
+.about-feature-icon {
+  width: 44px; height: 44px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 3px 10px rgba(44,62,80,0.25);
+}
+
+.about-feature-icon i { font-size: 1.35rem; color: white; }
+
+.about-feature-title {
+  font-size: 0.97rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.about-feature-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Roles Grid ───────────────────────────── */
+.about-roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.about-role-card {
+  padding: 1.75rem 1.4rem;
+  background: var(--bg-primary);
+  border-radius: 14px;
+  border: 1.5px solid rgba(44,62,80,0.08);
+  text-align: center;
+  transition: transform 0.22s ease;
+}
+
+:root[data-theme="light"] .about-role-card { background: #f8fafc; border-color: #e2e8f0; }
+:root[data-theme="dark"] .about-role-card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.07); }
+
+.about-role-card:hover { transform: translateY(-4px); }
+
+.about-role-icon-wrap {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.about-role-icon-wrap i { font-size: 1.9rem; }
+
+.about-role-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 0.65rem;
+}
+
+.about-role-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Tech Stack ───────────────────────────── */
+.about-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.about-tech-card {
+  padding: 1.4rem 1rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  border-radius: 14px;
+  text-align: center;
+  color: white;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 14px rgba(44,62,80,0.25);
+}
+
+.about-tech-card:hover { transform: translateY(-4px); }
+.about-tech-card i { font-size: 2.2rem; color: rgba(255,255,255,0.85); display: block; margin-bottom: 0.7rem; }
+.about-tech-card h4 { font-size: 0.97rem; font-weight: 800; margin: 0 0 0.25rem; color: white; }
+.about-tech-card span { font-size: 0.78rem; color: rgba(255,255,255,0.6); font-weight: 500; }
+
+/* ── Workflow ─────────────────────────────── */
+.about-workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.about-workflow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.about-wf-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(44,62,80,0.3);
+  position: relative; z-index: 2;
+}
+
+.about-wf-circle i { font-size: 1.3rem; color: white; }
+
+.about-wf-line {
+  position: absolute;
+  left: 23px;
+  top: 48px;
+  width: 2px;
+  height: calc(100% + 0.5rem);
+  background: rgba(44,62,80,0.15);
+  z-index: 1;
+}
+
+:root[data-theme="dark"] .about-wf-line { background: rgba(255,255,255,0.1); }
+
+.about-wf-content {
+  padding: 0 0 1.75rem;
+  flex: 1;
+}
+
+.about-wf-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.about-wf-label {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem;
+}
+
+.about-wf-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Future Scope ─────────────────────────── */
+.about-future-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.about-future-card {
+  padding: 1.4rem;
+  background: var(--bg-primary);
+  border-radius: 14px;
+  border: 1.5px solid rgba(44,62,80,0.08);
+  transition: transform 0.2s;
+}
+
+:root[data-theme="light"] .about-future-card { background: #f8fafc; border-color: #e2e8f0; }
+:root[data-theme="dark"] .about-future-card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.07); }
+
+.about-future-card:hover { transform: translateY(-4px); }
+.about-future-card i { font-size: 1.75rem; color: #3498db; display: block; margin-bottom: 0.75rem; }
+.about-future-card h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-primary); margin: 0 0 0.5rem; }
+.about-future-card p { font-size: 0.84rem; color: var(--text-secondary); margin: 0; line-height: 1.65; }
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .about-page { padding: 0 0 2rem; }
+  .about-hero { padding: 2.5rem 1.25rem 2rem; }
+  .about-hero-title { font-size: 1.8rem; }
+  .about-section-card { padding: 1.5rem 1.25rem; }
+  .about-features-grid,
+  .about-roles-grid,
+  .about-future-grid { grid-template-columns: 1fr; }
+  .about-tech-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-problem-grid { grid-template-columns: 1fr; }
+}

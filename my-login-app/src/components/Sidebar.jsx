@@ -1,22 +1,12 @@
 
-// // import React, { useState, useEffect } from 'react';
 
-// // const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle }) => {
-
-// import React, { useState, useEffect } from 'react';
+// import React, { useState } from 'react';
 
 // const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onAdminHomeClick, isAdminPanel, currentPage, isSearchOpen }) => {
 //   const [activeMenu, setActiveMenu] = useState('home');
 //   const [profileImage, setProfileImage] = useState(null);
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 //   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-//   useEffect(() => {
-//     const savedImage = localStorage.getItem('profileImage');
-//     if (savedImage) {
-//       setProfileImage(savedImage);
-//     }
-//   }, []);
 
 //   const handleImageUpload = (e) => {
 //     const file = e.target.files[0];
@@ -39,109 +29,102 @@
 
 //   React.useEffect(() => {
 //     const savedImage = localStorage.getItem('profileImage');
-//     if (savedImage) {
-//       setProfileImage(savedImage);
-//     }
+//     if (savedImage) setProfileImage(savedImage);
 //   }, []);
 
-//   // FIX 3: Sync activeMenu with currentPage prop and search state
 //   React.useEffect(() => {
 //     if (isSearchOpen) {
-//       // When search is open, highlight search
 //       setActiveMenu('search');
 //     } else if (currentPage === 'dashboard') {
 //       setActiveMenu('home');
 //     } else if (currentPage === 'profile') {
 //       setActiveMenu('profile');
+//     } else if (currentPage === 'projectManagement') {
+//       setActiveMenu('projectManagement');
 //     }
 //   }, [currentPage, isSearchOpen]);
-//   const menuItems = [
-//     { id: 'home', icon: 'bx-home', label: 'Home' },
-//     { id: 'search', icon: 'bx-search', label: 'Search' },
-//     { id: 'meeting', icon: 'bx-video', label: 'Meeting' },
-//     { id: 'notification', icon: 'bx-bell', label: 'Notification' },
-//     { id: 'about', icon: 'bx-info-circle', label: 'About' },
-//     { id: 'profile', icon: 'bx-user', label: 'Profile' }
+
+//   // Admin sidebar: only Home, About, Notification, Profile
+//   const adminMenuItems = [
+//     { id: 'home',         icon: 'bx-home',         label: 'Home'         },
+//     { id: 'notification', icon: 'bx-bell',          label: 'Notification' },
+//     { id: 'about',        icon: 'bx-info-circle',   label: 'About'        },
+//     { id: 'profile',      icon: 'bx-user',          label: 'Profile'      },
 //   ];
 
-//   const handleMenuClick = (menuId) => {
+//   // Student sidebar: full menu
+//   const studentMenuItems = [
+//     { id: 'home',              icon: 'bx-home',       label: 'Home'               },
+//     { id: 'search',            icon: 'bx-search',     label: 'Search'             },
+//     { id: 'projectManagement', icon: 'bx-briefcase',  label: 'Project Management' },
+//     { id: 'notification',      icon: 'bx-bell',       label: 'Notification'       },
+//     { id: 'about',             icon: 'bx-info-circle',label: 'About'              },
+//     { id: 'profile',           icon: 'bx-user',       label: 'Profile'            },
+//   ];
 
+//   const menuItems = isAdminPanel ? adminMenuItems : studentMenuItems;
+
+//   const handleMenuClick = (menuId) => {
 //     setActiveMenu(menuId);
 
 //     if (menuId === 'home') {
-//       onNavigate?.('dashboard');
-//       onSearchToggle?.(false);
-//     }
-//     else if (menuId === 'search') {
-//       onNavigate?.('dashboard');
-//       onSearchToggle?.(true);
-//     }
-//     else if (menuId === 'meeting') {
-//       onNavigate?.('meeting');
-//       onSearchToggle?.(false);
-//     }
-//     else if (menuId === 'profile') {
-//       onNavigate?.('profile');
-//       onSearchToggle?.(false);
 //       if (isAdminPanel && onAdminHomeClick) {
 //         onAdminHomeClick();
 //       } else {
-//         if (onNavigate) {
-//           onNavigate('dashboard');
-//         }
+//         if (onNavigate) onNavigate('dashboard');
 //         window.scrollTo({ top: 0, behavior: 'smooth' });
 //         const mainContent = document.querySelector('.dashboard-content');
-//         if (mainContent) {
-//           mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-//         }
-//         if (onSearchToggle) {
-//           onSearchToggle(false);
-//         }
+//         if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+//         if (onSearchToggle) onSearchToggle(false);
 //       }
 //     } else if (menuId === 'search') {
-//       if (onNavigate) {
-//         onNavigate('dashboard');
-//       }
-      
-//       if (onSearchToggle) {
-//         onSearchToggle(true);
-//       }
-      
+//       if (onNavigate) onNavigate('dashboard');
+//       localStorage.setItem('openSearch', 'true');
+//       if (onSearchToggle) onSearchToggle(true);
 //       setTimeout(() => {
 //         window.scrollTo({ top: 0, behavior: 'smooth' });
 //         const mainContent = document.querySelector('.dashboard-content');
-//         if (mainContent) {
-//           mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-//         }
+//         if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
 //       }, 100);
+//     } else if (menuId === 'projectManagement' && onNavigate) {
+//       onNavigate('projectManagement');
+//       if (onSearchToggle) onSearchToggle(false);
 //     } else if (menuId === 'profile' && onNavigate) {
 //       onNavigate('profile');
-//       if (onSearchToggle) {
-//         onSearchToggle(false);
-//       }
+//       if (onSearchToggle) onSearchToggle(false);
 //     }
 //   };
 
 //   return (
 //     <>
-//       <button className="mobile-menu-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+//       <button
+//         className="mobile-menu-toggle"
+//         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+//       >
 //         <i className='bx bx-menu'></i>
 //       </button>
 
 //       {isSidebarOpen && (
-//         <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+//         <div
+//           className="sidebar-overlay"
+//           onClick={() => setIsSidebarOpen(false)}
+//         ></div>
 //       )}
 
 //       <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-
 //         <div className="sidebar-profile">
-
 //           <span className="user-role-badge">{userRole}</span>
 
 //           <div className="profile-image-wrapper">
-
-//             <div className="profile-image" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-//               {profileImage ? <img src={profileImage} alt="Profile"/> : <i className='bx bx-user'></i>}
+//             <div
+//               className="profile-image"
+//               onClick={() => setShowProfileMenu(!showProfileMenu)}
+//             >
+//               {profileImage ? (
+//                 <img src={profileImage} alt="Profile" />
+//               ) : (
+//                 <i className='bx bx-user'></i>
+//               )}
 //             </div>
 
 //             {showProfileMenu && (
@@ -150,14 +133,12 @@
 //                   <i className='bx bx-edit'></i>
 //                   <span>Edit Profile</span>
 //                 </label>
-
 //                 <button className="profile-menu-item" onClick={handleRemoveProfile}>
 //                   <i className='bx bx-trash'></i>
 //                   <span>Remove Picture</span>
 //                 </button>
 //               </div>
 //             )}
-
 //             <input
 //               type="file"
 //               id="profile-upload"
@@ -165,11 +146,8 @@
 //               onChange={handleImageUpload}
 //               style={{ display: 'none' }}
 //             />
-
 //           </div>
-
 //           <h3 className="username">{username}</h3>
-
 //         </div>
 
 //         <nav className="sidebar-nav">
@@ -192,7 +170,6 @@
 //             <span>Logout</span>
 //           </button>
 //         </div>
-
 //       </aside>
 //     </>
 //   );
@@ -229,12 +206,9 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
 
   React.useEffect(() => {
     const savedImage = localStorage.getItem('profileImage');
-    if (savedImage) {
-      setProfileImage(savedImage);
-    }
+    if (savedImage) setProfileImage(savedImage);
   }, []);
 
-  // Sync activeMenu with currentPage prop and search state
   React.useEffect(() => {
     if (isSearchOpen) {
       setActiveMenu('search');
@@ -247,66 +221,63 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
     }
   }, [currentPage, isSearchOpen]);
 
-  const menuItems = [
-    { id: 'home', icon: 'bx-home', label: 'Home' },
-    { id: 'search', icon: 'bx-search', label: 'Search' },
-    { id: 'projectManagement', icon: 'bx-briefcase', label: 'Project Management' },
-    { id: 'notification', icon: 'bx-bell', label: 'Notification' },
-    { id: 'about', icon: 'bx-info-circle', label: 'About' },
-    { id: 'profile', icon: 'bx-user', label: 'Profile' }
+  // Admin sidebar: only Home, About, Notification, Profile
+  const adminMenuItems = [
+    { id: 'home',         icon: 'bx-home',         label: 'Home'         },
+    { id: 'notification', icon: 'bx-bell',          label: 'Notification' },
+    { id: 'about',        icon: 'bx-info-circle',   label: 'About'        },
+    { id: 'profile',      icon: 'bx-user',          label: 'Profile'      },
   ];
+
+  // Student sidebar: full menu
+  const studentMenuItems = [
+    { id: 'home',              icon: 'bx-home',       label: 'Home'               },
+    { id: 'search',            icon: 'bx-search',     label: 'Search'             },
+    { id: 'projectManagement', icon: 'bx-briefcase',  label: 'Project Management' },
+    { id: 'notification',      icon: 'bx-bell',       label: 'Notification'       },
+    { id: 'about',             icon: 'bx-info-circle',label: 'About'              },
+    { id: 'profile',           icon: 'bx-user',       label: 'Profile'            },
+  ];
+
+  const menuItems = isAdminPanel ? adminMenuItems : studentMenuItems;
 
   const handleMenuClick = (menuId) => {
     setActiveMenu(menuId);
-    
+
     if (menuId === 'home') {
       if (isAdminPanel && onAdminHomeClick) {
         onAdminHomeClick();
       } else {
-        if (onNavigate) {
-          onNavigate('dashboard');
-        }
+        if (onNavigate) onNavigate('dashboard');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         const mainContent = document.querySelector('.dashboard-content');
-        if (mainContent) {
-          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        if (onSearchToggle) {
-          onSearchToggle(false);
-        }
+        if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        if (onSearchToggle) onSearchToggle(false);
       }
     } else if (menuId === 'search') {
-      if (onNavigate) {
-        onNavigate('dashboard');
-      }
+      if (onNavigate) onNavigate('dashboard');
       localStorage.setItem('openSearch', 'true');
-      if (onSearchToggle) {
-        onSearchToggle(true);
-      }
-      
+      if (onSearchToggle) onSearchToggle(true);
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         const mainContent = document.querySelector('.dashboard-content');
-        if (mainContent) {
-          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
       }, 100);
     } else if (menuId === 'projectManagement' && onNavigate) {
       onNavigate('projectManagement');
-      if (onSearchToggle) {
-        onSearchToggle(false);
-      }
+      if (onSearchToggle) onSearchToggle(false);
     } else if (menuId === 'profile' && onNavigate) {
       onNavigate('profile');
-      if (onSearchToggle) {
-        onSearchToggle(false);
-      }
+      if (onSearchToggle) onSearchToggle(false);
+    } else if (menuId === 'about' && onNavigate) {
+      onNavigate('about');
+      if (onSearchToggle) onSearchToggle(false);
     }
   };
 
   return (
     <>
-      <button 
+      <button
         className="mobile-menu-toggle"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
@@ -314,7 +285,7 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
       </button>
 
       {isSidebarOpen && (
-        <div 
+        <div
           className="sidebar-overlay"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
@@ -323,9 +294,9 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
       <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-profile">
           <span className="user-role-badge">{userRole}</span>
-          
+
           <div className="profile-image-wrapper">
-            <div 
+            <div
               className="profile-image"
               onClick={() => setShowProfileMenu(!showProfileMenu)}
             >
@@ -335,7 +306,7 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
                 <i className='bx bx-user'></i>
               )}
             </div>
-            
+
             {showProfileMenu && (
               <div className="profile-menu">
                 <label htmlFor="profile-upload" className="profile-menu-item">
@@ -348,8 +319,8 @@ const Sidebar = ({ userRole, username, onLogout, onNavigate, onSearchToggle, onA
                 </button>
               </div>
             )}
-            <input 
-              type="file" 
+            <input
+              type="file"
               id="profile-upload"
               accept="image/*"
               onChange={handleImageUpload}

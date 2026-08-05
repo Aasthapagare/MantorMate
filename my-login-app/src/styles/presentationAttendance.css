@@ -1,0 +1,446 @@
+/* ============================================================
+   PRESENTATION ATTENDANCE — Clean Form+Table Layout
+   MentorMate | #2C3E50 palette
+   ============================================================ */
+
+.presentation-attendance-container {
+  padding: 2rem 2.5rem 3rem;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* ── Team Selector Bar ─────────────────────── */
+.team-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+.team-select {
+  width: 340px;
+  padding: 0.65rem 2.5rem 0.65rem 1rem;
+  border: 1.5px solid rgba(44, 62, 80, 0.18);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%232C3E50' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  box-shadow: 0 1px 6px rgba(44, 62, 80, 0.08);
+}
+
+:root[data-theme="light"] .team-select {
+  background-color: #fff;
+  border-color: #c8d3dc;
+}
+
+:root[data-theme="dark"] .team-select {
+  background-color: var(--card-bg);
+  border-color: rgba(255,255,255,0.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23cbd5e0' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+}
+
+.team-select:focus {
+  outline: none;
+  border-color: #2C3E50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.12);
+}
+
+.team-select:hover {
+  border-color: #2C3E50;
+}
+
+/* ── Team Info Card ────────────────────────── */
+.team-info-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 18px rgba(44, 62, 80, 0.28);
+}
+
+.team-info-card h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0 0 0.15rem;
+  letter-spacing: -0.2px;
+}
+
+.team-info-card p {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.78;
+}
+
+.student-count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Table Wrapper ─────────────────────────── */
+.attendance-table-wrapper {
+  background: var(--card-bg);
+  border-radius: 14px;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.1);
+  border: 1px solid rgba(44, 62, 80, 0.09);
+}
+
+:root[data-theme="light"] .attendance-table-wrapper {
+  background: #fff;
+  border-color: #dde3ea;
+  box-shadow: 0 4px 20px rgba(44, 62, 80, 0.08);
+}
+
+:root[data-theme="dark"] .attendance-table-wrapper {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Attendance Table ──────────────────────── */
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+  table-layout: fixed;
+}
+
+/* Fixed column widths for proper alignment */
+.attendance-table colgroup col:nth-child(1) { width: 18%; }  /* Student Name */
+.attendance-table colgroup col:nth-child(2) { width: 14%; }  /* Enrollment   */
+.attendance-table colgroup col:nth-child(3) { width: 13%; }  /* Attendance   */
+.attendance-table colgroup col:nth-child(4) { width: 25%; }  /* Milestone    */
+.attendance-table colgroup col:nth-child(5) { width: 30%; }  /* Notes        */
+
+/* Table Head */
+.attendance-table thead {
+  background: linear-gradient(90deg, #2C3E50 0%, #34495E 100%);
+}
+
+.attendance-table th {
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.82);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  white-space: nowrap;
+}
+
+/* Table Body Rows */
+.attendance-table tbody tr {
+  border-bottom: 1px solid rgba(44, 62, 80, 0.07);
+  transition: background 0.15s ease;
+}
+
+:root[data-theme="dark"] .attendance-table tbody tr {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.attendance-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Alternate row background — light theme */
+:root[data-theme="light"] .attendance-table tbody tr:nth-child(even) {
+  background: #f7f9fb;
+}
+
+:root[data-theme="default"] .attendance-table tbody tr:nth-child(even) {
+  background: rgba(44, 62, 80, 0.025);
+}
+
+/* Row hover */
+.attendance-table tbody tr:hover {
+  background: rgba(44, 62, 80, 0.05) !important;
+}
+
+:root[data-theme="light"] .attendance-table tbody tr:hover {
+  background: #edf1f6 !important;
+}
+
+.attendance-table td {
+  padding: 0.95rem 1.1rem;
+  vertical-align: middle;
+}
+
+/* ── Student Name Cell ─────────────────────── */
+.student-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.student-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 2px 7px rgba(44, 62, 80, 0.25);
+}
+
+/* ── Enrollment Cell ───────────────────────── */
+.enrollment-cell {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* ── Attendance Cell ───────────────────────── */
+.attendance-cell {
+  /* fixed by col width */
+}
+
+.attendance-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.attendance-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #27ae60;
+  flex-shrink: 0;
+}
+
+.status-present {
+  color: #27ae60;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.status-absent {
+  color: #e74c3c;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ── Milestone Cell ────────────────────────── */
+.milestone-cell {
+  /* fixed by col width */
+}
+
+.milestone-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.milestone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.milestone-text strong {
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.weight-badge {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  background: rgba(44, 62, 80, 0.09);
+  color: var(--accent-color);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+:root[data-theme="dark"] .weight-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.milestone-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.milestone-checkbox input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #2C3E50;
+  flex-shrink: 0;
+}
+
+.milestone-checkbox span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ── Notes Cell ────────────────────────────── */
+.notes-cell {
+  /* fixed by col width */
+}
+
+.notes-cell textarea {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid rgba(44, 62, 80, 0.13);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.5;
+  min-height: 52px;
+  box-sizing: border-box;
+}
+
+:root[data-theme="light"] .notes-cell textarea {
+  background: #f9fafb;
+  border-color: #c8d3dc;
+}
+
+.notes-cell textarea:focus {
+  outline: none;
+  border-color: #2C3E50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  background: var(--card-bg);
+}
+
+.notes-cell textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+
+/* ── Submit Section ────────────────────────── */
+.submit-section {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  border: none;
+  border-radius: 11px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.32);
+  letter-spacing: 0.2px;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #1a2a3a, #2C3E50);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 22px rgba(44, 62, 80, 0.42);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn i {
+  font-size: 1.1rem;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 900px) {
+  .presentation-attendance-container {
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .team-select {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .submit-section {
+    justify-content: stretch;
+  }
+
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Dark / Default theme dropdown fix ──── */
+.team-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+:root[data-theme="dark"] .team-select {
+  background-color: #2d2d2d !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #e2e8f0 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23cbd5e0' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+}
+
+:root[data-theme="dark"] .team-select option {
+  background-color: #2d2d2d;
+  color: #e2e8f0;
+}
+
+:root[data-theme="default"] .team-select {
+  background-color: #2C3E50 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #ECF0F1 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23ECF0F1' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+}
+
+:root[data-theme="default"] .team-select option {
+  background-color: #2C3E50;
+  color: #ECF0F1;
+}

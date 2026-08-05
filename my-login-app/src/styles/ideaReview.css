@@ -1,0 +1,384 @@
+/* ============================================================
+   IDEA REVIEW — Premium Redesign
+   MentorMate | #2C3E50 palette
+   ============================================================ */
+
+.idea-review-container {
+  padding: 2.25rem 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Header ────────────────────────────────── */
+.review-header {
+  margin-bottom: 2.25rem;
+}
+
+.review-header h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem;
+  letter-spacing: -0.3px;
+}
+
+.review-header p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+
+/* ── Section ───────────────────────────────── */
+.ideas-section { margin-bottom: 2.75rem; }
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(44,62,80,0.08);
+}
+
+:root[data-theme="dark"] .section-heading { border-bottom-color: rgba(255,255,255,0.06); }
+
+.section-heading i {
+  font-size: 1.25rem;
+  color: #2C3E50;
+  opacity: 0.7;
+}
+
+:root[data-theme="dark"] .section-heading i { color: #94a3b8; }
+
+/* ── Ideas Grid ────────────────────────────── */
+.ideas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ── Idea Card ─────────────────────────────── */
+.idea-card {
+  background: var(--card-bg);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px var(--shadow);
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(44,62,80,0.08);
+  position: relative;
+}
+
+:root[data-theme="light"] .idea-card { background: #fff; border-color: #e2e8f0; }
+
+.idea-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 40px rgba(44,62,80,0.16);
+}
+
+/* Accent top stripe by status */
+.idea-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+
+.pending-card::before { background: linear-gradient(90deg, #f39c12, #e67e22); }
+.approved-card::before { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.rejected-card::before { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+
+.approved-card { opacity: 0.88; }
+.rejected-card { opacity: 0.82; }
+
+/* ── Card Body ─────────────────────────────── */
+.idea-body { padding: 1.5rem 1.5rem 0; flex: 1; }
+
+/* Idea Header */
+.idea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.team-info { display: flex; align-items: center; gap: 0.65rem; }
+
+.team-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.team-info h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 0.28rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.status-pending { background: rgba(243,156,18,0.12); color: #e67e22; border: 1px solid rgba(243,156,18,0.25); }
+.status-approved { background: rgba(39,174,96,0.12); color: #27ae60; border: 1px solid rgba(39,174,96,0.25); }
+.status-rejected { background: rgba(231,76,60,0.12); color: #e74c3c; border: 1px solid rgba(231,76,60,0.25); }
+
+/* Idea Content */
+.idea-content { flex: 1; }
+
+.idea-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  letter-spacing: -0.2px;
+  line-height: 1.4;
+}
+
+.idea-title i {
+  font-size: 1.15rem;
+  color: #e67e22;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pending-card .idea-title i { color: #e67e22; }
+.approved-card .idea-title i { color: #27ae60; }
+.rejected-card .idea-title i { color: #e74c3c; }
+
+.idea-description {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin: 0 0 1.1rem;
+}
+
+.idea-meta {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 0;
+  border-top: 1px solid rgba(44,62,80,0.07);
+  margin-bottom: 0;
+}
+
+:root[data-theme="dark"] .idea-meta { border-top-color: rgba(255,255,255,0.05); }
+
+.meta-date {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.meta-date i { font-size: 0.95rem; }
+
+/* ── Card Footer ───────────────────────────── */
+.idea-footer { padding: 0 1.5rem 1.5rem; }
+
+.idea-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(44,62,80,0.07);
+}
+
+:root[data-theme="dark"] .idea-actions { border-top-color: rgba(255,255,255,0.05); }
+
+.approve-btn, .reject-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 11px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.22s ease;
+  letter-spacing: 0.1px;
+}
+
+.approve-btn {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  box-shadow: 0 3px 12px rgba(39,174,96,0.28);
+}
+
+.approve-btn:hover {
+  background: linear-gradient(135deg, #219653, #27ae60);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(39,174,96,0.38);
+}
+
+.reject-btn {
+  background: rgba(231,76,60,0.08);
+  color: #e74c3c;
+  border: 1.5px solid rgba(231,76,60,0.2);
+}
+
+.reject-btn:hover {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(231,76,60,0.3);
+}
+
+.approve-btn i, .reject-btn i { font-size: 1.1rem; }
+
+/* ── Reviewed Status ───────────────────────── */
+.reviewed-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  background: rgba(44,62,80,0.04);
+  border-radius: 10px;
+  margin: 1rem 1.5rem 1.5rem;
+}
+
+:root[data-theme="light"] .reviewed-status { background: #f8fafc; }
+
+.reviewed-status i { font-size: 1.5rem; }
+.approved-card .reviewed-status i { color: #27ae60; }
+.rejected-card .reviewed-status i { color: #e74c3c; }
+.reviewed-status span { font-size: 0.92rem; font-weight: 700; color: var(--text-primary); }
+
+/* ── Empty State ───────────────────────────── */
+.empty-state { text-align: center; padding: 5rem 2rem; }
+.empty-state i { font-size: 4rem; color: var(--text-secondary); opacity: 0.25; display: block; margin-bottom: 1rem; }
+.empty-state p { font-size: 1rem; color: var(--text-secondary); margin: 0; }
+
+/* ── Confirmation Modal ────────────────────── */
+.confirmation-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.confirmation-modal {
+  background: var(--card-bg);
+  border-radius: 22px;
+  padding: 2.5rem 2rem;
+  max-width: 440px;
+  width: 92%;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.32);
+  text-align: center;
+  animation: slideUp 0.25s ease;
+  border: 1px solid rgba(44,62,80,0.1);
+}
+
+:root[data-theme="light"] .confirmation-modal { background: #fff; }
+
+@keyframes slideUp {
+  from { transform: translateY(36px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-icon { font-size: 3.75rem; margin-bottom: 1rem; }
+.modal-icon .bx-check-circle { color: #27ae60; }
+.modal-icon .bx-x-circle { color: #e74c3c; }
+
+.confirmation-modal h3 { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin: 0 0 0.75rem; }
+.confirmation-modal p { font-size: 0.95rem; color: var(--text-secondary); margin: 0 0 1.75rem; line-height: 1.7; }
+.confirmation-modal p strong { color: var(--text-primary); font-weight: 700; }
+
+.modal-actions { display: flex; gap: 0.9rem; }
+.modal-actions button {
+  flex: 1; padding: 0.9rem;
+  border: none; border-radius: 11px;
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+}
+
+.cancel-btn { background: rgba(44,62,80,0.08); color: var(--text-primary); }
+.cancel-btn:hover { background: rgba(44,62,80,0.14); }
+
+.confirm-approve-btn { background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; }
+.confirm-approve-btn:hover { background: linear-gradient(135deg, #219653, #27ae60); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(39,174,96,0.35); }
+
+.confirm-reject-btn { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+.confirm-reject-btn:hover { background: linear-gradient(135deg, #c0392b, #a93226); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(231,76,60,0.35); }
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 1024px) { .ideas-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); } }
+
+@media (max-width: 768px) {
+  .idea-review-container { padding: 1.25rem; }
+  .ideas-grid { grid-template-columns: 1fr; }
+  .idea-actions { flex-direction: column; }
+  .modal-actions { flex-direction: column; }
+  .idea-header { flex-wrap: wrap; }
+}
+
+/* ── Dark theme explicit fixes ──────────── */
+:root[data-theme="dark"] .idea-review-container {
+  background: var(--bg-primary);
+}
+
+:root[data-theme="dark"] .review-header h2 {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .review-header p {
+  color: #cbd5e0;
+}
+
+:root[data-theme="dark"] .idea-card {
+  background: #2d2d2d;
+  border-color: rgba(255,255,255,0.07);
+}
+
+:root[data-theme="dark"] .team-info h4 {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .idea-title {
+  color: #f7fafc;
+}
+
+:root[data-theme="dark"] .idea-description {
+  color: #cbd5e0;
+}
+
+:root[data-theme="dark"] .meta-date {
+  color: #94a3b8;
+}
+
+:root[data-theme="dark"] .section-heading {
+  color: #f7fafc;
+}

@@ -1,0 +1,470 @@
+/* ============================================================
+   MEETING ATTENDANCE — Consistent with Presentation Attendance
+   MentorMate | #2C3E50 palette
+   ============================================================ */
+
+/* ── Container ─────────────────────────────── */
+.meeting-attendance-container {
+  padding: 2rem 2.5rem 3rem;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* ── Team Selector ─────────────────────────── */
+/* Reuses .team-selector and .team-select from presentationAttendance.css */
+/* Scoped overrides only if needed */
+
+.meeting-attendance-container .team-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.4rem;
+}
+
+.meeting-attendance-container .team-select {
+  width: 340px;
+  padding: 0.65rem 2.5rem 0.65rem 1rem;
+  border: 1.5px solid rgba(44, 62, 80, 0.18);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%232C3E50' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  box-shadow: 0 1px 6px rgba(44, 62, 80, 0.08);
+}
+
+:root[data-theme="light"] .meeting-attendance-container .team-select {
+  background-color: #fff;
+  border-color: #c8d3dc;
+}
+
+:root[data-theme="dark"] .meeting-attendance-container .team-select {
+  background-color: var(--card-bg);
+  border-color: rgba(255, 255, 255, 0.12);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23cbd5e0' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+}
+
+.meeting-attendance-container .team-select:focus {
+  outline: none;
+  border-color: #2C3E50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.12);
+}
+
+.meeting-attendance-container .team-select:hover {
+  border-color: #2C3E50;
+}
+
+/* ── Team Info Card ────────────────────────── */
+.meeting-attendance-container .team-info-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 18px rgba(44, 62, 80, 0.28);
+}
+
+.meeting-attendance-container .team-info-card h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0 0 0.15rem;
+  letter-spacing: -0.2px;
+}
+
+.meeting-attendance-container .team-info-card p {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.78;
+}
+
+.meeting-attendance-container .student-count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.9rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Table Wrapper ─────────────────────────── */
+.meeting-attendance-container .attendance-table-wrapper {
+  background: var(--card-bg);
+  border-radius: 14px;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.1);
+  border: 1px solid rgba(44, 62, 80, 0.09);
+}
+
+:root[data-theme="light"] .meeting-attendance-container .attendance-table-wrapper {
+  background: #fff;
+  border-color: #dde3ea;
+  box-shadow: 0 4px 20px rgba(44, 62, 80, 0.08);
+}
+
+:root[data-theme="dark"] .meeting-attendance-container .attendance-table-wrapper {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Meeting Table ─────────────────────────── */
+.meeting-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+  table-layout: fixed;
+}
+
+/* Column widths */
+.meeting-table colgroup col:nth-child(1) { width: 22%; }  /* Student Name */
+.meeting-table colgroup col:nth-child(2) { width: 16%; }  /* Date         */
+.meeting-table colgroup col:nth-child(3) { width: 14%; }  /* Mode         */
+.meeting-table colgroup col:nth-child(4) { width: 40%; }  /* Notes        */
+.meeting-table colgroup col:nth-child(5) { width: 8%;  }  /* Action       */
+
+/* Table Head */
+.meeting-table thead {
+  background: linear-gradient(90deg, #2C3E50 0%, #34495E 100%);
+}
+
+.meeting-table th {
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.82);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  white-space: nowrap;
+}
+
+/* Table Body Rows */
+.meeting-table tbody tr {
+  border-bottom: 1px solid rgba(44, 62, 80, 0.07);
+  transition: background 0.15s ease;
+}
+
+:root[data-theme="dark"] .meeting-table tbody tr {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.meeting-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Alternate rows — light theme */
+:root[data-theme="light"] .meeting-table tbody tr:nth-child(even) {
+  background: #f7f9fb;
+}
+
+:root[data-theme="default"] .meeting-table tbody tr:nth-child(even) {
+  background: rgba(44, 62, 80, 0.025);
+}
+
+/* Row hover */
+.meeting-table tbody tr:hover {
+  background: rgba(44, 62, 80, 0.05) !important;
+}
+
+:root[data-theme="light"] .meeting-table tbody tr:hover {
+  background: #edf1f6 !important;
+}
+
+.meeting-table td {
+  padding: 0.85rem 1.1rem;
+  vertical-align: middle;
+}
+
+/* ── Meeting Cell Inputs ───────────────────── */
+.meeting-cell {
+  /* sized by colgroup */
+}
+
+/* Shared input style for select + date */
+.meeting-select,
+.meeting-date-input {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border: 1.5px solid rgba(44, 62, 80, 0.13);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+:root[data-theme="light"] .meeting-select,
+:root[data-theme="light"] .meeting-date-input {
+  background: #f9fafb;
+  border-color: #c8d3dc;
+}
+
+.meeting-select:focus,
+.meeting-date-input:focus {
+  outline: none;
+  border-color: #2C3E50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  background: var(--card-bg);
+}
+
+.meeting-select:hover,
+.meeting-date-input:hover {
+  border-color: rgba(44, 62, 80, 0.35);
+}
+
+/* Custom arrow for select */
+.meeting-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%232C3E50' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 2rem;
+}
+
+:root[data-theme="dark"] .meeting-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23cbd5e0' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+}
+
+/* Narrower mode select */
+.meeting-mode-select {
+  /* inherits meeting-select */
+}
+
+/* ── Notes Cell ────────────────────────────── */
+/* Reuses .notes-cell textarea from presentationAttendance.css */
+.meeting-attendance-container .notes-cell textarea {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid rgba(44, 62, 80, 0.13);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.5;
+  min-height: 52px;
+  box-sizing: border-box;
+}
+
+:root[data-theme="light"] .meeting-attendance-container .notes-cell textarea {
+  background: #f9fafb;
+  border-color: #c8d3dc;
+}
+
+.meeting-attendance-container .notes-cell textarea:focus {
+  outline: none;
+  border-color: #2C3E50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+  background: var(--card-bg);
+}
+
+.meeting-attendance-container .notes-cell textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+
+/* ── Action Cell ───────────────────────────── */
+.meeting-action-cell {
+  text-align: center;
+}
+
+.remove-row-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(231, 76, 60, 0.25);
+  background: rgba(231, 76, 60, 0.06);
+  color: #e74c3c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.remove-row-btn:hover:not(:disabled) {
+  background: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
+  transform: scale(1.08);
+}
+
+.remove-row-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Footer: Add Row + Submit ──────────────── */
+.meeting-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Add Row Button */
+.add-row-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border: 1.5px dashed rgba(44, 62, 80, 0.3);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+:root[data-theme="light"] .add-row-btn {
+  border-color: #c8d3dc;
+}
+
+.add-row-btn:hover {
+  border-color: #2C3E50;
+  color: #2C3E50;
+  background: rgba(44, 62, 80, 0.05);
+}
+
+:root[data-theme="dark"] .add-row-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.add-row-btn i {
+  font-size: 1.1rem;
+}
+
+/* Submit / Mark Meeting Button — same as PresentationAttendance */
+.meeting-attendance-container .submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, #2C3E50, #34495E);
+  color: white;
+  border: none;
+  border-radius: 11px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.32);
+  letter-spacing: 0.2px;
+  font-family: inherit;
+}
+
+.meeting-attendance-container .submit-btn:hover {
+  background: linear-gradient(135deg, #1a2a3a, #2C3E50);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 22px rgba(44, 62, 80, 0.42);
+}
+
+.meeting-attendance-container .submit-btn:active {
+  transform: translateY(0);
+}
+
+.meeting-attendance-container .submit-btn i {
+  font-size: 1.1rem;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 900px) {
+  .meeting-attendance-container {
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .meeting-attendance-container .team-select {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .meeting-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .meeting-attendance-container .submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .add-row-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Dark / Default theme dropdown fix ──────
+   Forces solid bg on select + option elements
+   Removes browser native striped pattern      */
+
+.meeting-select,
+.meeting-attendance-container .team-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+:root[data-theme="dark"] .meeting-select,
+:root[data-theme="dark"] .meeting-date-input,
+:root[data-theme="dark"] .meeting-attendance-container .team-select {
+  background-color: #2d2d2d !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #e2e8f0 !important;
+}
+
+:root[data-theme="dark"] .meeting-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23cbd5e0' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+}
+
+:root[data-theme="dark"] .meeting-select option,
+:root[data-theme="dark"] .meeting-attendance-container .team-select option {
+  background-color: #2d2d2d;
+  color: #e2e8f0;
+}
+
+:root[data-theme="default"] .meeting-select,
+:root[data-theme="default"] .meeting-attendance-container .team-select {
+  background-color: #2C3E50 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #ECF0F1 !important;
+}
+
+:root[data-theme="default"] .meeting-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23ECF0F1' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+}
+
+:root[data-theme="default"] .meeting-select option,
+:root[data-theme="default"] .meeting-attendance-container .team-select option {
+  background-color: #2C3E50;
+  color: #ECF0F1;
+}
