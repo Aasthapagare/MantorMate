@@ -1,206 +1,303 @@
+import React, { useEffect, useState } from "react";
 
+const CHAT_BASE_URL = "http://localhost:8086";
 
-import React, { useState, useEffect } from 'react';
-
-const ChatPage = ({ onClose, preSelectedPerson }) => {
+const ChatPage = ({ onClose }) => {
   const [selectedChat, setSelectedChat] = useState(null);
-  const [messageInput, setMessageInput] = useState('');
-  const [allChats, setAllChats] = useState([
-    {
-      id: 1,
-      name: 'Dr. Rajesh Kumar',
-      avatar: null,
-      lastMessage: 'That sounds great! Need any help?',
-      lastMessageTime: new Date('2026-02-06T15:30:00'),
-      messages: [
-        { id: 1, text: 'Hey! How are you?', sender: 'them', time: '10:30 AM' },
-        { id: 2, text: 'I am good! Working on the project.', sender: 'me', time: '10:32 AM' },
-        { id: 3, text: 'That sounds great! Need any help?', sender: 'them', time: '10:35 AM' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Sneha Reddy',
-      avatar: null,
-      lastMessage: 'It is scheduled for tomorrow at 3 PM',
-      lastMessageTime: new Date('2026-02-06T14:20:00'),
-      messages: [
-        { id: 1, text: 'Hi! When is the next meeting?', sender: 'them', time: '09:15 AM' },
-        { id: 2, text: 'It is scheduled for tomorrow at 3 PM', sender: 'me', time: '09:20 AM' }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Arjun Verma',
-      avatar: null,
-      lastMessage: 'Here it is: github.com/project',
-      lastMessageTime: new Date('2026-02-06T11:06:00'),
-      messages: [
-        { id: 1, text: 'Can you review my code?', sender: 'them', time: '11:00 AM' },
-        { id: 2, text: 'Sure! Send me the link.', sender: 'me', time: '11:05 AM' },
-        { id: 3, text: 'Here it is: github.com/project', sender: 'them', time: '11:06 AM' }
-      ]
-    },
-    {
-      id: 4,
-      name: 'Prof. Anjali Sharma',
-      avatar: null,
-      lastMessage: 'Thanks for the update!',
-      lastMessageTime: new Date('2026-02-05T16:45:00'),
-      messages: [
-        { id: 1, text: 'Have you submitted the report?', sender: 'them', time: 'Yesterday 4:30 PM' },
-        { id: 2, text: 'Yes, submitted this morning.', sender: 'me', time: 'Yesterday 4:35 PM' },
-        { id: 3, text: 'Thanks for the update!', sender: 'them', time: 'Yesterday 4:45 PM' }
-      ]
-    }
-  ]);
+  const [messageInput, setMessageInput] = useState("");
+  const [allChats, setAllChats] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [usersError, setUsersError] = useState("");
 
-  // Handle pre-selected person from search
+  const token = localStorage.getItem("token");
+  const loggedInUserId = localStorage.getItem("userId");
+  const loggedInUserRole = (localStorage.getItem("role") || "").toString().trim().toUpperCase();
+
+  const mapMessages = (data) =>
+    data.map((msg) => ({
+      id: msg.id,
+      text: msg.content,
+      sender: String(msg.senderId) === String(loggedInUserId) ? "me" : "them",
+      seen: Boolean(msg.seen),
+      time: new Date(msg.timestamp).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    }));
+
+  const loadChatHistory = async (chat, options = {}) => {
+    const { markSeen = false } = options;
+
+    const response = await fetch(`${CHAT_BASE_URL}/chat/history?otherUser=${chat.id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || "Failed to load chat history");
+    }
+
+    const data = await response.json();
+
+    if (markSeen) {
+      await fetch(`${CHAT_BASE_URL}/chat/seen?otherUser=${chat.id}`, {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+    }
+
+    setSelectedChat((prev) => ({
+      ...(prev || chat),
+      ...chat,
+      messages: mapMessages(data),
+    }));
+  };
+
   useEffect(() => {
-    if (preSelectedPerson) {
-      // Find or create chat for this person
-      let existingChat = allChats.find(chat => chat.name === preSelectedPerson.name);
-      
-      if (!existingChat) {
-        // Create new chat if person not in chat list
-        existingChat = {
-          id: Date.now(),
-          name: preSelectedPerson.name,
-          avatar: null,
-          lastMessage: '',
-          lastMessageTime: new Date(),
-          messages: []
-        };
-        setAllChats(prev => [existingChat, ...prev]);
-      }
-      
-      setSelectedChat(existingChat);
-    }
-  }, [preSelectedPerson]);
+    setLoadingUsers(true);
+    setUsersError("");
 
-  // ... rest of the component code remains exactly same ...
-  
-  const sortedChats = [...allChats].sort((a, b) => b.lastMessageTime - a.lastMessageTime);
+    fetch(`${CHAT_BASE_URL}/chat/users`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "Failed to load chat users");
+        }
+
+        return res.json();
+      })
+      .then((usersList) => {
+        const filtered = usersList.filter(
+          (user) => String(user.userId) !== String(loggedInUserId)
+        );
+
+        setAllChats(
+          filtered.map((user) => ({
+            id: user.userId,
+            name: user.name,
+            role: user.role,
+            avatar: null,
+            lastMessage:
+              loggedInUserRole === "STUDENT"
+                ? "Start chatting with your guide"
+                : "Start chatting with your student",
+            lastMessageTime: 0,
+            messages: [],
+          }))
+        );
+      })
+      .catch((err) => {
+        console.error("Users fetch error:", err);
+        setUsersError(err.message || "Users load nahi ho sake.");
+      })
+      .finally(() => setLoadingUsers(false));
+  }, [loggedInUserId, loggedInUserRole, token]);
+
+  useEffect(() => {
+    if (!selectedChat?.id) {
+      return undefined;
+    }
+
+    const refreshSelectedChat = () => {
+      loadChatHistory(selectedChat).catch((error) => {
+        console.error("Selected chat refresh error:", error);
+      });
+    };
+
+    refreshSelectedChat();
+    const intervalId = window.setInterval(refreshSelectedChat, 4000);
+
+    return () => window.clearInterval(intervalId);
+  }, [selectedChat?.id, token]);
+
+  const sortedChats = [...allChats].sort(
+    (a, b) => b.lastMessageTime - a.lastMessageTime
+  );
 
   const formatTime = (date) => {
     const now = new Date();
-    const diff = now - date;
+    const diff = now - new Date(date);
     const hours = Math.floor(diff / (1000 * 60 * 60));
-    
+
     if (hours < 24) {
-      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    } else if (hours < 48) {
-      return 'Yesterday';
-    } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return new Date(date).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     }
+
+    if (hours < 48) {
+      return "Yesterday";
+    }
+
+    return new Date(date).toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+    });
   };
 
   const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
+    loadChatHistory(chat, { markSeen: true }).catch((error) => {
+      console.error("History load error:", error);
+    });
   };
 
   const handleBackToList = () => {
     setSelectedChat(null);
   };
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!messageInput.trim() || !selectedChat) return;
+  const handleSendMessage = (event) => {
+    event.preventDefault();
+    if (!messageInput.trim() || !selectedChat) {
+      return;
+    }
 
-    const newMessage = {
-      id: Date.now(),
-      text: messageInput,
-      sender: 'me',
-      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-    };
+    fetch(`${CHAT_BASE_URL}/chat/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        receiverId: selectedChat.id,
+        content: messageInput,
+      }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "Send failed");
+        }
 
-    setAllChats(prevChats =>
-      prevChats.map(chat =>
-        chat.id === selectedChat.id
-          ? {
-              ...chat,
-              messages: [...chat.messages, newMessage],
-              lastMessage: messageInput,
-              lastMessageTime: new Date()
-            }
-          : chat
-      )
-    );
+        return res.json();
+      })
+      .then((savedMessage) => {
+        const newMessage = {
+          id: savedMessage.id,
+          text: savedMessage.content,
+          sender: "me",
+          seen: Boolean(savedMessage.seen),
+          time: new Date(savedMessage.timestamp).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
 
-    setSelectedChat(prev => ({
-      ...prev,
-      messages: [...prev.messages, newMessage]
-    }));
+        setSelectedChat((prev) => ({
+          ...prev,
+          messages: [...prev.messages, newMessage],
+        }));
 
-    setMessageInput('');
+        setAllChats((prev) =>
+          prev.map((chat) =>
+            chat.id === selectedChat.id
+              ? {
+                  ...chat,
+                  lastMessage: messageInput,
+                  lastMessageTime: new Date(),
+                }
+              : chat
+          )
+        );
+
+        setMessageInput("");
+      })
+      .catch((error) => {
+        console.error("Send message error:", error);
+      });
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      handleSendMessage(e);
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      handleSendMessage(event);
     }
   };
 
   return (
     <>
-      <link 
-        href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' 
-        rel='stylesheet'
+      <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
       />
-      
-      {/* ... existing style tag ... */}
 
       <div className="chat-page-wrapper">
-        {/* Chat List View */}
         {!selectedChat ? (
           <div className="chat-list-page">
             <div className="chat-page-header">
               <button className="chat-back-btn" onClick={onClose}>
-                <i className='bx bx-arrow-back'></i>
+                <i className="bx bx-arrow-back"></i>
               </button>
               <h2 className="chat-page-title">Messages</h2>
             </div>
 
             <div className="chat-list-container">
-              {sortedChats.map(chat => (
-                <div
-                  key={chat.id}
-                  className="chat-list-item"
-                  onClick={() => handleChatSelect(chat)}
-                >
-                  <div className="chat-list-avatar">
-                    {chat.avatar ? (
-                      <img src={chat.avatar} alt={chat.name} />
-                    ) : (
-                      <i className='bx bx-user-circle'></i>
-                    )}
-                  </div>
-                  <div className="chat-list-info">
-                    <div className="chat-list-header">
-                      <h3 className="chat-list-name">{chat.name}</h3>
-                      <span className="chat-list-time">{formatTime(chat.lastMessageTime)}</span>
-                    </div>
-                    <p className="chat-list-last-message">{chat.lastMessage}</p>
-                  </div>
+              {loadingUsers && (
+                <div className="chat-list-empty">Loading contacts...</div>
+              )}
+
+              {!loadingUsers && usersError && (
+                <div className="chat-list-empty">{usersError}</div>
+              )}
+
+              {!loadingUsers && !usersError && sortedChats.length === 0 && (
+                <div className="chat-list-empty">
+                  {loggedInUserRole === "STUDENT"
+                    ? "No guides available for chat."
+                    : "No students available for chat."}
                 </div>
-              ))}
+              )}
+
+              {!loadingUsers &&
+                !usersError &&
+                sortedChats.map((chat) => (
+                  <div
+                    key={chat.id}
+                    className="chat-list-item"
+                    onClick={() => handleChatSelect(chat)}
+                  >
+                    <div className="chat-list-avatar">
+                      {chat.avatar ? (
+                        <img src={chat.avatar} alt={chat.name} />
+                      ) : (
+                        <i className="bx bx-user-circle"></i>
+                      )}
+                    </div>
+                    <div className="chat-list-info">
+                      <div className="chat-list-header">
+                        <h3 className="chat-list-name">{chat.name}</h3>
+                        <span className="chat-list-time">
+                          {chat.lastMessageTime ? formatTime(chat.lastMessageTime) : chat.role}
+                        </span>
+                      </div>
+                      <p className="chat-list-last-message">{chat.lastMessage}</p>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         ) : (
-          /* Single Chat View - remains same */
           <div className="single-chat-page">
             <div className="single-chat-header">
               <button className="chat-back-btn" onClick={handleBackToList}>
-                <i className='bx bx-arrow-back'></i>
+                <i className="bx bx-arrow-back"></i>
               </button>
+
               <div className="single-chat-user-avatar">
                 {selectedChat.avatar ? (
                   <img src={selectedChat.avatar} alt={selectedChat.name} />
                 ) : (
-                  <i className='bx bx-user-circle'></i>
+                  <i className="bx bx-user-circle"></i>
                 )}
               </div>
+
               <div className="single-chat-user-info">
                 <h3 className="single-chat-user-name">{selectedChat.name}</h3>
                 <p className="single-chat-user-status">Online</p>
@@ -208,14 +305,26 @@ const ChatPage = ({ onClose, preSelectedPerson }) => {
             </div>
 
             <div className="single-chat-messages">
-              {selectedChat.messages.map(message => (
+              {selectedChat.messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`chat-message-item ${message.sender === 'me' ? 'message-sent' : 'message-received'}`}
+                  className={`chat-message-item ${
+                    message.sender === "me" ? "message-sent" : "message-received"
+                  }`}
                 >
                   <div className="chat-message-bubble">
                     <p className="chat-message-text">{message.text}</p>
-                    <span className="chat-message-time">{message.time}</span>
+                    <div className="chat-message-meta">
+                      <span className="chat-message-time">{message.time}</span>
+                      {message.sender === "me" && (
+                        <span
+                          className={`chat-message-seen ${message.seen ? "is-seen" : ""}`}
+                          title={message.seen ? "Seen" : "Delivered"}
+                        >
+                          <i className={`bx ${message.seen ? "bx-check-double" : "bx-check"}`}></i>
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -227,12 +336,12 @@ const ChatPage = ({ onClose, preSelectedPerson }) => {
                   type="text"
                   placeholder="Type a message..."
                   value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
+                  onChange={(event) => setMessageInput(event.target.value)}
                   onKeyPress={handleKeyPress}
                   className="single-chat-input-field"
                 />
                 <button type="submit" className="single-chat-send-btn">
-                  <i className='bx bx-send'></i>
+                  <i className="bx bx-send"></i>
                 </button>
               </form>
             </div>

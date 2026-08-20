@@ -1,12 +1,21 @@
 package com.divya.AdminService.controller;
 
-import com.divya.AdminService.entity.Student;
-import com.divya.AdminService.entity.Teacher;
-import com.divya.AdminService.service.StudentService;
-import com.divya.AdminService.service.TeacherService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.divya.AdminService.DTO.AdminDashboardDto;
+import com.divya.AdminService.DTO.AdminGroupAllocationDto;
+import com.divya.AdminService.DTO.AllocateGuideRequest;
+import com.divya.AdminService.DTO.FileUploadResponse;
+import com.divya.AdminService.DTO.UserDto;
+import com.divya.AdminService.service.AdminService;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -14,59 +23,53 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    @Autowired
-    private StudentService studentService;
+    private final AdminService adminService;
 
-    @Autowired
-    private TeacherService teacherService;
-    @PostMapping("/upload/students")
-    public ResponseEntity<?> uploadStudents(@RequestParam MultipartFile file) throws Exception {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("File is empty");
-        }
-
-        if (!file.getOriginalFilename().endsWith(".csv")) {
-            return ResponseEntity.badRequest().body("Only CSV files are allowed");
-        }
-        studentService.uploadStudents(file);
-        return ResponseEntity.ok("Students uploaded successfully");
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
     }
 
-    @PostMapping("/upload/teachers")
-    public ResponseEntity<?> uploadTeachers(@RequestParam MultipartFile file) throws Exception {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("File is empty");
-        }
-
-        if (!file.getOriginalFilename().endsWith(".csv")) {
-            return ResponseEntity.badRequest().body("Only CSV files are allowed");
-        }
-        teacherService.uploadTeachers(file);
-        return ResponseEntity.ok("Teachers uploaded successfully");
-    }
-    @GetMapping("/student")
-    public ResponseEntity<List<Student>> getAllStudents() {
-        return ResponseEntity.ok(studentService.getAllStudents());
-    }
-    @GetMapping("/teacher")
-    public ResponseEntity<List<Teacher>> getAllTeachers() {
-        return ResponseEntity.ok(teacherService.getAllTeachers());
-    }
-    @DeleteMapping("/student/{rollNo}")
-    public ResponseEntity<String> deleteStudent(
-            @PathVariable String rollNo) {
-
-        studentService.deleteStudent(rollNo);
-        return ResponseEntity.ok("Student deleted successfully");
+    @GetMapping("/dashboard")
+    public AdminDashboardDto getDashboard(@RequestHeader(value = "Authorization", required = false) String token) {
+        return adminService.getDashboard(token);
     }
 
-    @DeleteMapping("/teacher/{employeeId}")
-    public ResponseEntity<String> deleteTeacher(
-            @PathVariable String employeeId) {
-
-        teacherService.deleteTeacher(employeeId);
-        return ResponseEntity.ok("Teacher deleted successfully");
+    @GetMapping("/students")
+    public List<UserDto> getStudents(@RequestHeader(value = "Authorization", required = false) String token) {
+        return adminService.getStudents(token);
     }
 
+    @GetMapping("/faculty")
+    public List<UserDto> getFaculty(@RequestHeader(value = "Authorization", required = false) String token) {
+        return adminService.getFaculty(token);
+    }
 
+    @DeleteMapping("/students/{id}")
+    public void deleteStudent(@PathVariable String id,
+                              @RequestHeader(value = "Authorization", required = false) String token) {
+        adminService.deleteUser(id, token);
+    }
+
+    @DeleteMapping("/faculty/{id}")
+    public void deleteFaculty(@PathVariable String id,
+                              @RequestHeader(value = "Authorization", required = false) String token) {
+        adminService.deleteUser(id, token);
+    }
+
+    @GetMapping("/group-guide-allocations")
+    public List<AdminGroupAllocationDto> getGroupGuideAllocations(
+            @RequestHeader(value = "Authorization", required = false) String token) {
+        return adminService.getGroupGuideAllocations(token);
+    }
+
+    @PostMapping("/allocate-guide")
+    public String allocateGuide(@RequestBody AllocateGuideRequest request,
+                                @RequestHeader(value = "Authorization", required = false) String token) {
+        return adminService.allocateGuide(request, token);
+    }
+
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public FileUploadResponse upload(@RequestParam("file") MultipartFile file) {
+        return adminService.upload(file);
+    }
 }

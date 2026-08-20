@@ -1,71 +1,107 @@
-import React, { useEffect, useRef, useState } from "react";
-import Sidebar from "./Sidebar";
+import React, { useEffect, useMemo, useState } from "react";
 import "../styles/dashboard.css";
 
-const MeetingRoom = ({ username, onNavigate, onLogout }) => {
+const ACTIVE_MEETING_LINK_KEY = "activeMeetingLink";
+const ACTIVE_MEETING_TITLE_KEY = "activeMeetingTitle";
 
-  const jitsiContainerRef = useRef(null);
-  const [roomName, setRoomName] = useState(null);
+const buildEmbedUrl = (meetingLink, displayName) => {
+  if (!meetingLink) {
+    return "";
+  }
+
+  try {
+    const url = new URL(meetingLink);
+    url.hash = [
+      "config.prejoinPageEnabled=false",
+      "config.startWithAudioMuted=true",
+      "config.startWithVideoMuted=false",
+      `userInfo.displayName="${encodeURIComponent(displayName || "MentorMate User")}"`,
+    ].join("&");
+    return url.toString();
+  } catch (error) {
+    return meetingLink;
+  }
+};
+
+const MeetingRoom = ({ username, onBack }) => {
+  const [meetingLink, setMeetingLink] = useState("");
+  const [meetingTitle, setMeetingTitle] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    const link = localStorage.getItem(ACTIVE_MEETING_LINK_KEY) || "";
+    const title =
+      localStorage.getItem(ACTIVE_MEETING_TITLE_KEY) || "Live Meeting";
 
-    // 🔥 Backend से meeting fetch करो
-    fetch("http://localhost:8080/api/meetings/create")
-      .then(res => res.json())
-      .then(data => {
-        setRoomName(data.roomName);
-      });
+    setMeetingTitle(title);
 
+    if (!link) {
+      setError(
+        "Meeting link is not available, Kindly join from Approved Meetings.",
+      );
+      return;
+    }
+
+    setMeetingLink(link);
   }, []);
 
-  useEffect(() => {
-
-    if (!roomName) return;
-
-    const domain = "meet.jit.si";
-
-    const options = {
-      roomName: roomName,
-      width: "100%",
-      height: 600,
-      parentNode: jitsiContainerRef.current,
-
-      userInfo: {
-        displayName: username || "Guest"
-      }
-    };
-
-    const script = document.createElement("script");
-    script.src = `https://${domain}/external_api.js`;
-
-    script.onload = () => {
-      new window.JitsiMeetExternalAPI(domain, options);
-    };
-
-    document.body.appendChild(script);
-
-  }, [roomName, username]);
+  const embedUrl = useMemo(
+    () =>
+      buildEmbedUrl(
+        meetingLink,
+        username || localStorage.getItem("name") || "MentorMate User",
+      ),
+    [meetingLink, username],
+  );
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-wrapper" style={{ minHeight: "100vh" }}>
+      <header className="dashboard-header">
+        <div className="header-left">
+          <button className="sm-back-btn" onClick={onBack}>
+            <i className="bx bx-arrow-back"></i>
+            Back
+          </button>
+        </div>
+        <div className="header-right">
+          <div className="logo-container">
+            <div className="logo-circle">
+              <i className="bx bxs-video-recording"></i>
+            </div>
+            <h1 className="project-name">{meetingTitle}</h1>
+          </div>
+        </div>
+      </header>
 
-      <Sidebar
-        username={username}
-        userRole="Student"
-        onNavigate={onNavigate}
-        onLogout={onLogout}
-      />
-
-      <div className="dashboard-content">
-        <h2>Live Meeting</h2>
-
-        {roomName
-          ? <div ref={jitsiContainerRef}></div>
-          : <p>Creating meeting...</p>
-        }
-
+      <div
+        className="dashboard-container"
+        style={{ minHeight: "calc(100vh - 92px)" }}
+      >
+        <main
+          className="dashboard-content"
+          style={{ width: "100%", padding: "16px" }}
+        >
+          {error ? (
+            <div className="sm-empty">
+              <i className="bx bx-error"></i>
+              <p>{error}</p>
+            </div>
+          ) : (
+            <iframe
+              title={meetingTitle}
+              src={embedUrl}
+              allow="camera; microphone; fullscreen; display-capture; autoplay"
+              style={{
+                width: "100%",
+                height: "calc(100vh - 140px)",
+                border: "0",
+                borderRadius: "18px",
+                background: "#0f172a",
+              }}
+            />
+          )}
+        </main>
       </div>
-
     </div>
   );
 };

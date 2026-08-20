@@ -1,646 +1,225 @@
-// import React, { useState } from 'react';
-// import '../styles/presentationAttendance.css';
-
-// const PresentationAttendance = () => {
-//   const [teams, setTeams] = useState([
-//     {
-//       id: 1,
-//       teamName: 'Team Alpha',
-//       projectTitle: 'AI Chatbot System',
-//       students: [
-//         { id: 1, name: 'Arjun Verma', enrollment: '0827CS211001', attendance: false, milestone: 'UI Completed', weight: 10, milestoneCompleted: false, notes: '' },
-//         { id: 2, name: 'Sneha Reddy', enrollment: '0827CS211002', attendance: false, milestone: 'Backend Integration', weight: 15, milestoneCompleted: false, notes: '' },
-//         { id: 3, name: 'Rahul Joshi', enrollment: '0827CS211003', attendance: false, milestone: 'Database Setup', weight: 12, milestoneCompleted: false, notes: '' },
-//         { id: 4, name: 'Priya Desai', enrollment: '0827CS211004', attendance: false, milestone: 'API Development', weight: 15, milestoneCompleted: false, notes: '' },
-//         { id: 5, name: 'Karan Singh', enrollment: '0827CS211005', attendance: false, milestone: 'Testing', weight: 8, milestoneCompleted: false, notes: '' }
-//       ]
-//     },
-//     {
-//       id: 2,
-//       teamName: 'Team Beta',
-//       projectTitle: 'E-Commerce Platform',
-//       students: [
-//         { id: 6, name: 'Pooja Sharma', enrollment: '0827CS211006', attendance: false, milestone: 'Frontend Design', weight: 10, milestoneCompleted: false, notes: '' },
-//         { id: 7, name: 'Kunal Mehta', enrollment: '0827CS211007', attendance: false, milestone: 'Cart System', weight: 12, milestoneCompleted: false, notes: '' },
-//         { id: 8, name: 'Meera Patel', enrollment: '0827CS211008', attendance: false, milestone: 'Payment Gateway', weight: 15, milestoneCompleted: false, notes: '' }
-//       ]
-//     },
-//     {
-//       id: 3,
-//       teamName: 'Team Gamma',
-//       projectTitle: 'IoT Smart Home',
-//       students: [
-//         { id: 9, name: 'Nikhil Rao', enrollment: '0827CS211009', attendance: false, milestone: 'Sensor Integration', weight: 15, milestoneCompleted: false, notes: '' },
-//         { id: 10, name: 'Vivek Kumar', enrollment: '0827CS211010', attendance: false, milestone: 'Mobile App', weight: 12, milestoneCompleted: false, notes: '' },
-//         { id: 11, name: 'Divya Singh', enrollment: '0827CS211011', attendance: false, milestone: 'Cloud Setup', weight: 10, milestoneCompleted: false, notes: '' }
-//       ]
-//     }
-//   ]);
-
-//   const [selectedTeam, setSelectedTeam] = useState(teams[0].id);
-
-//   const handleAttendanceChange = (teamId, studentId, value) => {
-//     setTeams(teams.map(team => {
-//       if (team.id === teamId) {
-//         return {
-//           ...team,
-//           students: team.students.map(student => 
-//             student.id === studentId ? { ...student, attendance: value } : student
-//           )
-//         };
-//       }
-//       return team;
-//     }));
-//   };
-
-//   const handleMilestoneChange = (teamId, studentId, value) => {
-//     setTeams(teams.map(team => {
-//       if (team.id === teamId) {
-//         return {
-//           ...team,
-//           students: team.students.map(student => 
-//             student.id === studentId ? { ...student, milestoneCompleted: value } : student
-//           )
-//         };
-//       }
-//       return team;
-//     }));
-//   };
-
-//   const handleNotesChange = (teamId, studentId, value) => {
-//     setTeams(teams.map(team => {
-//       if (team.id === teamId) {
-//         return {
-//           ...team,
-//           students: team.students.map(student => 
-//             student.id === studentId ? { ...student, notes: value } : student
-//           )
-//         };
-//       }
-//       return team;
-//     }));
-//   };
-
-//   const handleSubmit = () => {
-//     const currentTeam = teams.find(t => t.id === selectedTeam);
-//     const attendanceData = {
-//       teamId: currentTeam.id,
-//       teamName: currentTeam.teamName,
-//       students: currentTeam.students.map(s => ({
-//         studentId: s.id,
-//         name: s.name,
-//         enrollment: s.enrollment,
-//         attendance: s.attendance ? 'Present' : 'Absent',
-//         milestone: s.milestone,
-//         milestoneCompleted: s.milestoneCompleted,
-//         notes: s.notes
-//       }))
-//     };
-    
-//     console.log('Submitting attendance data:', attendanceData);
-//     alert(`Attendance submitted for ${currentTeam.teamName}!\nCheck console for details.`);
-//   };
-
-//   const currentTeam = teams.find(t => t.id === selectedTeam);
-
-//   return (
-//     <div className="presentation-attendance-container">
-//       <div className="attendance-header">
-//         <h2>Presentation Attendance</h2>
-//         <p>Track student attendance, milestones, and performance</p>
-//       </div>
-
-//       {/* Team Selector */}
-//       <div className="team-selector">
-//         <label>Select Team:</label>
-//         <select 
-//           value={selectedTeam} 
-//           onChange={(e) => setSelectedTeam(Number(e.target.value))}
-//           className="team-select"
-//         >
-//           {teams.map(team => (
-//             <option key={team.id} value={team.id}>
-//               {team.teamName} - {team.projectTitle}
-//             </option>
-//           ))}
-//         </select>
-//       </div>
-
-//       {/* Team Info */}
-//       <div className="team-info-card">
-//         <h3>{currentTeam.teamName}</h3>
-//         <p>{currentTeam.projectTitle}</p>
-//         <span className="student-count">
-//           {currentTeam.students.length} Students
-//         </span>
-//       </div>
-
-//       {/* Attendance Table */}
-//       <div className="attendance-table-wrapper">
-//         <table className="attendance-table">
-//           <thead>
-//             <tr>
-//               <th>Student Name</th>
-//               <th>Enrollment</th>
-//               <th>Attendance</th>
-//               <th>Milestone</th>
-//               <th>Notes / Review</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {currentTeam.students.map((student) => (
-//               <tr key={student.id}>
-//                 {/* Student Name */}
-//                 <td className="student-name-cell">
-//                   <div className="student-avatar">
-//                     {student.name.charAt(0)}
-//                   </div>
-//                   <span>{student.name}</span>
-//                 </td>
-
-//                 {/* Enrollment */}
-//                 <td className="enrollment-cell">
-//                   {student.enrollment}
-//                 </td>
-
-//                 {/* Attendance */}
-//                 <td className="attendance-cell">
-//                   <label className="attendance-checkbox">
-//                     <input
-//                       type="checkbox"
-//                       checked={student.attendance}
-//                       onChange={(e) => handleAttendanceChange(currentTeam.id, student.id, e.target.checked)}
-//                     />
-//                     <span className={student.attendance ? 'status-present' : 'status-absent'}>
-//                       {student.attendance ? '✓ Present' : '✗ Absent'}
-//                     </span>
-//                   </label>
-//                 </td>
-
-//                 {/* Milestone */}
-//                 <td className="milestone-cell">
-//                   <div className="milestone-info">
-//                     <div className="milestone-text">
-//                       <strong>{student.milestone}</strong>
-//                       <span className="weight-badge">Weight: {student.weight}</span>
-//                     </div>
-//                     <label className="milestone-checkbox">
-//                       <input
-//                         type="checkbox"
-//                         checked={student.milestoneCompleted}
-//                         onChange={(e) => handleMilestoneChange(currentTeam.id, student.id, e.target.checked)}
-//                       />
-//                       <span>{student.milestoneCompleted ? 'Completed' : 'Mark Complete'}</span>
-//                     </label>
-//                   </div>
-//                 </td>
-
-//                 {/* Notes */}
-//                 <td className="notes-cell">
-//                   <textarea
-//                     placeholder="Add notes or review..."
-//                     value={student.notes}
-//                     onChange={(e) => handleNotesChange(currentTeam.id, student.id, e.target.value)}
-//                     rows="2"
-//                   />
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* Submit Button */}
-//       <div className="submit-section">
-//         <button className="submit-btn" onClick={handleSubmit}>
-//           <i className='bx bx-check-circle'></i>
-//           Submit Attendance
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default PresentationAttendance;
-
-// import React, { useState } from 'react';
-// import '../styles/presentationAttendance.css';
-
-// const PresentationAttendance = () => {
-//   const [teams, setTeams] = useState([
-//     {
-//       id: 1,
-//       teamName: 'Team Alpha',
-//       projectTitle: 'AI Chatbot System',
-//       students: [
-//         { id: 1, name: 'Arjun Verma', enrollment: '0827CS211001', attendance: false, milestone: 'UI Completed', weight: 10, milestoneCompleted: false, notes: '' },
-//         { id: 2, name: 'Sneha Reddy', enrollment: '0827CS211002', attendance: false, milestone: 'Backend Integration', weight: 15, milestoneCompleted: false, notes: '' },
-//         { id: 3, name: 'Rahul Joshi', enrollment: '0827CS211003', attendance: false, milestone: 'Database Setup', weight: 12, milestoneCompleted: false, notes: '' },
-//         { id: 4, name: 'Priya Desai', enrollment: '0827CS211004', attendance: false, milestone: 'API Development', weight: 15, milestoneCompleted: false, notes: '' },
-//         { id: 5, name: 'Karan Singh', enrollment: '0827CS211005', attendance: false, milestone: 'Testing', weight: 8, milestoneCompleted: false, notes: '' }
-//       ]
-//     },
-//     {
-//       id: 2,
-//       teamName: 'Team Beta',
-//       projectTitle: 'E-Commerce Platform',
-//       students: [
-//         { id: 6, name: 'Pooja Sharma', enrollment: '0827CS211006', attendance: false, milestone: 'Frontend Design', weight: 10, milestoneCompleted: false, notes: '' },
-//         { id: 7, name: 'Kunal Mehta', enrollment: '0827CS211007', attendance: false, milestone: 'Cart System', weight: 12, milestoneCompleted: false, notes: '' },
-//         { id: 8, name: 'Meera Patel', enrollment: '0827CS211008', attendance: false, milestone: 'Payment Gateway', weight: 15, milestoneCompleted: false, notes: '' }
-//       ]
-//     },
-//     {
-//       id: 3,
-//       teamName: 'Team Gamma',
-//       projectTitle: 'IoT Smart Home',
-//       students: [
-//         { id: 9, name: 'Nikhil Rao', enrollment: '0827CS211009', attendance: false, milestone: 'Sensor Integration', weight: 15, milestoneCompleted: false, notes: '' },
-//         { id: 10, name: 'Vivek Kumar', enrollment: '0827CS211010', attendance: false, milestone: 'Mobile App', weight: 12, milestoneCompleted: false, notes: '' },
-//         { id: 11, name: 'Divya Singh', enrollment: '0827CS211011', attendance: false, milestone: 'Cloud Setup', weight: 10, milestoneCompleted: false, notes: '' }
-//       ]
-//     }
-//   ]);
-
-//   const [selectedTeam, setSelectedTeam] = useState(teams[0].id);
-
-//   const handleAttendanceChange = (teamId, studentId, value) => {
-//     setTeams(teams.map(team => {
-//       if (team.id === teamId) {
-//         return {
-//           ...team,
-//           students: team.students.map(student => 
-//             student.id === studentId ? { ...student, attendance: value } : student
-//           )
-//         };
-//       }
-//       return team;
-//     }));
-//   };
-
-//   const handleMilestoneChange = (teamId, studentId, value) => {
-//     setTeams(teams.map(team => {
-//       if (team.id === teamId) {
-//         return {
-//           ...team,
-//           students: team.students.map(student => 
-//             student.id === studentId ? { ...student, milestoneCompleted: value } : student
-//           )
-//         };
-//       }
-//       return team;
-//     }));
-//   };
-
-//   const handleNotesChange = (teamId, studentId, value) => {
-//     setTeams(teams.map(team => {
-//       if (team.id === teamId) {
-//         return {
-//           ...team,
-//           students: team.students.map(student => 
-//             student.id === studentId ? { ...student, notes: value } : student
-//           )
-//         };
-//       }
-//       return team;
-//     }));
-//   };
-
-//   const handleSubmit = () => {
-//     const currentTeam = teams.find(t => t.id === selectedTeam);
-//     const attendanceData = {
-//       teamId: currentTeam.id,
-//       teamName: currentTeam.teamName,
-//       students: currentTeam.students.map(s => ({
-//         studentId: s.id,
-//         name: s.name,
-//         enrollment: s.enrollment,
-//         attendance: s.attendance ? 'Present' : 'Absent',
-//         milestone: s.milestone,
-//         milestoneCompleted: s.milestoneCompleted,
-//         notes: s.notes
-//       }))
-//     };
-    
-//     console.log('Submitting attendance data:', attendanceData);
-//     alert(`Attendance submitted for ${currentTeam.teamName}!\nCheck console for details.`);
-//   };
-
-//   const currentTeam = teams.find(t => t.id === selectedTeam);
-
-//   return (
-//     <div className="presentation-attendance-container">
-//       <div className="attendance-header">
-        
-//         <p>Track student attendance, milestones, and performance</p>
-//       </div>
-
-//       {/* Team Selector */}
-//       <div className="team-selector">
-//         <label>Select Team:</label>
-//         <select 
-//           value={selectedTeam} 
-//           onChange={(e) => setSelectedTeam(Number(e.target.value))}
-//           className="team-select"
-//         >
-//           {teams.map(team => (
-//             <option key={team.id} value={team.id}>
-//               {team.teamName} - {team.projectTitle}
-//             </option>
-//           ))}
-//         </select>
-//       </div>
-
-//       {/* Team Info */}
-//       <div className="team-info-card">
-//         <h3>{currentTeam.teamName}</h3>
-//         <p>{currentTeam.projectTitle}</p>
-//         <span className="student-count">
-//           {currentTeam.students.length} Students
-//         </span>
-//       </div>
-
-//       {/* Attendance Table */}
-//       <div className="attendance-table-wrapper">
-//         <table className="attendance-table">
-//           <thead>
-//             <tr>
-//               <th>Student Name</th>
-//               <th>Enrollment</th>
-//               <th>Attendance</th>
-//               <th>Milestone</th>
-//               <th>Notes / Review</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {currentTeam.students.map((student) => (
-//               <tr key={student.id}>
-//                 {/* Student Name */}
-//                 <td className="student-name-cell">
-//                   <div className="student-avatar">
-//                     {student.name.charAt(0)}
-//                   </div>
-//                   <span>{student.name}</span>
-//                 </td>
-
-//                 {/* Enrollment */}
-//                 <td className="enrollment-cell">
-//                   {student.enrollment}
-//                 </td>
-
-//                 {/* Attendance */}
-//                 <td className="attendance-cell">
-//                   <label className="attendance-checkbox">
-//                     <input
-//                       type="checkbox"
-//                       checked={student.attendance}
-//                       onChange={(e) => handleAttendanceChange(currentTeam.id, student.id, e.target.checked)}
-//                     />
-//                     <span className={student.attendance ? 'status-present' : 'status-absent'}>
-//                       {student.attendance ? '✓ Present' : '✗ Absent'}
-//                     </span>
-//                   </label>
-//                 </td>
-
-//                 {/* Milestone */}
-//                 <td className="milestone-cell">
-//                   <div className="milestone-info">
-//                     <div className="milestone-text">
-//                       <strong>{student.milestone}</strong>
-//                       <span className="weight-badge">Weight: {student.weight}</span>
-//                     </div>
-//                     <label className="milestone-checkbox">
-//                       <input
-//                         type="checkbox"
-//                         checked={student.milestoneCompleted}
-//                         onChange={(e) => handleMilestoneChange(currentTeam.id, student.id, e.target.checked)}
-//                       />
-//                       <span>{student.milestoneCompleted ? 'Completed' : 'Mark Complete'}</span>
-//                     </label>
-//                   </div>
-//                 </td>
-
-//                 {/* Notes */}
-//                 <td className="notes-cell">
-//                   <textarea
-//                     placeholder="Add notes or review..."
-//                     value={student.notes}
-//                     onChange={(e) => handleNotesChange(currentTeam.id, student.id, e.target.value)}
-//                     rows="2"
-//                   />
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* Submit Button */}
-//       <div className="submit-section">
-//         <button className="submit-btn" onClick={handleSubmit}>
-//           <i className='bx bx-check-circle'></i>
-//           Submit Attendance
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default PresentationAttendance;
-
-// import React, { useState } from 'react';
-// import PresentationAttendance from './PresentationAttendance';
-// import MeetingAttendance from './MeetingAttendance';
-// import '../styles/attendance.css';
-
-// const Attendance = ({ onClose }) => {
-//   const [activeTab, setActiveTab] = useState('presentation');
-
-//   const handleTabClick = (tab) => {
-//     setActiveTab(tab);
-//   };
-
-//   return (
-//     <div className="attendance-page">
-//       {/* Close Button - Top Right */}
-//       <button className="attendance-close-btn" onClick={onClose}>
-//         <i className='bx bx-x'></i>
-//       </button>
-
-//       {/* Header Section */}
-//       <div className="attendance-header">
-//         <h1 className="attendance-title">Attendance</h1>
-        
-//         {/* Tab Buttons */}
-//         <div className="attendance-tabs">
-//           <button
-//             className={`tab-button ${activeTab === 'presentation' ? 'active' : ''}`}
-//             onClick={() => handleTabClick('presentation')}
-//           >
-//             <i className='bx bx-slideshow'></i>
-//             <span>Presentation</span>
-//           </button>
-          
-//           <button
-//             className={`tab-button ${activeTab === 'meeting' ? 'active' : ''}`}
-//             onClick={() => handleTabClick('meeting')}
-//           >
-//             <i className='bx bx-calendar-event'></i>
-//             <span>Meeting</span>
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Content Area */}
-//       <div className="attendance-content">
-//         {activeTab === 'presentation' && (
-//           <PresentationAttendance />
-//         )}
-
-//         {activeTab === 'meeting' && (
-//           <MeetingAttendance />
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Attendance;
-
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import '../styles/presentationAttendance.css';
+import {
+  getAllUsers,
+  getGuideGroups,
+  getPresentationAttendance,
+  getPresentationMilestones,
+  getPresentationSchedules,
+  submitPresentationAttendance
+} from '../services/guideAttendanceService';
+
+const buildStudents = (group, attendance = [], milestones = [], schedule = null, usersById = new Map()) => {
+  const attendanceMap = new Map(attendance.map((item) => [item.studentId, item]));
+  const milestoneMap = new Map(milestones.map((item) => [item.studentId, item]));
+  const groupMembers = (group?.memberDetails?.length
+    ? group.memberDetails
+    : (group?.members || []).map((memberId) => ({
+        userId: memberId,
+        name: usersById.get(memberId)?.name || memberId
+      })));
+
+  return groupMembers.map((member) => {
+    const savedAttendance = attendanceMap.get(member.userId);
+    const savedMilestone = milestoneMap.get(member.userId);
+    const fallbackUser = usersById.get(member.userId);
+
+    return {
+      studentId: member.userId,
+      name: member.name || fallbackUser?.name || member.userId,
+      enrollment: member.userId,
+      attendance: savedAttendance?.attended || false,
+      milestone: schedule?.milestoneName || 'Milestone not available',
+      maxWeight: schedule?.milestoneWeight || 0,
+      weight: savedMilestone?.weightage ?? schedule?.milestoneWeight ?? 0,
+      milestoneCompleted: savedMilestone?.completed || false,
+      notes: savedAttendance?.notes || ''
+    };
+  });
+};
 
 const PresentationAttendance = () => {
-  const [teams, setTeams] = useState([
-    {
-      id: 1,
-      teamName: 'Team Alpha',
-      projectTitle: 'AI Chatbot System',
-      students: [
-        { id: 1, name: 'Arjun Verma', enrollment: '0827CS211001', attendance: false, milestone: 'UI Completed', weight: 10, milestoneCompleted: false, notes: '' },
-        { id: 2, name: 'Sneha Reddy', enrollment: '0827CS211002', attendance: false, milestone: 'Backend Integration', weight: 15, milestoneCompleted: false, notes: '' },
-        { id: 3, name: 'Rahul Joshi', enrollment: '0827CS211003', attendance: false, milestone: 'Database Setup', weight: 12, milestoneCompleted: false, notes: '' },
-        { id: 4, name: 'Priya Desai', enrollment: '0827CS211004', attendance: false, milestone: 'API Development', weight: 15, milestoneCompleted: false, notes: '' },
-        { id: 5, name: 'Karan Singh', enrollment: '0827CS211005', attendance: false, milestone: 'Testing', weight: 8, milestoneCompleted: false, notes: '' }
-      ]
-    },
-    {
-      id: 2,
-      teamName: 'Team Beta',
-      projectTitle: 'E-Commerce Platform',
-      students: [
-        { id: 6, name: 'Pooja Sharma', enrollment: '0827CS211006', attendance: false, milestone: 'Frontend Design', weight: 10, milestoneCompleted: false, notes: '' },
-        { id: 7, name: 'Kunal Mehta', enrollment: '0827CS211007', attendance: false, milestone: 'Cart System', weight: 12, milestoneCompleted: false, notes: '' },
-        { id: 8, name: 'Meera Patel', enrollment: '0827CS211008', attendance: false, milestone: 'Payment Gateway', weight: 15, milestoneCompleted: false, notes: '' }
-      ]
-    },
-    {
-      id: 3,
-      teamName: 'Team Gamma',
-      projectTitle: 'IoT Smart Home',
-      students: [
-        { id: 9, name: 'Nikhil Rao', enrollment: '0827CS211009', attendance: false, milestone: 'Sensor Integration', weight: 15, milestoneCompleted: false, notes: '' },
-        { id: 10, name: 'Vivek Kumar', enrollment: '0827CS211010', attendance: false, milestone: 'Mobile App', weight: 12, milestoneCompleted: false, notes: '' },
-        { id: 11, name: 'Divya Singh', enrollment: '0827CS211011', attendance: false, milestone: 'Cloud Setup', weight: 10, milestoneCompleted: false, notes: '' }
-      ]
-    }
-  ]);
+  const [groups, setGroups] = useState([]);
+  const [schedules, setSchedules] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState('');
+  const [selectedSchedule, setSelectedSchedule] = useState('');
+  const [students, setStudents] = useState([]);
+  const [usersById, setUsersById] = useState(new Map());
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const [selectedTeam, setSelectedTeam] = useState(teams[0].id);
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        setLoading(true);
+        const [groupData, scheduleData] = await Promise.all([
+          getGuideGroups(),
+          getPresentationSchedules()
+        ]);
+        const userData = await getAllUsers();
 
-  const handleAttendanceChange = (teamId, studentId, value) => {
-    setTeams(teams.map(team => {
-      if (team.id === teamId) {
-        return {
-          ...team,
-          students: team.students.map(student =>
-            student.id === studentId ? { ...student, attendance: value } : student
-          )
-        };
+        setUsersById(new Map((userData || []).map((user) => [user.userId, user])));
+
+        setGroups(groupData || []);
+        setSchedules(scheduleData || []);
+
+        if (groupData?.length) {
+          setSelectedGroup(String(groupData[0].groupId));
+        }
+
+        if (scheduleData?.length) {
+          setSelectedSchedule(String(scheduleData[0].id));
+        }
+      } catch (err) {
+        setError(err.message || 'Unable to load presentation attendance data.');
+      } finally {
+        setLoading(false);
       }
-      return team;
-    }));
-  };
-
-  const handleMilestoneChange = (teamId, studentId, value) => {
-    setTeams(teams.map(team => {
-      if (team.id === teamId) {
-        return {
-          ...team,
-          students: team.students.map(student =>
-            student.id === studentId ? { ...student, milestoneCompleted: value } : student
-          )
-        };
-      }
-      return team;
-    }));
-  };
-
-  const handleNotesChange = (teamId, studentId, value) => {
-    setTeams(teams.map(team => {
-      if (team.id === teamId) {
-        return {
-          ...team,
-          students: team.students.map(student =>
-            student.id === studentId ? { ...student, notes: value } : student
-          )
-        };
-      }
-      return team;
-    }));
-  };
-
-  const handleSubmit = () => {
-    const currentTeam = teams.find(t => t.id === selectedTeam);
-    const attendanceData = {
-      teamId: currentTeam.id,
-      teamName: currentTeam.teamName,
-      students: currentTeam.students.map(s => ({
-        studentId: s.id,
-        name: s.name,
-        enrollment: s.enrollment,
-        attendance: s.attendance ? 'Present' : 'Absent',
-        milestone: s.milestone,
-        milestoneCompleted: s.milestoneCompleted,
-        notes: s.notes
-      }))
     };
-    console.log('Submitting attendance data:', attendanceData);
-    alert(`Attendance submitted for ${currentTeam.teamName}!\nCheck console for details.`);
+
+    loadInitialData();
+  }, []);
+
+  const currentGroup = useMemo(
+    () => groups.find((group) => String(group.groupId) === selectedGroup) || null,
+    [groups, selectedGroup]
+  );
+
+  const currentSchedule = useMemo(
+    () => schedules.find((schedule) => String(schedule.id) === selectedSchedule) || null,
+    [schedules, selectedSchedule]
+  );
+
+  useEffect(() => {
+    const loadGroupPresentationData = async () => {
+      if (!currentGroup || !currentSchedule) {
+        setStudents([]);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const [attendanceData, milestoneData] = await Promise.all([
+          getPresentationAttendance(currentSchedule.id),
+          getPresentationMilestones(currentSchedule.id)
+        ]);
+
+        const groupMemberIds = new Set(
+          (currentGroup.memberDetails?.length
+            ? currentGroup.memberDetails
+            : (currentGroup.members || []).map((memberId) => ({ userId: memberId }))
+          ).map((member) => member.userId)
+        );
+
+        setStudents(
+          buildStudents(
+            currentGroup,
+            (attendanceData || []).filter((item) => groupMemberIds.has(item.studentId)),
+            (milestoneData || []).filter((item) => groupMemberIds.has(item.studentId)),
+            currentSchedule,
+            usersById
+          )
+        );
+      } catch (err) {
+        setError(err.message || 'Unable to load saved presentation attendance.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGroupPresentationData();
+  }, [currentGroup, currentSchedule, usersById]);
+
+  const updateStudent = (studentId, updates) => {
+    setStudents((prev) =>
+      prev.map((student) =>
+        student.studentId === studentId ? { ...student, ...updates } : student
+      )
+    );
   };
 
-  const currentTeam = teams.find(t => t.id === selectedTeam);
+  const handleSubmit = async () => {
+    if (!currentGroup || !currentSchedule) {
+      alert('Please select a group and presentation date.');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await submitPresentationAttendance({
+        presentationId: currentSchedule.id,
+        milestoneName: currentSchedule.milestoneName,
+        entries: students.map((student) => ({
+          studentId: student.studentId,
+          attended: student.attendance,
+          milestoneCompleted: student.milestoneCompleted,
+          weightage: Number(student.weight) || 0,
+          notes: student.notes,
+          rating: 0
+        }))
+      });
+
+      alert(`Attendance submitted for ${currentGroup.groupName}!`);
+    } catch (err) {
+      alert(err.message || 'Failed to submit attendance.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="presentation-attendance-container">
-
-      {/* Team Selector */}
-      <div className="team-selector">
+      <div className="team-selector selector-row">
         <select
-          value={selectedTeam}
-          onChange={(e) => setSelectedTeam(Number(e.target.value))}
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
           className="team-select"
+          disabled={!groups.length}
         >
-          {teams.map(team => (
-            <option key={team.id} value={team.id}>
-              {team.teamName} - {team.projectTitle}
+          {groups.length === 0 && <option value="">No groups assigned</option>}
+          {groups.map((group) => (
+            <option key={group.groupId} value={group.groupId}>
+              {group.groupName} - {group.projectTitle || 'Project not submitted'}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedSchedule}
+          onChange={(e) => setSelectedSchedule(e.target.value)}
+          className="team-select schedule-select"
+          disabled={!schedules.length}
+        >
+          {schedules.length === 0 && <option value="">No presentation schedules</option>}
+          {schedules.map((schedule) => (
+            <option key={schedule.id} value={schedule.id}>
+              {schedule.date} - {schedule.presentationTitle || `Presentation ${schedule.presentationNumber}`} - {schedule.milestoneName}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Team Info */}
-      <div className="team-info-card">
-        <div>
-          <h3>{currentTeam.teamName}</h3>
-          <p>{currentTeam.projectTitle}</p>
-        </div>
-        <span className="student-count">
-          {currentTeam.students.length} Students
-        </span>
-      </div>
+      {error && <p className="attendance-feedback error-text">{error}</p>}
 
-      {/* Attendance Table */}
+      {currentGroup && (
+        <div className="team-info-card">
+          <div>
+            <h3>{currentGroup.groupName}</h3>
+            <p>{currentGroup.projectTitle || 'Project title not available'}</p>
+            {currentSchedule && (
+              <p>{currentSchedule.presentationTitle || `Presentation ${currentSchedule.presentationNumber}`} | {currentSchedule.milestoneName}</p>
+            )}
+            {currentSchedule?.expectedCompletion && (
+              <p>{currentSchedule.expectedCompletion}</p>
+            )}
+          </div>
+          <span className="student-count">
+            {students.length} Students
+          </span>
+        </div>
+      )}
+
       <div className="attendance-table-wrapper">
         <table className="attendance-table">
           <colgroup>
@@ -660,59 +239,75 @@ const PresentationAttendance = () => {
             </tr>
           </thead>
           <tbody>
-            {currentTeam.students.map((student) => (
-              <tr key={student.id}>
-                {/* Student Name */}
+            {!loading && students.length === 0 && (
+              <tr>
+                <td colSpan="5" className="empty-state-cell">No students found for this group.</td>
+              </tr>
+            )}
+
+            {students.map((student) => (
+              <tr key={student.studentId}>
                 <td className="student-name-cell">
                   <div className="student-avatar">
-                    {student.name.charAt(0)}
+                    {(student.name || student.enrollment).charAt(0)}
                   </div>
                   <span>{student.name}</span>
                 </td>
 
-                {/* Enrollment */}
                 <td className="enrollment-cell">
                   {student.enrollment}
                 </td>
 
-                {/* Attendance */}
                 <td className="attendance-cell">
                   <label className="attendance-checkbox">
                     <input
                       type="checkbox"
                       checked={student.attendance}
-                      onChange={(e) => handleAttendanceChange(currentTeam.id, student.id, e.target.checked)}
+                      onChange={(e) => updateStudent(student.studentId, { attendance: e.target.checked })}
                     />
                     <span className={student.attendance ? 'status-present' : 'status-absent'}>
-                      {student.attendance ? '✓ Present' : '✗ Absent'}
+                      {student.attendance ? 'Present' : 'Absent'}
                     </span>
                   </label>
                 </td>
 
-                {/* Milestone */}
                 <td className="milestone-cell">
                   <div className="milestone-info">
                     <div className="milestone-text">
                       <strong>{student.milestone}</strong>
-                      <span className="weight-badge">Weight: {student.weight}</span>
+                      <div className="weight-input-row">
+                        <span className="weight-badge">Max: {student.maxWeight}</span>
+                        <input
+                          type="number"
+                          min="0"
+                          max={student.maxWeight}
+                          value={student.weight}
+                          onChange={(e) => updateStudent(student.studentId, { weight: e.target.value })}
+                          className="weight-input"
+                        />
+                      </div>
                     </div>
                     <label className="milestone-checkbox">
                       <input
                         type="checkbox"
                         checked={student.milestoneCompleted}
-                        onChange={(e) => handleMilestoneChange(currentTeam.id, student.id, e.target.checked)}
+                        onChange={(e) =>
+                          updateStudent(student.studentId, {
+                            milestoneCompleted: e.target.checked,
+                            weight: e.target.checked ? student.weight : 0
+                          })
+                        }
                       />
                       <span>{student.milestoneCompleted ? 'Completed' : 'Mark Complete'}</span>
                     </label>
                   </div>
                 </td>
 
-                {/* Notes */}
                 <td className="notes-cell">
                   <textarea
                     placeholder="Add notes or review..."
                     value={student.notes}
-                    onChange={(e) => handleNotesChange(currentTeam.id, student.id, e.target.value)}
+                    onChange={(e) => updateStudent(student.studentId, { notes: e.target.value })}
                     rows="2"
                   />
                 </td>
@@ -722,11 +317,10 @@ const PresentationAttendance = () => {
         </table>
       </div>
 
-      {/* Submit Button */}
       <div className="submit-section">
-        <button className="submit-btn" onClick={handleSubmit}>
+        <button className="submit-btn" onClick={handleSubmit} disabled={submitting || loading}>
           <i className='bx bx-check-circle'></i>
-          Submit Attendance
+          {submitting ? 'Submitting...' : 'Submit Attendance'}
         </button>
       </div>
     </div>

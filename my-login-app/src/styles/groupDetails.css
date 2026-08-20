@@ -237,21 +237,3 @@
   .students-grid { grid-template-columns: 1fr; }
   .project-meta { flex-direction: column; gap: 0.85rem; }
 }
-
-/* ── Dark theme explicit fixes ──────────── */
-:root[data-theme="dark"] .group-details-container {
-  background: var(--bg-primary);
-}
-
-:root[data-theme="dark"] .group-details-title,
-:root[data-theme="dark"] .card-title,
-:root[data-theme="dark"] .student-name,
-:root[data-theme="dark"] .detail-value,
-:root[data-theme="dark"] .detail-label {
-  color: #f7fafc;
-}
-
-:root[data-theme="dark"] .student-meta,
-:root[data-theme="dark"] .detail-secondary {
-  color: #cbd5e0;
-}

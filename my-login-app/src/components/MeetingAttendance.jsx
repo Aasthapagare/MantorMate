@@ -1,336 +1,125 @@
-// import React, { useState } from 'react';
-// import '../styles/meetingAttendance.css';
-
-// const MeetingAttendance = () => {
-//   const [teams, setTeams] = useState([
-//     {
-//       id: 1,
-//       teamName: 'Team Alpha',
-//       projectTitle: 'AI Chatbot System',
-//       students: [
-//         { id: 1, name: 'Arjun Verma', enrollment: '0827CS211001' },
-//         { id: 2, name: 'Sneha Reddy', enrollment: '0827CS211002' },
-//         { id: 3, name: 'Rahul Joshi', enrollment: '0827CS211003' },
-//         { id: 4, name: 'Priya Desai', enrollment: '0827CS211004' },
-//         { id: 5, name: 'Karan Singh', enrollment: '0827CS211005' }
-//       ]
-//     },
-//     {
-//       id: 2,
-//       teamName: 'Team Beta',
-//       projectTitle: 'E-Commerce Platform',
-//       students: [
-//         { id: 6, name: 'Pooja Sharma', enrollment: '0827CS211006' },
-//         { id: 7, name: 'Kunal Mehta', enrollment: '0827CS211007' },
-//         { id: 8, name: 'Meera Patel', enrollment: '0827CS211008' }
-//       ]
-//     },
-//     {
-//       id: 3,
-//       teamName: 'Team Gamma',
-//       projectTitle: 'IoT Smart Home',
-//       students: [
-//         { id: 9, name: 'Nikhil Rao', enrollment: '0827CS211009' },
-//         { id: 10, name: 'Vivek Kumar', enrollment: '0827CS211010' },
-//         { id: 11, name: 'Divya Singh', enrollment: '0827CS211011' }
-//       ]
-//     }
-//   ]);
-
-//   const [selectedTeam, setSelectedTeam] = useState(teams[0].id);
-
-//   const [rows, setRows] = useState([
-//     { id: 1, studentId: '', date: '', mode: '', notes: '' }
-//   ]);
-
-//   const currentTeam = teams.find(t => t.id === selectedTeam);
-
-//   const handleTeamChange = (teamId) => {
-//     setSelectedTeam(Number(teamId));
-//     setRows([{ id: 1, studentId: '', date: '', mode: '', notes: '' }]);
-//   };
-
-//   const handleRowChange = (rowId, field, value) => {
-//     setRows(rows.map(row =>
-//       row.id === rowId ? { ...row, [field]: value } : row
-//     ));
-//   };
-
-//   const handleAddRow = () => {
-//     const newId = rows.length > 0 ? Math.max(...rows.map(r => r.id)) + 1 : 1;
-//     setRows([...rows, { id: newId, studentId: '', date: '', mode: '', notes: '' }]);
-//   };
-
-//   const handleRemoveRow = (rowId) => {
-//     if (rows.length === 1) return;
-//     setRows(rows.filter(row => row.id !== rowId));
-//   };
-
-//   const handleSubmit = () => {
-//     const meetingData = {
-//       teamId: currentTeam.id,
-//       teamName: currentTeam.teamName,
-//       entries: rows.map(row => ({
-//         studentName: currentTeam.students.find(s => s.id === Number(row.studentId))?.name || '',
-//         date: row.date,
-//         mode: row.mode,
-//         notes: row.notes
-//       }))
-//     };
-//     console.log('Submitting meeting data:', meetingData);
-//     alert(`Meeting marked for ${currentTeam.teamName}!\nCheck console for details.`);
-//   };
-
-//   return (
-//     <div className="meeting-attendance-container">
-
-//       {/* Team Selector */}
-//       <div className="team-selector">
-//         <select
-//           value={selectedTeam}
-//           onChange={(e) => handleTeamChange(e.target.value)}
-//           className="team-select"
-//         >
-//           {teams.map(team => (
-//             <option key={team.id} value={team.id}>
-//               {team.teamName} - {team.projectTitle}
-//             </option>
-//           ))}
-//         </select>
-//       </div>
-
-//       {/* Team Info */}
-//       <div className="team-info-card">
-//         <div>
-//           <h3>{currentTeam.teamName}</h3>
-//           <p>{currentTeam.projectTitle}</p>
-//         </div>
-//         <span className="student-count">
-//           {currentTeam.students.length} Students
-//         </span>
-//       </div>
-
-//       {/* Meeting Table */}
-//       <div className="attendance-table-wrapper">
-//         <table className="attendance-table meeting-table">
-//           <colgroup>
-//             <col />
-//             <col />
-//             <col />
-//             <col />
-//             <col />
-//           </colgroup>
-//           <thead>
-//             <tr>
-//               <th>Student Name</th>
-//               <th>Date</th>
-//               <th>Mode</th>
-//               <th>Notes</th>
-//               <th>Action</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {rows.map((row, index) => (
-//               <tr key={row.id}>
-
-//                 {/* Student Name Dropdown */}
-//                 <td className="meeting-cell">
-//                   <select
-//                     value={row.studentId}
-//                     onChange={(e) => handleRowChange(row.id, 'studentId', e.target.value)}
-//                     className="meeting-select"
-//                   >
-//                     <option value="">Select Student</option>
-//                     {currentTeam.students.map(student => (
-//                       <option key={student.id} value={student.id}>
-//                         {student.name}
-//                       </option>
-//                     ))}
-//                   </select>
-//                 </td>
-
-//                 {/* Date */}
-//                 <td className="meeting-cell">
-//                   <input
-//                     type="date"
-//                     value={row.date}
-//                     onChange={(e) => handleRowChange(row.id, 'date', e.target.value)}
-//                     className="meeting-date-input"
-//                   />
-//                 </td>
-
-//                 {/* Mode */}
-//                 <td className="meeting-cell">
-//                   <select
-//                     value={row.mode}
-//                     onChange={(e) => handleRowChange(row.id, 'mode', e.target.value)}
-//                     className="meeting-select meeting-mode-select"
-//                   >
-//                     <option value="">Select Mode</option>
-//                     <option value="Online">Online</option>
-//                     <option value="Offline">Offline</option>
-//                   </select>
-//                 </td>
-
-//                 {/* Notes */}
-//                 <td className="notes-cell">
-//                   <textarea
-//                     placeholder="e.g. Discussion about backend integration"
-//                     value={row.notes}
-//                     onChange={(e) => handleRowChange(row.id, 'notes', e.target.value)}
-//                     rows="2"
-//                   />
-//                 </td>
-
-//                 {/* Remove Row */}
-//                 <td className="meeting-action-cell">
-//                   <button
-//                     className="remove-row-btn"
-//                     onClick={() => handleRemoveRow(row.id)}
-//                     disabled={rows.length === 1}
-//                     title="Remove row"
-//                   >
-//                     <i className="bx bx-trash"></i>
-//                   </button>
-//                 </td>
-
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* Add Row + Submit */}
-//       <div className="meeting-footer">
-//         <button className="add-row-btn" onClick={handleAddRow}>
-//           <i className="bx bx-plus"></i>
-//           Add Row
-//         </button>
-//         <button className="submit-btn" onClick={handleSubmit}>
-//           <i className="bx bx-check-circle"></i>
-//           Mark Meeting
-//         </button>
-//       </div>
-
-//     </div>
-//   );
-// };
-
-// export default MeetingAttendance;
-
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import '../styles/meetingAttendance.css';
+import { getAllUsers, getGuideGroups, submitMeetingAttendance } from '../services/guideAttendanceService';
+
+const initialMeeting = { date: '', mode: '', notes: '' };
+
+const getGroupMembers = (group, usersById) =>
+  group?.memberDetails?.length
+    ? group.memberDetails
+    : (group?.members || []).map((memberId) => ({
+        userId: memberId,
+        name: usersById.get(memberId)?.name || memberId
+      }));
 
 const MeetingAttendance = () => {
-  const [teams, setTeams] = useState([
-    {
-      id: 1,
-      teamName: 'Team Alpha',
-      projectTitle: 'AI Chatbot System',
-      students: [
-        { id: 1, name: 'Arjun Verma', enrollment: '0827CS211001' },
-        { id: 2, name: 'Sneha Reddy', enrollment: '0827CS211002' },
-        { id: 3, name: 'Rahul Joshi', enrollment: '0827CS211003' },
-        { id: 4, name: 'Priya Desai', enrollment: '0827CS211004' },
-        { id: 5, name: 'Karan Singh', enrollment: '0827CS211005' }
-      ]
-    },
-    {
-      id: 2,
-      teamName: 'Team Beta',
-      projectTitle: 'E-Commerce Platform',
-      students: [
-        { id: 6, name: 'Pooja Sharma', enrollment: '0827CS211006' },
-        { id: 7, name: 'Kunal Mehta', enrollment: '0827CS211007' },
-        { id: 8, name: 'Meera Patel', enrollment: '0827CS211008' }
-      ]
-    },
-    {
-      id: 3,
-      teamName: 'Team Gamma',
-      projectTitle: 'IoT Smart Home',
-      students: [
-        { id: 9, name: 'Nikhil Rao', enrollment: '0827CS211009' },
-        { id: 10, name: 'Vivek Kumar', enrollment: '0827CS211010' },
-        { id: 11, name: 'Divya Singh', enrollment: '0827CS211011' }
-      ]
-    }
-  ]);
+  const [groups, setGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState('');
+  const [usersById, setUsersById] = useState(new Map());
+  const [meeting, setMeeting] = useState(initialMeeting);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const [selectedTeam, setSelectedTeam] = useState(teams[0].id);
+  useEffect(() => {
+    const loadGroups = async () => {
+      try {
+        setLoading(true);
+        const [groupData, userData] = await Promise.all([
+          getGuideGroups(),
+          getAllUsers()
+        ]);
 
-  const [rows, setRows] = useState([
-    { id: 1, studentId: '', date: '', mode: '', notes: '' }
-  ]);
+        setGroups(groupData || []);
+        setUsersById(new Map((userData || []).map((user) => [user.userId, user])));
 
-  const currentTeam = teams.find(t => t.id === selectedTeam);
-
-  const handleTeamChange = (teamId) => {
-    setSelectedTeam(Number(teamId));
-    setRows([{ id: 1, studentId: '', date: '', mode: '', notes: '' }]);
-  };
-
-  const handleRowChange = (rowId, field, value) => {
-    setRows(rows.map(row =>
-      row.id === rowId ? { ...row, [field]: value } : row
-    ));
-  };
-
-  const handleAddRow = () => {
-    const newId = rows.length > 0 ? Math.max(...rows.map(r => r.id)) + 1 : 1;
-    setRows([...rows, { id: newId, studentId: '', date: '', mode: '', notes: '' }]);
-  };
-
-  const handleRemoveRow = (rowId) => {
-    if (rows.length === 1) return;
-    setRows(rows.filter(row => row.id !== rowId));
-  };
-
-  const handleSubmit = () => {
-    const meetingData = {
-      teamId: currentTeam.id,
-      teamName: currentTeam.teamName,
-      entries: rows.map(row => ({
-        studentName: currentTeam.students.find(s => s.id === Number(row.studentId))?.name || '',
-        date: row.date,
-        mode: row.mode,
-        notes: row.notes
-      }))
+        if (groupData?.length) {
+          setSelectedGroup(String(groupData[0].groupId));
+        }
+      } catch (err) {
+        setError(err.message || 'Unable to load groups.');
+      } finally {
+        setLoading(false);
+      }
     };
-    console.log('Submitting meeting data:', meetingData);
-    alert(`Meeting marked for ${currentTeam.teamName}!\nCheck console for details.`);
+
+    loadGroups();
+  }, []);
+
+  const currentGroup = useMemo(
+    () => groups.find((group) => String(group.groupId) === selectedGroup) || null,
+    [groups, selectedGroup]
+  );
+
+  const members = getGroupMembers(currentGroup, usersById);
+
+  const handleSubmit = async () => {
+    if (!currentGroup) {
+      alert('Please select a group.');
+      return;
+    }
+
+    if (!meeting.date || !meeting.mode) {
+      alert('Please select date and mode.');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      await Promise.all(
+        members.map((student) =>
+          submitMeetingAttendance({
+            studentId: student.userId,
+            guideId: localStorage.getItem('userId'),
+            meetingDate: meeting.date,
+            mode: meeting.mode.toUpperCase(),
+            notes: meeting.notes
+          })
+        )
+      );
+
+      alert(`Meeting marked for all students in ${currentGroup.groupName}!`);
+      setMeeting(initialMeeting);
+    } catch (err) {
+      alert(err.message || 'Failed to submit meeting attendance.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="meeting-attendance-container">
-
-      {/* Team Selector */}
       <div className="team-selector">
         <select
-          value={selectedTeam}
-          onChange={(e) => handleTeamChange(e.target.value)}
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
           className="team-select"
+          disabled={!groups.length}
         >
-          {teams.map(team => (
-            <option key={team.id} value={team.id}>
-              {team.teamName} - {team.projectTitle}
+          {groups.length === 0 && <option value="">No groups assigned</option>}
+          {groups.map((group) => (
+            <option key={group.groupId} value={group.groupId}>
+              {group.groupName} - {group.projectTitle || 'Project not submitted'}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Team Info */}
-      <div className="team-info-card">
-        <div>
-          <h3>{currentTeam.teamName}</h3>
-          <p>{currentTeam.projectTitle}</p>
-        </div>
-        <span className="student-count">
-          {currentTeam.students.length} Students
-        </span>
-      </div>
+      {error && <p className="attendance-feedback error-text">{error}</p>}
 
-      {/* Meeting Table */}
+      {currentGroup && (
+        <div className="team-info-card">
+          <div>
+            <h3>{currentGroup.groupName}</h3>
+            <p>{currentGroup.projectTitle || 'Project title not available'}</p>
+          </div>
+          <span className="student-count">
+            {members.length} Students
+          </span>
+        </div>
+      )}
+
       <div className="attendance-table-wrapper">
         <table className="attendance-table meeting-table">
           <colgroup>
@@ -338,100 +127,71 @@ const MeetingAttendance = () => {
             <col />
             <col />
             <col />
-            <col />
           </colgroup>
           <thead>
             <tr>
-              <th>Student Name</th>
+              <th>Group Name</th>
               <th>Date</th>
               <th>Mode</th>
               <th>Notes</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
-              <tr key={row.id}>
+            <tr>
+              <td className="group-name-cell">
+                <div className="group-badge">
+                  {currentGroup?.groupName || 'Select Group'}
+                </div>
+              </td>
 
-                {/* Student Name Dropdown */}
-                <td className="meeting-cell">
-                  <select
-                    value={row.studentId}
-                    onChange={(e) => handleRowChange(row.id, 'studentId', e.target.value)}
-                    className="meeting-select"
-                  >
-                    <option value="">Select Student</option>
-                    {currentTeam.students.map(student => (
-                      <option key={student.id} value={student.id}>
-                        {student.name}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+              <td className="meeting-cell">
+                <input
+                  type="date"
+                  value={meeting.date}
+                  onChange={(e) => setMeeting((prev) => ({ ...prev, date: e.target.value }))}
+                  className="meeting-date-input"
+                />
+              </td>
 
-                {/* Date */}
-                <td className="meeting-cell">
-                  <input
-                    type="date"
-                    value={row.date}
-                    onChange={(e) => handleRowChange(row.id, 'date', e.target.value)}
-                    className="meeting-date-input"
-                  />
-                </td>
+              <td className="meeting-cell">
+                <select
+                  value={meeting.mode}
+                  onChange={(e) => setMeeting((prev) => ({ ...prev, mode: e.target.value }))}
+                  className="meeting-select meeting-mode-select"
+                >
+                  <option value="">Select Mode</option>
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
+                </select>
+              </td>
 
-                {/* Mode */}
-                <td className="meeting-cell">
-                  <select
-                    value={row.mode}
-                    onChange={(e) => handleRowChange(row.id, 'mode', e.target.value)}
-                    className="meeting-select meeting-mode-select"
-                  >
-                    <option value="">Select Mode</option>
-                    <option value="Online">Online</option>
-                    <option value="Offline">Offline</option>
-                  </select>
-                </td>
-
-                {/* Notes */}
-                <td className="notes-cell">
-                  <textarea
-                    placeholder="e.g. Discussion about backend integration"
-                    value={row.notes}
-                    onChange={(e) => handleRowChange(row.id, 'notes', e.target.value)}
-                    rows="2"
-                  />
-                </td>
-
-                {/* Remove Row */}
-                <td className="meeting-action-cell">
-                  <button
-                    className="remove-row-btn"
-                    onClick={() => handleRemoveRow(row.id)}
-                    disabled={rows.length === 1}
-                    title="Remove row"
-                  >
-                    <i className="bx bx-trash"></i>
-                  </button>
-                </td>
-
-              </tr>
-            ))}
+              <td className="notes-cell">
+                <textarea
+                  placeholder="e.g. Discussion about backend integration"
+                  value={meeting.notes}
+                  onChange={(e) => setMeeting((prev) => ({ ...prev, notes: e.target.value }))}
+                  rows="2"
+                />
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Add Row + Submit */}
-      <div className="meeting-footer">
-        <button className="add-row-btn" onClick={handleAddRow}>
-          <i className="bx bx-plus"></i>
-          Add Row
-        </button>
-        <button className="submit-btn" onClick={handleSubmit}>
-          <i className="bx bx-check-circle"></i>
-          Mark Meeting
-        </button>
+      <div className="meeting-member-list">
+        {members.map((student) => (
+          <span key={student.userId} className="member-pill">
+            {student.name}
+          </span>
+        ))}
       </div>
 
+      <div className="meeting-footer single-action">
+        <button className="submit-btn" onClick={handleSubmit} disabled={submitting || loading || !members.length}>
+          <i className="bx bx-check-circle"></i>
+          {submitting ? 'Saving...' : 'Mark Meeting'}
+        </button>
+      </div>
     </div>
   );
 };

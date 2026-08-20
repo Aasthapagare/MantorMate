@@ -1,51 +1,89 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { getMilestones } from "../services/progressApi";
+import ProjectStatus from "./ProjectStatus";
 
 const TaskTable = () => {
-  const tasks = [
-    { id: 1, task: 'Project Documentation', timeline: '2 days left', progress: 75 },
-    { id: 2, task: 'Code Review Session', timeline: '5 days left', progress: 40 },
-    { id: 3, task: 'Meeting with Guide', timeline: 'Tomorrow', progress: 90 },
-    { id: 4, task: 'Submit Proposal', timeline: '1 week left', progress: 60 },
-    { id: 5, task: 'Research Phase', timeline: '3 days left', progress: 50 },
-    { id: 6, task: 'Design Mockups', timeline: '4 days left', progress: 30 }
-  ];
+
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    fetchMilestones();
+  }, []);
+
+  const fetchMilestones = async () => {
+    try {
+      const data = await getMilestones();
+
+      const formatted = data.map((m, index) => ({
+  id: index,
+  task: m.name,        // milestone name
+  timeline: m.status,  // Completed / Pending
+  progress: m.progress // actual %
+}));
+      setTasks(formatted);
+
+    } catch (error) {
+      console.error("Error loading milestones", error);
+    }
+  };
 
   return (
     <div className="task-table-section">
-      <h2 className="section-title">Your Tasks</h2>
-      
+
+      <h2 className="section-title">Milestones</h2>
+
       <div className="task-table-container">
+
         <div className="task-table-header">
-          <div className="task-col">Task</div>
-          <div className="timeline-col">Timeline</div>
+          <div className="task-col">Milestone</div>
+          <div className="timeline-col">Status</div>
           <div className="progress-col">Progress</div>
         </div>
-        
+
         <div className="task-table-body">
+
           {tasks.map(task => (
+
             <div key={task.id} className="task-row">
+
               <div className="task-col">
                 <i className='bx bx-task'></i>
                 <span>{task.task}</span>
               </div>
+
               <div className="timeline-col">
-                <i className='bx bx-time'></i>
-                <span>{task.timeline}</span>
+                {task.timeline}
               </div>
+
               <div className="progress-col">
+
                 <div className="progress-bar-wrapper">
-                  <div 
+
+                  <div
                     className="progress-bar-fill"
-                    style={{ width: `${task.progress}%` }}
+                    style={{ width: `${Math.round(task.progress)}%` }}
                   >
-                    <span className="progress-text">{task.progress}%</span>
+
+                    <span className="progress-text">
+                      {Math.round(task.progress)}%
+                    </span>
+
                   </div>
+
                 </div>
+
               </div>
+
             </div>
+
           ))}
+
         </div>
+
       </div>
+
+      <ProjectStatus />
+
     </div>
   );
 };

@@ -1,119 +1,30 @@
-
-
-// import React, { useState } from 'react';
-
-// const LoginForm = ({ onLoginSuccess }) => {
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [username, setUsername] = useState('');
-//   const [selectedRole, setSelectedRole] = useState('Student');
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log('Login submitted with role:', selectedRole);
-//     onLoginSuccess(username || 'User', selectedRole);
-//   };
-
-//   return (
-//     <div className="form-box login">
-//       <div className="form-content">
-//         <h1>Login</h1>
-//         <div className="input-box">
-//           <input 
-//             type="text" 
-//             placeholder="Username" 
-//             value={username}
-//             onChange={(e) => setUsername(e.target.value)}
-//             required 
-//           />
-//           <i className='bx bxs-user'></i>
-//         </div>
-//         <div className="input-box">
-//           <input 
-//             type={showPassword ? "text" : "password"} 
-//             placeholder="Password" 
-//             required 
-//           />
-//           <i 
-//             className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`}
-//             onClick={() => setShowPassword(!showPassword)}
-//             style={{ cursor: 'pointer' }}
-//           ></i>
-//         </div>
-        
-//         {/* Role Selection */}
-//         <div className="role-selection">
-//           <label className="role-label">Login As:</label>
-//           <div className="role-options">
-//             <label className="radio-option">
-//               <input 
-//                 type="radio" 
-//                 name="loginRole" 
-//                 value="Student"
-//                 checked={selectedRole === 'Student'}
-//                 onChange={(e) => setSelectedRole(e.target.value)}
-//               />
-//               <span className="radio-custom"></span>
-//               <span className="role-text">Student</span>
-//             </label>
-            
-//             <label className="radio-option">
-//               <input 
-//                 type="radio" 
-//                 name="loginRole" 
-//                 value="Teacher"
-//                 checked={selectedRole === 'Teacher'}
-//                 onChange={(e) => setSelectedRole(e.target.value)}
-//               />
-//               <span className="radio-custom"></span>
-//               <span className="role-text">Teacher</span>
-//             </label>
-            
-//             <label className="radio-option">
-//               <input 
-//                 type="radio" 
-//                 name="loginRole" 
-//                 value="Admin"
-//                 checked={selectedRole === 'Admin'}
-//                 onChange={(e) => setSelectedRole(e.target.value)}
-//               />
-//               <span className="radio-custom"></span>
-//               <span className="role-text">Admin</span>
-//             </label>
-//           </div>
-//         </div>
-
-//         <div className="forgot-link">
-//           <a href="#" onClick={(e) => e.preventDefault()}>Forgot password?</a>
-//         </div>
-//         <button className="btn" onClick={handleSubmit}>Login</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default LoginForm;
-
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { loginUser } from '../services/authService';
+import { getGroupId } from "../services/progressApi";
 
 const LoginForm = ({ onLoginSuccess }) => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [enrollmentNumber, setEnrollmentNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState('Student');
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const validateEnrollmentNumber = (value) => {
+  // Email validation
+  const validateEmail = (value) => {
     if (!value.trim()) {
-      return 'Enrollment number is required';
+      return 'Email is required';
     }
-    // Format: Year + Department + Number (e.g., 2021CS001)
-    const enrollmentPattern = /^[0-9]{4}[A-Z]{2}[0-9]{6}$/;
-    if (!enrollmentPattern.test(value)) {
-      return 'Invalid enrollment number format (e.g., 2021CS001)';
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) {
+      return 'Invalid email format';
     }
     return '';
   };
 
+  // Password validation
   const validatePassword = (value) => {
     if (!value) {
       return 'Password is required';
@@ -127,11 +38,10 @@ const LoginForm = ({ onLoginSuccess }) => {
     return '';
   };
 
-  const handleEnrollmentChange = (e) => {
-    const value = e.target.value.toUpperCase();
-    setEnrollmentNumber(value);
-    if (errors.enrollmentNumber) {
-      setErrors({ ...errors, enrollmentNumber: '' });
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (errors.email) {
+      setErrors({ ...errors, email: '' });
     }
   };
 
@@ -142,61 +52,84 @@ const LoginForm = ({ onLoginSuccess }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate all fields
-    const enrollmentError = validateEnrollmentNumber(enrollmentNumber);
+
+    const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
-    
-    if (enrollmentError || passwordError) {
+
+    if (emailError || passwordError) {
       setErrors({
-        enrollmentNumber: enrollmentError,
+        email: emailError,
         password: passwordError
       });
       return;
     }
 
-    // Clear errors
     setErrors({});
-    
-    // Success - call login handler
-    console.log('Login submitted with:', { enrollmentNumber, selectedRole });
-    onLoginSuccess(enrollmentNumber, selectedRole);
+    setSuccessMessage('');
+    setIsLoading(true);
+
+    // Call login API (no role needed now)
+    const response = await loginUser(email, password);
+
+    setIsLoading(false);
+
+    if (response.success) {
+      setSuccessMessage(response.message);
+
+      // Normalize role (backend may return "admin", "Admin", etc.)
+      const normalizedRole = response.data?.role
+        ? response.data.role.toString().trim().toUpperCase()
+        : '';
+
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("name", response.data.name);
+      localStorage.setItem("role", normalizedRole);
+       
+      onLoginSuccess(
+        response.data.userId,
+        normalizedRole,
+        response.data.name
+      );
+    } else {
+      setErrors({ submit: response.message });
+    }
   };
 
   return (
     <div className="form-box login">
       <div className="form-content">
         <h1>Login</h1>
-        
-        {/* Enrollment Number Input */}
+
+        {/* Email Input */}
         <div className="input-box">
-          <input 
-            type="text" 
-            placeholder="Enrollment Number" 
-            value={enrollmentNumber}
-            onChange={handleEnrollmentChange}
-            className={errors.enrollmentNumber ? 'input-error' : ''}
-            required 
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={handleEmailChange}
+            className={errors.email ? 'input-error' : ''}
+            required
           />
-          <i className='bx bxs-id-card'></i>
+          <i className='bx bxs-envelope'></i>
         </div>
-        {errors.enrollmentNumber && (
-          <span className="error-text">{errors.enrollmentNumber}</span>
+        {errors.email && (
+          <span className="error-text">{errors.email}</span>
         )}
-        
+
         {/* Password Input */}
         <div className="input-box">
-          <input 
-            type={showPassword ? "text" : "password"} 
-            placeholder="Password" 
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
             value={password}
             onChange={handlePasswordChange}
             className={errors.password ? 'input-error' : ''}
-            required 
+            required
           />
-          <i 
+          <i
             className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`}
             onClick={() => setShowPassword(!showPassword)}
             style={{ cursor: 'pointer' }}
@@ -205,53 +138,42 @@ const LoginForm = ({ onLoginSuccess }) => {
         {errors.password && (
           <span className="error-text">{errors.password}</span>
         )}
-        
-        {/* Role Selection */}
-        <div className="role-selection">
-          <label className="role-label">Login As:</label>
-          <div className="role-options">
-            <label className="radio-option">
-              <input 
-                type="radio" 
-                name="loginRole" 
-                value="Student"
-                checked={selectedRole === 'Student'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="radio-custom"></span>
-              <span className="role-text">Student</span>
-            </label>
-            
-            <label className="radio-option">
-              <input 
-                type="radio" 
-                name="loginRole" 
-                value="Teacher"
-                checked={selectedRole === 'Teacher'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="radio-custom"></span>
-              <span className="role-text">Teacher</span>
-            </label>
-            
-            <label className="radio-option">
-              <input 
-                type="radio" 
-                name="loginRole" 
-                value="Admin"
-                checked={selectedRole === 'Admin'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="radio-custom"></span>
-              <span className="role-text">Admin</span>
-            </label>
+
+        {/* Error Message */}
+        {errors.submit && (
+          <div style={{
+            color: '#e74c3c',
+            marginTop: '10px',
+            padding: '10px',
+            backgroundColor: '#fadbd8',
+            borderRadius: '4px'
+          }}>
+            {errors.submit}
           </div>
-        </div>
+        )}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div style={{
+            color: '#27ae60',
+            marginTop: '10px',
+            padding: '10px',
+            backgroundColor: '#d5f4e6',
+            borderRadius: '4px'
+          }}>
+            {successMessage}
+          </div>
+        )}
 
         <div className="forgot-link">
-          <a href="#" onClick={(e) => e.preventDefault()}>Forgot password?</a>
+          <a href="#" onClick={(e) => e.preventDefault()}>
+            Forgot password?
+          </a>
         </div>
-        <button className="btn" onClick={handleSubmit}>Login</button>
+
+        <button className="btn" onClick={handleSubmit} disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
       </div>
     </div>
   );

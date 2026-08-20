@@ -1,364 +1,240 @@
-// import React, { useState } from 'react';
+import React, { useState } from 'react';
+import { registerUser } from '../services/authService';
 
-// const RegisterForm = ({ onRegisterSuccess }) => {
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [selectedRole, setSelectedRole] = useState('student');
-//   const [formData, setFormData] = useState({
-//     name: '',
-//     email: '',
-//     enrollment: '',
-//     password: ''
-//   });
-//   const [errors, setErrors] = useState({});
-
-//   const validateName = (name) => {
-//     const nameRegex = /^[a-zA-Z\s]{3,}$/;
-//     return nameRegex.test(name);
-//   };
-
-//   const validateEmail = (email) => {
-//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     return emailRegex.test(email);
-//   };
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData(prev => ({ ...prev, [name]: value }));
-    
-//     // Real-time validation
-//     if (name === 'name' && value) {
-//       setErrors(prev => ({
-//         ...prev,
-//         name: validateName(value) ? '' : 'Name must be at least 3 characters (letters only)'
-//       }));
-//     }
-    
-//     if (name === 'email' && value) {
-//       setErrors(prev => ({
-//         ...prev,
-//         email: validateEmail(value) ? '' : 'Please enter a valid email address'
-//       }));
-//     }
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-    
-//     const newErrors = {};
-//     if (!validateName(formData.name)) {
-//       newErrors.name = 'Name must be at least 3 characters (letters only)';
-//     }
-//     if (!validateEmail(formData.email)) {
-//       newErrors.email = 'Please enter a valid email address';
-//     }
-    
-//     if (Object.keys(newErrors).length === 0) {
-//       console.log('Registration submitted', { ...formData, role: selectedRole });
-//       // Registration success - redirect to login
-//       onRegisterSuccess();
-//     } else {
-//       setErrors(newErrors);
-//     }
-//   };
-
-//   return (
-//     <div className="form-box register">
-//       <div className="form-content">
-//         <h1>Registration</h1>
-        
-//         {/* Name Input */}
-//         <div className="input-box">
-//           <input 
-//             type="text" 
-//             name="name"
-//             placeholder="Full Name" 
-//             value={formData.name}
-//             onChange={handleInputChange}
-//             required 
-//           />
-//           <i className='bx bxs-user'></i>
-//         </div>
-//         {errors.name && <span className="error-text">{errors.name}</span>}
-        
-//         {/* Email Input */}
-//         <div className="input-box">
-//           <input 
-//             type="text" 
-//             name="email"
-//             placeholder="Email" 
-//             value={formData.email}
-//             onChange={handleInputChange}
-//             required 
-//           />
-//           <i className='bx bxs-envelope'></i>
-//         </div>
-//         {errors.email && <span className="error-text">{errors.email}</span>}
-        
-//         {/* Enrollment Number Input */}
-//         <div className="input-box">
-//           <input 
-//             type="text" 
-//             name="enrollment"
-//             placeholder="Enrollment Number" 
-//             value={formData.enrollment}
-//             onChange={handleInputChange}
-//             required 
-//           />
-//           <i className='bx bxs-id-card'></i>
-//         </div>
-        
-//         {/* Role Selection */}
-//         <div className="role-selection">
-//           <label className="role-label">Select Role:</label>
-//           <div className="role-options">
-//             <label className="radio-option">
-//               <input 
-//                 type="radio" 
-//                 name="role" 
-//                 value="student"
-//                 checked={selectedRole === 'student'}
-//                 onChange={(e) => setSelectedRole(e.target.value)}
-//               />
-//               <span className="radio-custom"></span>
-//               <span className="role-text">Student</span>
-//             </label>
-            
-//             <label className="radio-option">
-//               <input 
-//                 type="radio" 
-//                 name="role" 
-//                 value="teacher"
-//                 checked={selectedRole === 'teacher'}
-//                 onChange={(e) => setSelectedRole(e.target.value)}
-//               />
-//               <span className="radio-custom"></span>
-//               <span className="role-text">Teacher</span>
-//             </label>
-            
-//             <label className="radio-option">
-//               <input 
-//                 type="radio" 
-//                 name="role" 
-//                 value="admin"
-//                 checked={selectedRole === 'admin'}
-//                 onChange={(e) => setSelectedRole(e.target.value)}
-//               />
-//               <span className="radio-custom"></span>
-//               <span className="role-text">Admin</span>
-//             </label>
-//           </div>
-//         </div>
-        
-//         {/* Password Input */}
-//         <div className="input-box">
-//           <input 
-//             type={showPassword ? "text" : "password"} 
-//             name="password"
-//             placeholder="Password" 
-//             value={formData.password}
-//             onChange={handleInputChange}
-//             required 
-//           />
-//           <i 
-//             className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`}
-//             onClick={() => setShowPassword(!showPassword)}
-//             style={{ cursor: 'pointer' }}
-//           ></i>
-//         </div>
-        
-//         <button className="btn" onClick={handleSubmit}>Register</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RegisterForm;
-
-import React, { useState, useEffect } from 'react';
-
-const RegisterForm = ({ onRegisterSuccess, isActive }) => {
+const RegisterForm = ({ onRegisterSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('student');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    enrollment: '',
-    password: ''
-  });
+  const [enrollmentNumber, setEnrollmentNumber] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
-  // Form reset when switching to login
-  useEffect(() => {
-    if (!isActive) {
-      // Reset form when user goes back to login
-      setFormData({
-        name: '',
-        email: '',
-        enrollment: '',
-        password: ''
-      });
-      setSelectedRole('student');
-      setErrors({});
-      setShowPassword(false);
+  // Enrollment Number validation
+  const validateEnrollmentNumber = (value) => {
+    if (!value.trim()) {
+      return 'Enrollment number is required';
     }
-  }, [isActive]);
-
-  const validateName = (name) => {
-    const nameRegex = /^[a-zA-Z\s]{3,}$/;
-    return nameRegex.test(name);
+    if (value.length < 3) {
+      return 'Enrollment number must be at least 3 characters';
+    }
+    if (value.length > 20) {
+      return 'Enrollment number must not exceed 20 characters';
+    }
+    return '';
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  // Name validation
+  const validateName = (value) => {
+    if (!value.trim()) {
+      return 'Name is required';
+    }
+    if (value.length < 2) {
+      return 'Name must be at least 2 characters';
+    }
+    if (value.length > 50) {
+      return 'Name must not exceed 50 characters';
+    }
+    return '';
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Real-time validation
-    if (name === 'name' && value) {
-      setErrors(prev => ({
-        ...prev,
-        name: validateName(value) ? '' : 'Name must be at least 3 characters (letters only)'
-      }));
+  // Email validation
+  const validateEmail = (value) => {
+    if (!value.trim()) {
+      return 'Email is required';
     }
-    
-    if (name === 'email' && value) {
-      setErrors(prev => ({
-        ...prev,
-        email: validateEmail(value) ? '' : 'Please enter a valid email address'
-      }));
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) {
+      return 'Invalid email format';
+    }
+    return '';
+  };
+
+  // Password validation
+  const validatePassword = (value) => {
+    if (!value) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    if (value.length > 50) {
+      return 'Password must not exceed 50 characters';
+    }
+    return '';
+  };
+
+  const handleEnrollmentNumberChange = (e) => {
+    setEnrollmentNumber(e.target.value);
+    if (errors.enrollmentNumber) {
+      setErrors({ ...errors, enrollmentNumber: '' });
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    if (errors.name) {
+      setErrors({ ...errors, name: '' });
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (errors.email) {
+      setErrors({ ...errors, email: '' });
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (errors.password) {
+      setErrors({ ...errors, password: '' });
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const newErrors = {};
-    if (!validateName(formData.name)) {
-      newErrors.name = 'Name must be at least 3 characters (letters only)';
+
+    const enrollmentNumberError = validateEnrollmentNumber(enrollmentNumber);
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (enrollmentNumberError || nameError || emailError || passwordError) {
+      setErrors({
+        enrollmentNumber: enrollmentNumberError,
+        name: nameError,
+        email: emailError,
+        password: passwordError
+      });
+      return;
     }
-    if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Registration submitted', { ...formData, role: selectedRole });
-      // Registration success - redirect to login
+
+    setErrors({});
+    setSuccessMessage('');
+    setIsLoading(true);
+
+    const response = await registerUser({
+      enrollmentNumber,
+      name,
+      email,
+      password
+    });
+
+    setIsLoading(false);
+
+    if (response.success) {
+      setSuccessMessage(response.message);
+      // Call onRegisterSuccess to switch to login
       onRegisterSuccess();
     } else {
-      setErrors(newErrors);
+      setErrors({ submit: response.message });
     }
   };
 
   return (
     <div className="form-box register">
       <div className="form-content">
-        <h1>Registration</h1>
-        
+        <h1>Register</h1>
+
+        {/* Enrollment Number Input */}
+        <div className="input-box">
+          <input
+            type="text"
+            placeholder="Enrollment Number"
+            value={enrollmentNumber}
+            onChange={handleEnrollmentNumberChange}
+            className={errors.enrollmentNumber ? 'input-error' : ''}
+            required
+          />
+          <i className='bx bx-id-card'></i>
+        </div>
+        {errors.enrollmentNumber && (
+          <span className="error-text">{errors.enrollmentNumber}</span>
+        )}
+
         {/* Name Input */}
         <div className="input-box">
-          <input 
-            type="text" 
-            name="name"
-            placeholder="Full Name" 
-            value={formData.name}
-            onChange={handleInputChange}
-            required 
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={handleNameChange}
+            className={errors.name ? 'input-error' : ''}
+            required
           />
-          <i className='bx bxs-user'></i>
+          <i className='bx bx-user'></i>
         </div>
-        {errors.name && <span className="error-text">{errors.name}</span>}
-        
+        {errors.name && (
+          <span className="error-text">{errors.name}</span>
+        )}
+
         {/* Email Input */}
         <div className="input-box">
-          <input 
-            type="text" 
-            name="email"
-            placeholder="Email" 
-            value={formData.email}
-            onChange={handleInputChange}
-            required 
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={handleEmailChange}
+            className={errors.email ? 'input-error' : ''}
+            required
           />
           <i className='bx bxs-envelope'></i>
         </div>
-        {errors.email && <span className="error-text">{errors.email}</span>}
-        
-        {/* Enrollment Number Input */}
-        <div className="input-box">
-          <input 
-            type="text" 
-            name="enrollment"
-            placeholder="Enrollment Number" 
-            value={formData.enrollment}
-            onChange={handleInputChange}
-            required 
-          />
-          <i className='bx bxs-id-card'></i>
-        </div>
-        
-        {/* Role Selection */}
-        <div className="role-selection">
-          <label className="role-label">Select Role:</label>
-          <div className="role-options">
-            <label className="radio-option">
-              <input 
-                type="radio" 
-                name="role" 
-                value="student"
-                checked={selectedRole === 'student'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="radio-custom"></span>
-              <span className="role-text">Student</span>
-            </label>
-            
-            <label className="radio-option">
-              <input 
-                type="radio" 
-                name="role" 
-                value="teacher"
-                checked={selectedRole === 'teacher'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="radio-custom"></span>
-              <span className="role-text">Teacher</span>
-            </label>
-            
-            <label className="radio-option">
-              <input 
-                type="radio" 
-                name="role" 
-                value="admin"
-                checked={selectedRole === 'admin'}
-                onChange={(e) => setSelectedRole(e.target.value)}
-              />
-              <span className="radio-custom"></span>
-              <span className="role-text">Admin</span>
-            </label>
-          </div>
-        </div>
-        
+        {errors.email && (
+          <span className="error-text">{errors.email}</span>
+        )}
+
         {/* Password Input */}
         <div className="input-box">
-          <input 
-            type={showPassword ? "text" : "password"} 
-            name="password"
-            placeholder="Password" 
-            value={formData.password}
-            onChange={handleInputChange}
-            required 
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={handlePasswordChange}
+            className={errors.password ? 'input-error' : ''}
+            required
           />
-          <i 
+          <i
             className={`bx ${showPassword ? 'bx-show' : 'bx-hide'}`}
             onClick={() => setShowPassword(!showPassword)}
             style={{ cursor: 'pointer' }}
           ></i>
         </div>
-        
-        <button className="btn" onClick={handleSubmit}>Register</button>
+        {errors.password && (
+          <span className="error-text">{errors.password}</span>
+        )}
+
+        {/* Error Message */}
+        {errors.submit && (
+          <div style={{
+            color: '#e74c3c',
+            marginTop: '10px',
+            padding: '10px',
+            backgroundColor: '#fadbd8',
+            borderRadius: '4px'
+          }}>
+            {errors.submit}
+          </div>
+        )}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div style={{
+            color: '#27ae60',
+            marginTop: '10px',
+            padding: '10px',
+            backgroundColor: '#d5f4e6',
+            borderRadius: '4px'
+          }}>
+            {successMessage}
+          </div>
+        )}
+
+        <button className="btn" onClick={handleSubmit} disabled={isLoading}>
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
       </div>
     </div>
   );

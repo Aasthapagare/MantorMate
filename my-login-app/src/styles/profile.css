@@ -1,21 +1,86 @@
-Profile Page Specific Styles
+/* Profile Page Specific Styles */
 .profile-page-content {
   width: 100%;
 }
 
-.profile-top-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
+.profile-status-banner {
+  margin-bottom: 1.5rem;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  color: #9a3412;
+  font-weight: 600;
 }
 
-/* Profile Info Card */
-.profile-info-card {
+.profile-hero-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(52, 73, 94, 0.14), transparent 32%),
+    linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 255, 255, 0.92) 100%);
+  box-shadow: 0 14px 40px var(--shadow);
+  border: 1px solid rgba(44, 62, 80, 0.08);
+  margin-bottom: 2rem;
+}
+
+.profile-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(44, 62, 80, 0.08);
+  color: var(--accent-color);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+.profile-hero-copy h2 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.profile-hero-copy p {
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.65;
+}
+
+.profile-hero-badge {
+  min-width: 140px;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
+  color: white;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 12px 24px rgba(44, 62, 80, 0.18);
+}
+
+.profile-top-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.9fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.profile-info-card,
+.profile-actions-card,
+.achievements-section {
   background: var(--card-bg);
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 40px var(--shadow);
+  border-radius: 24px;
+  padding: 2.25rem;
+  box-shadow: 0 12px 32px var(--shadow);
+  border: 1px solid rgba(44, 62, 80, 0.06);
 }
 
 .profile-picture-section {
@@ -29,7 +94,7 @@ Profile Page Specific Styles
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,11 +121,11 @@ Profile Page Specific Styles
   gap: 0.5rem;
   background: var(--accent-color);
   color: white;
-  padding: 0.7rem 1.5rem;
-  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 700;
   transition: all 0.3s ease;
 }
 
@@ -74,10 +139,10 @@ Profile Page Specific Styles
 }
 
 .bio-title {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.4rem;
   position: relative;
   padding-bottom: 0.8rem;
 }
@@ -96,6 +161,7 @@ Profile Page Specific Styles
 .bio-item {
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
   padding: 1rem 0;
   border-bottom: 1px solid var(--shadow);
 }
@@ -113,14 +179,18 @@ Profile Page Specific Styles
 .bio-value {
   color: var(--text-secondary);
   font-size: 0.95rem;
+  text-align: right;
 }
 
-/* Profile Actions Card */
+.profile-loading-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 .profile-actions-card {
-  background: var(--card-bg);
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 40px var(--shadow);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -128,267 +198,245 @@ Profile Page Specific Styles
 
 .action-btn {
   width: 100%;
-  padding: 1.2rem 1.5rem;
   border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
   justify-content: center;
-  transition: all 0.3s ease;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  box-shadow: 0 12px 28px rgba(30, 52, 74, 0.14);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
 }
 
 .action-btn i {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 }
 
 .edit-profile-btn {
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
-  color: white;
-}
-
-.edit-profile-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px var(--shadow);
+  background: linear-gradient(135deg, #2c3e50 0%, #425d78 100%);
+  color: #fff;
 }
 
 .change-password-btn {
-  background: rgba(44, 62, 80, 0.1);
+  background: linear-gradient(135deg, #f5f8fb 0%, #e8eef5 100%);
   color: var(--text-primary);
-  border: 2px solid var(--accent-color);
+  border: 1px solid rgba(118, 138, 162, 0.18);
 }
 
-.change-password-btn:hover {
-  background: var(--accent-color);
-  color: white;
-  transform: translateY(-3px);
-}
-
-/* Edit Form Container */
 .edit-form-container {
-  background: var(--bg-primary);
-  border-radius: 15px;
-  padding: 2rem;
-  margin-top: 1rem;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-radius: 20px;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(245, 248, 252, 0.98));
+  border: 1px solid rgba(118, 138, 162, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 14px 30px rgba(30, 52, 74, 0.08);
 }
 
 .form-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  margin-bottom: 1.2rem;
   color: var(--text-primary);
-  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
 }
 
 .edit-profile-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+  display: grid;
+  gap: 1rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .form-group label {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
-.form-group input {
-  padding: 0.9rem 1.2rem;
-  border: 2px solid var(--shadow);
-  border-radius: 10px;
-  background: var(--card-bg);
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(118, 138, 162, 0.2);
+  background: rgba(255, 255, 255, 0.96);
   color: var(--text-primary);
   font-size: 0.95rem;
-  transition: all 0.3s ease;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 10px rgba(44, 62, 80, 0.1);
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: rgba(44, 62, 80, 0.45);
+  box-shadow: 0 0 0 4px rgba(44, 62, 80, 0.08);
+  background: #fff;
 }
 
 .submit-btn {
-  background: var(--accent-color);
-  color: white;
-  padding: 1rem 2rem;
+  margin-top: 0.25rem;
+  width: 100%;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  display: flex;
+  border-radius: 14px;
+  padding: 0.95rem 1.1rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #1f8f5f 0%, #2eb67d 100%);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 14px 24px rgba(46, 182, 125, 0.22);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .submit-btn:hover {
-  background: var(--hover-bg);
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px var(--shadow);
+  box-shadow: 0 18px 30px rgba(46, 182, 125, 0.28);
 }
 
-/* Achievements Section */
-.achievements-section {
-  background: var(--card-bg);
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 40px var(--shadow);
-  margin-bottom: 2rem;
+.form-error-text {
+  margin: 0;
+  color: #d64545;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.profile-readonly-card,
+.profile-note-card {
+  border-radius: 18px;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(244, 247, 251, 0.94));
+  border: 1px solid rgba(118, 138, 162, 0.14);
+}
+
+.profile-readonly-head {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.profile-readonly-head i {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.profile-readonly-head h3,
+.profile-note-card h3 {
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.profile-readonly-head p,
+.profile-note-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.profile-readonly-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.profile-readonly-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(44, 62, 80, 0.04);
+}
+
+.profile-readonly-item span {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.profile-readonly-item strong {
+  color: var(--text-primary);
+  text-align: right;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.upload-achievement-btn {
-    background: var(--accent-color);
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.upload-achievement-btn:hover {
-  background: var(--hover-bg);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px var(--shadow);
-}
-
-.upload-achievement-btn i {
-  font-size: 1.1rem;
-}
-
-.achievements-grid {
+.profile-overview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
 }
 
-.achievement-card {
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--hover-bg) 100%);
-  border-radius: 15px;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+.profile-overview-card {
+  padding: 1.2rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(244, 247, 251, 0.96));
+  border: 1px solid rgba(118, 138, 162, 0.14);
+  box-shadow: 0 10px 24px rgba(31, 52, 74, 0.08);
 }
 
-.achievement-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  transition: all 0.5s ease;
-}
-
-.achievement-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 15px 40px var(--shadow);
-}
-
-.achievement-card:hover::before {
-  top: -10%;
-  right: -10%;
-}
-
-.achievement-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.achievement-card:hover .achievement-icon {
-  transform: scale(1.1) rotate(10deg);
-}
-
-.achievement-icon i {
-  font-size: 2.5rem;
-  color: white;
-}
-
-.achievement-title {
-  font-size: 1.3rem;
+.profile-overview-card span {
+  display: block;
+  color: #7b8ca0;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: white;
-  margin-bottom: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
 }
 
-.achievement-date {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+.profile-overview-card strong {
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
-.achievement-date i {
-  font-size: 1.1rem;
-}
-
-/* Responsive Design */
 @media screen and (max-width: 1024px) {
   .profile-top-section {
     grid-template-columns: 1fr;
   }
-
-  .achievements-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
 }
 
 @media screen and (max-width: 768px) {
+  .profile-hero-card,
   .profile-info-card,
   .profile-actions-card,
   .achievements-section {
-    padding: 1.8rem;
+    padding: 1.6rem;
+  }
+
+  .profile-hero-card {
+    flex-direction: column;
+  }
+
+  .profile-hero-badge {
+    min-width: auto;
+    width: 100%;
   }
 
   .profile-pic-large {
@@ -400,35 +448,30 @@ Profile Page Specific Styles
     font-size: 4rem;
   }
 
-  .bio-title {
-    font-size: 1.3rem;
-  }
-
-  .bio-item {
+  .bio-item,
+  .profile-readonly-item {
     flex-direction: column;
-    gap: 0.3rem;
   }
 
-  .section-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
+  .bio-value,
+  .profile-readonly-item strong {
+    text-align: left;
   }
 
-  .upload-achievement-btn {
-    width: 100%;
-  }
-
-  .achievements-grid {
-    grid-template-columns: 1fr;
+  .action-btn {
+    font-size: 0.94rem;
   }
 }
 
 @media screen and (max-width: 480px) {
+  .profile-hero-copy h2 {
+    font-size: 1.6rem;
+  }
+
   .profile-info-card,
   .profile-actions-card,
   .achievements-section {
-    padding: 1.5rem;
+    padding: 1.3rem;
   }
 
   .profile-pic-large {
@@ -437,49 +480,6 @@ Profile Page Specific Styles
   }
 
   .profile-pic-large i {
-    font-size: 3.5rem;
-  }
-
-  .bio-title {
-    font-size: 1.2rem;
-  }
-
-  .bio-label,
-  .bio-value {
-    font-size: 0.85rem;
-  }
-
-  .action-btn {
-    padding: 1rem 1.2rem;
-    font-size: 0.9rem;
-  }
-
-  .edit-form-container {
-    padding: 1.5rem;
-  }
-
-  .form-title {
-    font-size: 1.1rem;
-  }
-
-  .achievement-card {
-    padding: 1.5rem;
-  }
-
-  .achievement-icon {
-    width: 70px;
-    height: 70px;
-  }
-
-  .achievement-icon i {
-    font-size: 2rem;
-  }
-
-  .achievement-title {
-    font-size: 1.1rem;
-  }
-
-  .achievement-date {
-    font-size: 0.85rem;
+    font-size: 3.4rem;
   }
 }

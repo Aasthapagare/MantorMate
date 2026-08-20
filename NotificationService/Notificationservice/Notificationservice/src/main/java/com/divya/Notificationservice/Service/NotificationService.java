@@ -5,6 +5,10 @@ import com.divya.Notificationservice.Repository.NotificationRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+
 @Service
 public class NotificationService {
     private final NotificationRepository repository;
@@ -27,5 +31,31 @@ public class NotificationService {
         );
 
         return saved;
+    }
+
+    public List<Notification> getUnreadForUser(String userId) {
+        return repository.findByUserIdInAndSeenFalse(buildLookupIds(userId));
+    }
+
+    private List<String> buildLookupIds(String userId) {
+        LinkedHashSet<String> lookupIds = new LinkedHashSet<>();
+
+        if (userId == null) {
+            return new ArrayList<>(lookupIds);
+        }
+
+        String normalized = userId.trim();
+        if (normalized.isEmpty()) {
+            return new ArrayList<>(lookupIds);
+        }
+
+        lookupIds.add(normalized);
+
+        String digitsOnly = normalized.replaceAll("\\D", "");
+        if (!digitsOnly.isEmpty()) {
+            lookupIds.add(digitsOnly);
+        }
+
+        return new ArrayList<>(lookupIds);
     }
 }

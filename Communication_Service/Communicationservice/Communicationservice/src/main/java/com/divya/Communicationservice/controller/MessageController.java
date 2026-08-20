@@ -1,6 +1,8 @@
 package com.divya.Communicationservice.controller;
 
+import com.divya.Communicationservice.client.AuthClient;
 import com.divya.Communicationservice.dto.SendMessageRequest;
+import com.divya.Communicationservice.dto.UserDTO;
 import com.divya.Communicationservice.entity.Message;
 import com.divya.Communicationservice.repository.MessageRepository;
 import com.divya.Communicationservice.security.SecurityUtil;
@@ -15,9 +17,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/chat")
 public class MessageController {
@@ -26,6 +27,8 @@ public class MessageController {
     private MessageRepository messageRepository;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private AuthClient authClient;
 
 
     public MessageController(MessageService service) {
@@ -37,9 +40,7 @@ public class MessageController {
     public ResponseEntity<Message> sendMessage(
             @Valid @RequestBody SendMessageRequest request) {
 
-        String sender =
-                SecurityUtil.getLoggedInUserId();
-
+        String sender = SecurityUtil.getLoggedInUserId();
         request.setSenderId(sender);
 
         return ResponseEntity.ok(service.sendMessage(request));
@@ -59,20 +60,13 @@ public class MessageController {
     }
     @PostMapping("/seen")
     public ResponseEntity<Void> markSeen(
-            @RequestParam String senderId,
-            @RequestParam String receiverId) {
+            @RequestParam String otherUser) {
 
-        service.markMessagesAsSeen(receiverId, senderId);
-        System.out.println("🔥 SENDING SEEN EVENT TO: /topic/seen/" + senderId);
-        messagingTemplate.convertAndSend(
-                "/topic/seen/" + senderId,
-                Optional.of(Map.of(
-                        "receiverId", receiverId,
-                        "status", "SEEN"
-                ))
-        );
+        String loggedInUser = SecurityUtil.getLoggedInUserId();
+        service.markMessagesAsSeen(loggedInUser, otherUser);
         return ResponseEntity.ok().build();
     }
+
 
     @PostMapping("/send-file")
     public ResponseEntity<Message> sendFile(
@@ -94,7 +88,27 @@ public class MessageController {
 
         return ResponseEntity.ok(messageRepository.save(msg));
     }
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDTO>> getAllUsers(
+            @RequestHeader("Authorization") String token) {
 
+        String currentRole = normalizeRole(SecurityUtil.getLoggedInUserRole());
 
+        List<UserDTO> users = switch (currentRole) {
+            case "STUDENT" -> authClient.getAllGuides(token);
+            case "GUIDE" -> authClient.getAllStudents(token);
+            default -> authClient.getAllUsers(token);
+        };
+
+        return ResponseEntity.ok(users);
+    }
+
+    private String normalizeRole(String role) {
+        if (role == null) {
+            return "";
+        }
+
+        return role.replace("ROLE_", "").trim().toUpperCase();
+    }
 
 }

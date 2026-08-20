@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
     List<Notification> findByUserIdAndSeenFalse(String userId);
+    List<Notification> findByUserIdInAndSeenFalse(List<String> userIds);
 }

@@ -10,6 +10,16 @@
   margin: 0 auto;
 }
 
+.attendance-feedback {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.error-text {
+  color: #e74c3c;
+}
+
 /* ── Team Selector ─────────────────────────── */
 /* Reuses .team-selector and .team-select from presentationAttendance.css */
 /* Scoped overrides only if needed */
@@ -129,11 +139,10 @@
 }
 
 /* Column widths */
-.meeting-table colgroup col:nth-child(1) { width: 22%; }  /* Student Name */
-.meeting-table colgroup col:nth-child(2) { width: 16%; }  /* Date         */
-.meeting-table colgroup col:nth-child(3) { width: 14%; }  /* Mode         */
-.meeting-table colgroup col:nth-child(4) { width: 40%; }  /* Notes        */
-.meeting-table colgroup col:nth-child(5) { width: 8%;  }  /* Action       */
+.meeting-table colgroup col:nth-child(1) { width: 24%; }  /* Group Name   */
+.meeting-table colgroup col:nth-child(2) { width: 18%; }  /* Date         */
+.meeting-table colgroup col:nth-child(3) { width: 16%; }  /* Mode         */
+.meeting-table colgroup col:nth-child(4) { width: 42%; }  /* Notes        */
 
 /* Table Head */
 .meeting-table thead {
@@ -186,6 +195,21 @@
 .meeting-table td {
   padding: 0.85rem 1.1rem;
   vertical-align: middle;
+}
+
+.group-name-cell {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.group-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(44, 62, 80, 0.08);
+  color: #2C3E50;
 }
 
 /* ── Meeting Cell Inputs ───────────────────── */
@@ -323,6 +347,28 @@
   gap: 1rem;
 }
 
+.single-action {
+  justify-content: flex-end;
+}
+
+.meeting-member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.member-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(44, 62, 80, 0.08);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 /* Add Row Button */
 .add-row-btn {
   display: inline-flex;
@@ -417,54 +463,4 @@
     width: 100%;
     justify-content: center;
   }
-}
-
-/* ── Dark / Default theme dropdown fix ──────
-   Forces solid bg on select + option elements
-   Removes browser native striped pattern      */
-
-.meeting-select,
-.meeting-attendance-container .team-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-:root[data-theme="dark"] .meeting-select,
-:root[data-theme="dark"] .meeting-date-input,
-:root[data-theme="dark"] .meeting-attendance-container .team-select {
-  background-color: #2d2d2d !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  color: #e2e8f0 !important;
-}
-
-:root[data-theme="dark"] .meeting-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23cbd5e0' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 10px center !important;
-}
-
-:root[data-theme="dark"] .meeting-select option,
-:root[data-theme="dark"] .meeting-attendance-container .team-select option {
-  background-color: #2d2d2d;
-  color: #e2e8f0;
-}
-
-:root[data-theme="default"] .meeting-select,
-:root[data-theme="default"] .meeting-attendance-container .team-select {
-  background-color: #2C3E50 !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
-  color: #ECF0F1 !important;
-}
-
-:root[data-theme="default"] .meeting-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23ECF0F1' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 10px center !important;
-}
-
-:root[data-theme="default"] .meeting-select option,
-:root[data-theme="default"] .meeting-attendance-container .team-select option {
-  background-color: #2C3E50;
-  color: #ECF0F1;
 }

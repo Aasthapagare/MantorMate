@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
-const GuideFooter = ({ onOpenSearch, onOpenChat, onNavigate }) => {
+const GuideFooter = ({ onOpenChat, onNavigate }) => {
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   const footerIcons = [
-    { id: 'search', icon: 'bx-search', label: 'Search', action: () => onOpenSearch && onOpenSearch() },
     { id: 'chat', icon: 'bx-message-dots', label: 'Chat', action: () => onOpenChat && onOpenChat() },
     { id: 'schedule', icon: 'bx-calendar-plus', label: 'Schedule Meeting', action: () => onNavigate && onNavigate('schedule') },
-    { id: 'join', icon: 'bx-video', label: 'Join Meeting', action: () => onNavigate && onNavigate('meeting') }
+    { id: 'join', icon: 'bx-video', label: 'Join Meeting', action: () => onNavigate && onNavigate('schedule') }
   ];
 
   return (

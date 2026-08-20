@@ -22,4 +22,9 @@ public class SecurityUtil {
                 .next()
                 .getAuthority();
     }
+    public static String getLoggedInUserRole() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getAuthorities().iterator().next().getAuthority();
+    }
+
 }

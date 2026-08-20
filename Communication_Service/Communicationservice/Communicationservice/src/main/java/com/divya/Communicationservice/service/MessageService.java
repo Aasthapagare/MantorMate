@@ -35,13 +35,18 @@ public class MessageService {
 
         Message savedMsg = repository.save(msg);
 
-        notificationClient.sendNotification(
-                new NotificationDTO(
-                        savedMsg.getReceiverId(),
-                        "New message from " + savedMsg.getSenderId(),
-                        "CHAT"
-                )
-        );
+        try {
+            notificationClient.sendNotification(
+                    new NotificationDTO(
+                            savedMsg.getReceiverId(),
+                            "New message from " + savedMsg.getSenderId(),
+                            "CHAT"
+                    )
+            );
+        } catch (Exception exception) {
+            // Persist chat even when notification service is unavailable.
+            System.err.println("Notification dispatch failed for chat message " + savedMsg.getId());
+        }
 
         return savedMsg;
     }
@@ -63,4 +68,3 @@ public class MessageService {
     }
 
 }
-

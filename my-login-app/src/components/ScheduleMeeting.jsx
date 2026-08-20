@@ -1,36 +1,158 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import meetingService from '../services/meetingService';
 import '../styles/scheduleMeeting.css';
 
-const generateMeetingLink = () => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz';
-  const rand = (n) => Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  return `https://meet.mentormate.app/${rand(3)}-${rand(4)}-${rand(3)}`;
+const normalizeNumericId = (value) => {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  const normalized = String(value).trim();
+  if (!normalized) {
+    return null;
+  }
+
+  const directNumber = Number(normalized);
+  if (Number.isFinite(directNumber)) {
+    return directNumber;
+  }
+
+  const digitsOnly = normalized.replace(/\D/g, '');
+  if (!digitsOnly) {
+    return null;
+  }
+
+  const extractedNumber = Number(digitsOnly);
+  return Number.isFinite(extractedNumber) ? extractedNumber : null;
 };
 
-const ScheduleMeeting = ({ onBack }) => {
+const formatMeetingMode = (value) => {
+  const normalized = String(value || '').trim().toUpperCase();
+  if (normalized === 'ONLINE') {
+    return 'Online';
+  }
+  if (normalized === 'OFFLINE') {
+    return 'Offline';
+  }
+  return value || 'Not selected';
+};
 
-  const [requests, setRequests] = useState([
-    { id: 1, student: 'Arjun Verma',  enrollment: '0827CS211001', requestedDate: '2026-03-25', requestedTime: '10:00', topic: 'Project idea discussion',     status: 'pending'    },
-    { id: 2, student: 'Sneha Reddy',  enrollment: '0827CS211002', requestedDate: '2026-03-26', requestedTime: '11:30', topic: 'Backend integration help',    status: 'pending'    },
-    { id: 3, student: 'Rahul Joshi',  enrollment: '0827CS211003', requestedDate: '2026-03-27', requestedTime: '14:00', topic: 'Database setup review',       status: 'scheduled', scheduledDate: '2026-03-27', scheduledTime: '14:00', mode: 'Online',  link: 'https://meet.mentormate.app/abc-defg-hij' },
-    { id: 4, student: 'Priya Desai',  enrollment: '0827CS211004', requestedDate: '2026-03-28', requestedTime: '15:30', topic: 'Milestone completion check',  status: 'pending'    },
-    { id: 5, student: 'Karan Singh',  enrollment: '0827CS211005', requestedDate: '2026-03-29', requestedTime: '09:00', topic: 'Final presentation feedback', status: 'pending'    },
-  ]);
+const parseDateTime = (value) => {
+  if (!value) {
+    return null;
+  }
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const direct = new Date(value);
+  if (!Number.isNaN(direct.getTime())) {
+    return direct;
+  }
 
-  const [showModal, setShowModal]             = useState(false);
+  const fallback = new Date(String(value).replace(' ', 'T'));
+  return Number.isNaN(fallback.getTime()) ? null : fallback;
+};
+
+const formatDate = (value) => {
+  const parsed = parseDateTime(value);
+  if (!parsed) {
+    return '';
+  }
+  return parsed.toISOString().slice(0, 10);
+};
+
+const formatDisplayDate = (value) => {
+  const parsed = parseDateTime(value);
+  if (!parsed) {
+    return 'Not available';
+  }
+  return parsed.toLocaleDateString('en-GB');
+};
+
+const formatDisplayTime = (value) => {
+  const parsed = parseDateTime(value);
+  if (!parsed) {
+    return 'Not available';
+  }
+  return parsed.toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+};
+
+const mapMeetings = (meetings) =>
+  [...meetings]
+    .sort((left, right) => {
+      const leftTime = parseDateTime(left.requestedAt)?.getTime() || 0;
+      const rightTime = parseDateTime(right.requestedAt)?.getTime() || 0;
+      return rightTime - leftTime;
+    })
+    .map((meeting) => ({
+      id: meeting.id,
+      student: meeting.studentName || 'Unknown Student',
+      enrollment: meeting.studentEnrollment || meeting.studentId || 'Not available',
+      topic: meeting.topic,
+      status: meeting.status,
+      requestedAt: meeting.requestedAt,
+      requestedDate: formatDisplayDate(meeting.requestedAt),
+      requestedTime: formatDisplayTime(meeting.requestedAt),
+      scheduledDate: formatDate(meeting.scheduledTime),
+      scheduledDisplayDate: formatDisplayDate(meeting.scheduledTime),
+      scheduledTime: meeting.scheduledTime ? String(meeting.scheduledTime).slice(11, 16) : '',
+      scheduledDisplayTime: formatDisplayTime(meeting.scheduledTime),
+      mode: formatMeetingMode(meeting.meetingMode),
+      link: meeting.meetingLink || ''
+    }));
+
+const ScheduleMeeting = ({ onBack, onOpenMeetingRoom }) => {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [guideId, setGuideId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [form, setForm]                       = useState({ date: '', time: '', mode: '', link: '' });
-  const [errors, setErrors]                   = useState({});
-  const [successId, setSuccessId]             = useState(null);
+  const [form, setForm] = useState({ date: '', time: '' });
+  const [errors, setErrors] = useState({});
+  const [successId, setSuccessId] = useState(null);
+  const [modalMode, setModalMode] = useState('approve');
+  const [submitting, setSubmitting] = useState(false);
 
-  const pendingList   = requests.filter(r => r.status === 'pending');
-  const scheduledList = requests.filter(r => r.status === 'scheduled');
+  const refreshMeetings = async (currentGuideId) => {
+    const data = await meetingService.getGuideMeetings(currentGuideId);
+    setRequests(mapMeetings(Array.isArray(data) ? data : []));
+  };
 
-  const openModal = (req) => {
-    setSelectedRequest(req);
-    setForm({ date: req.requestedDate, time: req.requestedTime, mode: '', link: '' });
+  useEffect(() => {
+    const loadMeetings = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const id = normalizeNumericId(localStorage.getItem('userId'));
+        if (!id) {
+          throw new Error('Guide ID not found');
+        }
+        setGuideId(id);
+        await refreshMeetings(id);
+      } catch (err) {
+        console.error('Error fetching meetings:', err);
+        setError(err.message || 'Failed to load meetings');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMeetings();
+  }, []);
+
+  const pendingList = requests.filter((request) => request.status === 'PENDING');
+  const scheduledList = requests.filter((request) => request.status === 'APPROVED' || request.status === 'COMPLETED');
+
+  const openModal = (request, mode = 'approve') => {
+    setSelectedRequest(request);
+    setModalMode(mode);
+    setForm({
+      date: request.scheduledDate || '',
+      time: request.scheduledTime || ''
+    });
     setErrors({});
     setSuccessId(null);
     setShowModal(true);
@@ -40,58 +162,67 @@ const ScheduleMeeting = ({ onBack }) => {
     setShowModal(false);
     setSelectedRequest(null);
     setErrors({});
+    setSubmitting(false);
   };
 
   const handleChange = (field, value) => {
-    if (field === 'mode') {
-      const newLink = value === 'Online' ? generateMeetingLink() : '';
-      setForm(prev => ({ ...prev, mode: value, link: newLink }));
-    } else {
-      setForm(prev => ({ ...prev, [field]: value }));
-    }
-    setErrors(prev => ({ ...prev, [field]: '', link: '' }));
-  };
-
-  const handleRegenerateLink = () => {
-    setForm(prev => ({ ...prev, link: generateMeetingLink() }));
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: '', submit: '' }));
   };
 
   const validate = () => {
-    const e = {};
-    if (!form.date) e.date = 'Date is required';
-    if (!form.time) e.time = 'Time is required';
-    if (!form.mode) e.mode = 'Please select a mode';
-    return e;
+    const nextErrors = {};
+    if (!form.date) {
+      nextErrors.date = 'Date is required';
+    }
+    if (!form.time) {
+      nextErrors.time = 'Time is required';
+    }
+    return nextErrors;
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    const meetingData = {
-      studentId:    selectedRequest.id,
-      student:      selectedRequest.student,
-      selectedDate: form.date,
-      selectedTime: form.time,
-      meetingMode:  form.mode,
-      meetingLink:  form.mode === 'Online' ? form.link : null,
-    };
-    console.log('Meeting scheduled:', meetingData);
-    setRequests(prev => prev.map(r =>
-      r.id === selectedRequest.id
-        ? { ...r, status: 'scheduled', scheduledDate: form.date, scheduledTime: form.time, mode: form.mode, link: form.link }
-        : r
-    ));
-    setSuccessId(selectedRequest.id);
-    setTimeout(() => closeModal(), 1800);
+
+    try {
+      setSubmitting(true);
+      const scheduledTime = `${form.date}T${form.time}:00`;
+      await meetingService.approveMeeting(selectedRequest.id, scheduledTime);
+      await refreshMeetings(guideId);
+      setSuccessId(selectedRequest.id);
+      setTimeout(() => {
+        closeModal();
+      }, 1200);
+    } catch (err) {
+      console.error('Approve error:', err);
+      setSubmitting(false);
+      setErrors({ submit: err.message || 'Failed to approve meeting' });
+    }
+  };
+
+  const handleReject = async (meetingId) => {
+    try {
+      await meetingService.rejectMeeting(meetingId);
+      await refreshMeetings(guideId);
+    } catch (err) {
+      alert(err.message || 'Reject failed');
+    }
+  };
+
+  const handleJoinMeeting = (meetingLink) => {
+    if (!meetingLink) {
+      alert('Meeting link is not available.');
+      return;
+    }
+    window.open(meetingLink, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <div className="sm-container">
-
-      {/* Page Header */}
       <div className="sm-page-header">
         <div className="sm-page-header-left">
           <button className="sm-back-btn" onClick={onBack}>
@@ -103,7 +234,7 @@ const ScheduleMeeting = ({ onBack }) => {
               <i className="bx bx-calendar-plus"></i>
               Schedule Meeting
             </h1>
-            <p className="sm-page-sub">Review student requests and schedule meetings</p>
+            <p className="sm-page-sub">Review Student requests.</p>
           </div>
         </div>
         <div className="sm-counters">
@@ -118,8 +249,10 @@ const ScheduleMeeting = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Pending Requests */}
-      {pendingList.length > 0 && (
+      {loading && <div className="sm-empty"><i className="bx bx-loader-alt bx-spin"></i><p>Loading...</p></div>}
+      {!loading && error && <div className="sm-empty"><i className="bx bx-error"></i><p>{error}</p></div>}
+
+      {!loading && !error && pendingList.length > 0 && (
         <div className="sm-section-card">
           <div className="sm-section-head">
             <i className="bx bx-time-five"></i>
@@ -127,41 +260,32 @@ const ScheduleMeeting = ({ onBack }) => {
           </div>
           <div className="sm-table-wrap">
             <table className="sm-table">
-              <colgroup>
-                <col style={{ width: '22%' }} />
-                <col style={{ width: '16%' }} />
-                <col style={{ width: '15%' }} />
-                <col style={{ width: '10%' }} />
-                <col style={{ width: '25%' }} />
-                <col style={{ width: '12%' }} />
-              </colgroup>
               <thead>
                 <tr>
                   <th>Student</th>
                   <th>Enrollment</th>
                   <th>Requested Date</th>
-                  <th>Time</th>
+                  <th>Requested Time</th>
+                  <th>Mode</th>
                   <th>Topic</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {pendingList.map(req => (
-                  <tr key={req.id}>
+                {pendingList.map((request) => (
+                  <tr key={request.id}>
+                    <td>{request.student}</td>
+                    <td>{request.enrollment}</td>
+                    <td>{request.requestedDate}</td>
+                    <td>{request.requestedTime}</td>
+                    <td>{request.mode}</td>
+                    <td>{request.topic}</td>
                     <td>
-                      <div className="sm-student-cell">
-                        <div className="sm-avatar">{req.student.charAt(0)}</div>
-                        <span>{req.student}</span>
-                      </div>
-                    </td>
-                    <td className="sm-mono">{req.enrollment}</td>
-                    <td>{req.requestedDate}</td>
-                    <td>{req.requestedTime}</td>
-                    <td className="sm-topic">{req.topic}</td>
-                    <td>
-                      <button className="sm-approve-btn" onClick={() => openModal(req)}>
-                        <i className="bx bx-check-circle"></i>
+                      <button className="sm-approve-btn" onClick={() => openModal(request, 'approve')}>
                         Approve
+                      </button>
+                      <button className="sm-reject-btn" onClick={() => handleReject(request.id)}>
+                        Reject
                       </button>
                     </td>
                   </tr>
@@ -172,65 +296,41 @@ const ScheduleMeeting = ({ onBack }) => {
         </div>
       )}
 
-      {/* Scheduled Meetings */}
-      {scheduledList.length > 0 && (
+      {!loading && !error && scheduledList.length > 0 && (
         <div className="sm-section-card">
           <div className="sm-section-head">
-            <i className="bx bx-calendar-check"></i>
-            <h3>Scheduled Meetings</h3>
+            <i className="bx bx-check-circle"></i>
+            <h3>Approved Meetings</h3>
           </div>
           <div className="sm-table-wrap">
             <table className="sm-table">
-              <colgroup>
-                <col style={{ width: '20%' }} />
-                <col style={{ width: '14%' }} />
-                <col style={{ width: '10%' }} />
-                <col style={{ width: '13%' }} />
-                <col style={{ width: '27%' }} />
-                <col style={{ width: '16%' }} />
-              </colgroup>
               <thead>
                 <tr>
                   <th>Student</th>
                   <th>Date</th>
                   <th>Time</th>
                   <th>Mode</th>
-                  <th>Meeting Link</th>
-                  <th>Status</th>
+                  <th>Topic</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {scheduledList.map(req => (
-                  <tr key={req.id}>
+                {scheduledList.map((meeting) => (
+                  <tr key={meeting.id}>
+                    <td>{meeting.student}</td>
+                    <td>{meeting.scheduledDisplayDate}</td>
+                    <td>{meeting.scheduledDisplayTime}</td>
+                    <td>{meeting.mode}</td>
+                    <td>{meeting.topic}</td>
                     <td>
-                      <div className="sm-student-cell">
-                        <div className="sm-avatar">{req.student.charAt(0)}</div>
-                        <span>{req.student}</span>
-                      </div>
-                    </td>
-                    <td>{req.scheduledDate}</td>
-                    <td>{req.scheduledTime}</td>
-                    <td>
-                      <span className={`sm-mode-tag ${req.mode === 'Online' ? 'online' : 'offline'}`}>
-                        <i className={`bx ${req.mode === 'Online' ? 'bx-wifi' : 'bx-buildings'}`}></i>
-                        {req.mode}
-                      </span>
-                    </td>
-                    <td>
-                      {req.link ? (
-                        <a href={req.link} target="_blank" rel="noreferrer" className="sm-join-link">
-                          <i className="bx bx-link-external"></i>
-                          Join Meeting
-                        </a>
-                      ) : (
-                        <span className="sm-offline-tag">In-person</span>
+                      <button className="sm-view-btn" onClick={() => openModal(meeting, 'view')}>
+                        <i className="bx bx-show"></i> View
+                      </button>
+                      {meeting.link && (
+                        <button className="sm-approve-btn" onClick={() => handleJoinMeeting(meeting.link)}>
+                          Join
+                        </button>
                       )}
-                    </td>
-                    <td>
-                      <span className="sm-scheduled-tag">
-                        <i className="bx bx-check-circle"></i>
-                        Confirmed
-                      </span>
                     </td>
                   </tr>
                 ))}
@@ -240,28 +340,24 @@ const ScheduleMeeting = ({ onBack }) => {
         </div>
       )}
 
-      {/* Empty */}
-      {requests.length === 0 && (
+      {!loading && !error && pendingList.length === 0 && scheduledList.length === 0 && (
         <div className="sm-empty">
-          <i className="bx bx-calendar-x"></i>
+          <i className="bx bx-calendar-check"></i>
           <p>No meeting requests yet</p>
         </div>
       )}
 
-      {/* Modal */}
       {showModal && selectedRequest && (
         <div className="sm-overlay" onClick={closeModal}>
-          <div className="sm-modal" onClick={e => e.stopPropagation()}>
-
-            {/* Modal Header */}
+          <div className="sm-modal" onClick={(event) => event.stopPropagation()}>
             <div className="sm-modal-header">
               <div className="sm-modal-title-wrap">
                 <div className="sm-modal-icon-box">
-                  <i className="bx bx-calendar-plus"></i>
+                  <i className={`bx ${modalMode === 'approve' ? 'bx-calendar-check' : 'bx-show-alt'}`}></i>
                 </div>
                 <div>
-                  <h3>Schedule Meeting</h3>
-                  <p>with <strong>{selectedRequest.student}</strong></p>
+                  <h3>{modalMode === 'approve' ? 'Approve Meeting' : 'Meeting Details'}</h3>
+                  <p>Student: <strong>{selectedRequest.student}</strong></p>
                 </div>
               </div>
               <button className="sm-modal-close" onClick={closeModal}>
@@ -269,147 +365,105 @@ const ScheduleMeeting = ({ onBack }) => {
               </button>
             </div>
 
-            {/* Success State */}
-            {successId === selectedRequest.id ? (
-              <div className="sm-success-state">
-                <div className="sm-success-icon">
-                  <i className="bx bx-check-circle"></i>
+            <div className="sm-modal-body">
+              {successId === selectedRequest.id ? (
+                <div className="sm-success-state">
+                  <div className="sm-success-icon">
+                    <i className="bx bx-check"></i>
+                  </div>
+                  <h4>Meeting scheduled successfully</h4>
                 </div>
-                <h4>Meeting Scheduled!</h4>
-                <p>{form.date} at {form.time} · {form.mode}</p>
-              </div>
-            ) : (
-              <div className="sm-modal-body">
-
-                {/* Request Info Banner */}
-                <div className="sm-request-info">
-                  <div className="sm-request-info-item">
-                    <i className="bx bx-user"></i>
-                    <span>{selectedRequest.student}</span>
-                  </div>
-                  <div className="sm-request-info-item">
-                    <i className="bx bx-message-dots"></i>
-                    <span>{selectedRequest.topic}</span>
-                  </div>
-                </div>
-
-                {/* Form */}
-                <div className="sm-form">
-
-                  {/* Date + Time */}
-                  <div className="sm-form-row">
-                    <div className="sm-field">
-                      <label className="sm-label">
-                        <i className="bx bx-calendar"></i>
-                        Date <span className="sm-required">*</span>
-                      </label>
-                      <input
-                        type="date"
-                        className={`sm-input${errors.date ? ' sm-input-error' : ''}`}
-                        value={form.date}
-                        min={todayStr}
-                        onChange={e => handleChange('date', e.target.value)}
-                      />
-                      {errors.date && (
-                        <span className="sm-error-msg">
-                          <i className="bx bx-error-circle"></i>{errors.date}
-                        </span>
-                      )}
+              ) : (
+                <>
+                  <div className="sm-request-info">
+                    <div className="sm-request-info-item">
+                      <i className="bx bx-book-content"></i>
+                      <span>{selectedRequest.topic}</span>
                     </div>
-
-                    <div className="sm-field">
-                      <label className="sm-label">
-                        <i className="bx bx-time"></i>
-                        Time <span className="sm-required">*</span>
-                      </label>
-                      <input
-                        type="time"
-                        className={`sm-input${errors.time ? ' sm-input-error' : ''}`}
-                        value={form.time}
-                        onChange={e => handleChange('time', e.target.value)}
-                      />
-                      {errors.time && (
-                        <span className="sm-error-msg">
-                          <i className="bx bx-error-circle"></i>{errors.time}
-                        </span>
-                      )}
+                    <div className="sm-request-info-item">
+                      <i className="bx bx-id-card"></i>
+                      <span>{selectedRequest.enrollment}</span>
+                    </div>
+                    <div className="sm-request-info-item">
+                      <i className="bx bx-video"></i>
+                      <span>{selectedRequest.mode}</span>
                     </div>
                   </div>
 
-                  {/* Mode */}
-                  <div className="sm-field">
-                    <label className="sm-label">
-                      <i className="bx bx-signal-5"></i>
-                      Mode <span className="sm-required">*</span>
-                    </label>
-                    <div className="sm-mode-options">
-                      <button
-                        type="button"
-                        className={`sm-mode-btn${form.mode === 'Online' ? ' active' : ''}`}
-                        onClick={() => handleChange('mode', 'Online')}
-                      >
-                        <i className="bx bx-wifi"></i>
-                        Online
-                      </button>
-                      <button
-                        type="button"
-                        className={`sm-mode-btn${form.mode === 'Offline' ? ' active' : ''}`}
-                        onClick={() => handleChange('mode', 'Offline')}
-                      >
-                        <i className="bx bx-buildings"></i>
-                        Offline
-                      </button>
-                    </div>
-                    {errors.mode && (
-                      <span className="sm-error-msg">
-                        <i className="bx bx-error-circle"></i>{errors.mode}
-                      </span>
-                    )}
-                  </div>
+                  <div className="sm-form">
+                    <div className="sm-form-row">
+                      <div className="sm-field">
+                        <label className="sm-label">
+                          <i className="bx bx-calendar"></i>
+                          Date
+                          {modalMode === 'approve' && <span className="sm-required">*</span>}
+                        </label>
+                        <input
+                          type="date"
+                          className={`sm-input ${errors.date ? 'sm-input-error' : ''}`}
+                          value={form.date}
+                          onChange={(event) => handleChange('date', event.target.value)}
+                          readOnly={modalMode === 'view'}
+                        />
+                        {errors.date && <span className="sm-error-msg"><i className="bx bx-error-circle"></i>{errors.date}</span>}
+                      </div>
 
-                  {/* Auto-generated Meeting Link — only if Online */}
-                  {form.mode === 'Online' && (
-                    <div className="sm-field sm-field-animate">
-                      <label className="sm-label">
-                        <i className="bx bx-link"></i>
-                        Meeting Link
-                        <span className="sm-auto-badge">Auto Generated</span>
-                      </label>
-                      <div className="sm-link-row">
-                        <div className="sm-link-display">
-                          <i className="bx bx-video"></i>
-                          <span className="sm-link-text">{form.link}</span>
-                        </div>
-                        <button
-                          type="button"
-                          className="sm-regen-btn"
-                          onClick={handleRegenerateLink}
-                          title="Generate new link"
-                        >
-                          <i className="bx bx-refresh"></i>
-                        </button>
+                      <div className="sm-field">
+                        <label className="sm-label">
+                          <i className="bx bx-time"></i>
+                          Time
+                          {modalMode === 'approve' && <span className="sm-required">*</span>}
+                        </label>
+                        <input
+                          type="time"
+                          className={`sm-input ${errors.time ? 'sm-input-error' : ''}`}
+                          value={form.time}
+                          onChange={(event) => handleChange('time', event.target.value)}
+                          readOnly={modalMode === 'view'}
+                        />
+                        {errors.time && <span className="sm-error-msg"><i className="bx bx-error-circle"></i>{errors.time}</span>}
                       </div>
                     </div>
-                  )}
 
-                </div>
+                    <div className="sm-field">
+                      <label className="sm-label">
+                        <i className="bx bx-video"></i>
+                        Meeting Mode
+                      </label>
+                      <input type="text" className="sm-input" value={selectedRequest.mode} readOnly />
+                    </div>
 
-                {/* Footer */}
-                <div className="sm-modal-footer">
-                  <button className="sm-cancel-btn" onClick={closeModal}>Cancel</button>
-                  <button className="sm-confirm-btn" onClick={handleConfirm}>
-                    <i className="bx bx-check-circle"></i>
-                    Confirm Schedule
-                  </button>
-                </div>
+                    {selectedRequest.link && (
+                      <button
+                        type="button"
+                        className="sm-join-link"
+                        onClick={() => handleJoinMeeting(selectedRequest.link)}
+                      >
+                        <i className="bx bx-link-external"></i>
+                        Join Meeting
+                      </button>
+                    )}
 
-              </div>
-            )}
+                    {errors.submit && <span className="sm-error-msg"><i className="bx bx-error-circle"></i>{errors.submit}</span>}
 
+                    <div className="sm-modal-footer">
+                      <button className="sm-cancel-btn" onClick={closeModal}>
+                        {modalMode === 'approve' ? 'Cancel' : 'Close'}
+                      </button>
+                      {modalMode === 'approve' && (
+                        <button className="sm-confirm-btn" onClick={handleConfirm} disabled={submitting}>
+                          <i className={`bx ${submitting ? 'bx-loader-alt bx-spin' : 'bx-check-circle'}`}></i>
+                          {submitting ? 'Scheduling...' : 'Confirm Schedule'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };

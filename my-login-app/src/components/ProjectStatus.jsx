@@ -1,63 +1,122 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import "../styles/projectStatus.css";
+import { getProgress } from "../services/progressApi";
+
+const formatPercent = (value) => `${Math.round(value || 0)}%`;
+
+const getProgressTone = (value) => {
+  if (value >= 75) {
+    return "strong";
+  }
+
+  if (value >= 40) {
+    return "steady";
+  }
+
+  return "early";
+};
 
 const ProjectStatus = () => {
-  const projectStatus = {
-    status: 'In Progress',
-    phase: 'Development',
-    completionPercentage: 65,
-    lastUpdated: 'Jan 25, 2026'
-  };
+  console.log("ProjectStatus component loaded");
 
-  const getStatusColor = (status) => {
-    switch(status.toLowerCase()) {
-      case 'completed':
-        return '#27ae60';
-      case 'in progress':
-        return '#f39c12';
-      case 'pending':
-        return '#e74c3c';
-      default:
-        return '#9ca3af';
-    }
-  };
+  const [progress, setProgress] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+  fetchProgress();
+}, []);
+
+const fetchProgress = async () => {
+  try {
+    const data = await getProgress();
+    setProgress(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  if (!progress) return <p>Loading...</p>;
+
+  const detailItems = [
+    { label: "Presentation Attendance", value: progress.presentations, key: "presentations" },
+    { label: "Meeting Attendance", value: progress.meetings, key: "meetings" },
+    { label: "Milestone Progress", value: progress.milestones, key: "milestones" }
+  ];
 
   return (
-    <div className="project-status-section">
-      <h2 className="section-title">Project Status</h2>
-      
-      <div className="project-status-card">
-        <div className="status-header">
-          <div className="status-info">
-            <span 
-              className="status-badge"
-              style={{ backgroundColor: `${getStatusColor(projectStatus.status)}15`, color: getStatusColor(projectStatus.status) }}
-            >
-              <i className='bx bx-pulse'></i>
-              {projectStatus.status}
+  <div className="project-status-section">
+
+    <h2 className="section-title">Overall Progress</h2>
+
+    <div className="status-card">
+      <div className="status-card-top">
+        <div>
+          <p className="status-kicker">Student Snapshot</p>
+          <div className="status-row status-row-main">
+            <span>Overall Progress</span>
+            <span className={`status-percent status-percent-${getProgressTone(progress.overall)}`}>
+              {formatPercent(progress.overall)}
             </span>
-            <p className="status-phase">Phase: {projectStatus.phase}</p>
-          </div>
-          <div className="status-date">
-            <i className='bx bx-time'></i>
-            Last Updated: {projectStatus.lastUpdated}
           </div>
         </div>
-        
-        <div className="progress-section">
-          <div className="progress-header">
-            <span className="progress-label">Overall Progress</span>
-            <span className="progress-percentage">{projectStatus.completionPercentage}%</span>
-          </div>
-          <div className="progress-bar-container">
-            <div 
-              className="progress-bar-filled"
-              style={{ width: `${projectStatus.completionPercentage}%` }}
-            ></div>
-          </div>
+
+        <div className={`status-badge status-badge-${getProgressTone(progress.overall)}`}>
+          {progress.overall >= 75 ? "On Fire" : progress.overall >= 40 ? "On Track" : "Getting Started"}
         </div>
       </div>
+
+      <div className="progress-bar">
+        <div
+          className="progress-fill"
+          style={{ width: `${progress.overall}%` }}
+        ></div>
+      </div>
+
+      <div className="status-summary-grid">
+        {detailItems.map((item) => (
+          <div key={item.key} className="status-summary-card">
+            <span className="status-summary-label">{item.label}</span>
+            <strong>{formatPercent(item.value)}</strong>
+          </div>
+        ))}
+      </div>
+
+      <button
+        className="toggle-btn"
+        onClick={() => setShowAll(!showAll)}
+      >
+        <span>{showAll ? "Hide Details" : "Show Details"}</span>
+        <i className={`bx ${showAll ? "bx-chevron-up" : "bx-chevron-down"}`}></i>
+      </button>
+
+      {showAll && (
+
+        <div className="status-details">
+          {detailItems.map((item) => (
+            <div key={item.key} className="status-detail-block">
+              <div className="status-row">
+                <span>{item.label}</span>
+                <span className={`status-percent status-percent-${getProgressTone(item.value)}`}>
+                  {formatPercent(item.value)}
+                </span>
+              </div>
+
+              <div className="progress-bar">
+                <div
+                  className={`progress-fill progress-fill-${getProgressTone(item.value)}`}
+                  style={{ width: `${item.value}%` }}
+                ></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      )}
+
     </div>
-  );
+
+  </div>
+);
 };
 
 export default ProjectStatus;

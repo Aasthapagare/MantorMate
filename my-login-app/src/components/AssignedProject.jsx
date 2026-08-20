@@ -2,12 +2,12 @@ import React from 'react';
 
 const AssignedProject = () => {
   const assignedProject = {
-    hasProject: true,
-    projectName: 'AI-Based Student Performance Prediction System',
-    guide: 'Dr. Rajesh Kumar',
-    assignedDate: 'Jan 10, 2026',
-    deadline: 'May 30, 2026',
-    description: 'Develop a machine learning model to predict student performance based on various parameters.'
+    hasProject: false,
+    projectName: '',
+    guide: '',
+    assignedDate: '',
+    deadline: '',
+    description: ''
   };
 
   return (

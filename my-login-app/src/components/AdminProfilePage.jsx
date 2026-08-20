@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import '../styles/profile.css';
+import { getCurrentUserDetails } from '../services/adminService';
 
 const AdminProfilePage = ({ userRole, username, onLogout, onNavigate, onAdminHomeClick }) => {
   const [theme, setTheme]                       = useState(localStorage.getItem('theme') || 'default');
@@ -10,15 +11,42 @@ const AdminProfilePage = ({ userRole, username, onLogout, onNavigate, onAdminHom
   const [profileImage, setProfileImage]         = useState(localStorage.getItem('adminProfileImage') || null);
 
   const [profileData, setProfileData] = useState({
-    fullName:    'Admin User',
-    department:  'Administration',
-    adminId:     'ADMIN2024001',
-    email:       'admin@mentormate.edu',
-    designation: 'System Administrator',
+    fullName: username || localStorage.getItem('name') || 'Admin User',
+    department: 'Administration',
+    adminId: localStorage.getItem('userId') || 'N/A',
+    email: 'N/A',
+    designation: userRole || localStorage.getItem('role') || 'ADMIN',
   });
 
   const [passwords, setPasswords]       = useState({ current: '', new: '', confirm: '' });
   const [passwordError, setPasswordError] = useState('');
+
+  useEffect(() => {
+    const loadAdminProfile = async () => {
+      const userId = localStorage.getItem('userId');
+      if (!userId) return;
+
+      try {
+        const user = await getCurrentUserDetails(userId);
+        setProfileData({
+          fullName: user?.name || username || 'Admin User',
+          department: 'Administration',
+          adminId: user?.userId || userId,
+          email: user?.email || 'N/A',
+          designation: user?.role || userRole || 'ADMIN',
+        });
+      } catch (error) {
+        setProfileData((prev) => ({
+          ...prev,
+          fullName: username || prev.fullName,
+          adminId: userId,
+          designation: userRole || prev.designation,
+        }));
+      }
+    };
+
+    loadAdminProfile();
+  }, [userRole, username]);
 
   const handleThemeChange = (t) => {
     setTheme(t);
@@ -261,7 +289,7 @@ const AdminProfilePage = ({ userRole, username, onLogout, onNavigate, onAdminHom
                           />
                         </div>
                         {passwordError && (
-                          <p style={{ color: '#e74c3c', fontSize: '0.85rem', margin: '0' }}>
+                          <p className="form-error-text">
                             {passwordError}
                           </p>
                         )}

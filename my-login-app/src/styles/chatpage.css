@@ -72,6 +72,18 @@
           padding: 0.5rem 0;
         }
 
+        .chat-list-empty {
+          margin: 1.2rem 1rem;
+          padding: 1.2rem 1.4rem;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.82);
+          border: 1px solid rgba(98, 120, 146, 0.12);
+          color: #5f7489;
+          text-align: center;
+          font-weight: 600;
+          box-shadow: 0 10px 24px rgba(44, 62, 80, 0.08);
+        }
+
         .chat-list-container::-webkit-scrollbar {
           width: 8px;
         }
@@ -292,11 +304,30 @@
           word-wrap: break-word;
         }
 
+        .chat-message-meta {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          gap: 0.35rem;
+        }
+
         .chat-message-time {
           font-size: 0.75rem;
           opacity: 0.7;
           display: block;
           text-align: right;
+        }
+
+        .chat-message-seen {
+          display: inline-flex;
+          align-items: center;
+          font-size: 0.95rem;
+          opacity: 0.75;
+        }
+
+        .chat-message-seen.is-seen {
+          color: #60a5fa;
+          opacity: 1;
         }
 
         .single-chat-input-area {

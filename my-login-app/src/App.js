@@ -1,24 +1,29 @@
-
-
 import React, { useState, useEffect } from 'react';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import TogglePanel from './components/TogglePanel';
 import Dashboard from './components/Dashboard';
-import GuideDashboard from './components/GuideDashboard';
 import ProfilePage from './components/ProfilePage';
 import ProjectManagement from './components/ProjectManagement';
 import GroupFormation from './components/GroupFormation';
 import GuideSelection from './components/GuideSelection';
 import ProjectIdeaSubmission from './components/ProjectIdeaSubmission';
 import MeetingScheduler from './components/MeetingScheduler';
+import MeetingRoom from './components/MeetingRoom';
 import AdminPanel from './components/AdminPanel';
-import AboutPage from './components/AboutPage';
+import GuideDashboard from './components/GuideDashboard';
+import NotificationPage from './components/NotificationPage';
+import ChatPage from './components/ChatPage';
 import './styles/style.css';
 import './styles/dashboard.css';
 import './styles/profile.css';
 import './styles/admin.css';
 import './styles/chatpage.css';
+import './styles/groupDetails.css';
+import './styles/attendance.css';
+import './styles/assignedGroups.css';
+import './styles/scheduleMeeting.css';
+import './styles/notification.css';
 
 const App = () => {
   const [isActive, setIsActive] = useState(false);
@@ -29,37 +34,35 @@ const App = () => {
     role: ''
   });
 
+  // Apply theme on app mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'default';
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
-  const handleRegisterClick = () => {
-    setIsActive(true);
-  };
+  const handleRegisterClick = () => setIsActive(true);
+  const handleLoginClick = () => setIsActive(false);
+  const handleRegisterSuccess = () => setIsActive(false);
 
-  const handleLoginClick = () => {
-    setIsActive(false);
-  };
+  // ✅ UPDATED LOGIN SUCCESS FUNCTION
+  const handleLoginSuccess = (userId, role, name) => {
+    const normalizedRole = role ? role.toString().trim().toUpperCase() : '';
+    console.log("Login success:", normalizedRole);
 
-  const handleRegisterSuccess = () => {
-    setIsActive(false);
-  };
-
-  const handleLoginSuccess = (username, role) => {
-    console.log('LOGIN SUCCESS - Username:', username, 'Role:', role);
-    
     setUserData({
-      username: username,
-      role: role
+      username: name,
+      role: normalizedRole
     });
+
     setIsLoggedIn(true);
-    
-    // Navigate based on role
-    if (role === 'Admin') {
-      setCurrentPage('admin');
+
+    // 🔥 ROLE BASED PAGE SET
+    if (normalizedRole === "ADMIN") {
+      setCurrentPage("admin");
+    } else if (normalizedRole === "GUIDE" || normalizedRole === "PROJECT GUIDE") {
+      setCurrentPage("guideDashboard");
     } else {
-      setCurrentPage('dashboard');
+      setCurrentPage("dashboard");
     }
   };
 
@@ -67,15 +70,33 @@ const App = () => {
     setIsLoggedIn(false);
     setUserData({ username: '', role: '' });
     setCurrentPage('dashboard');
+    localStorage.clear();
   };
 
   const handleNavigation = (page) => {
     setCurrentPage(page);
   };
 
+  const handleNotificationOpen = (notification) => {
+    const notificationType = (notification?.type || '').toString().trim().toUpperCase();
+
+    if (notificationType === 'CHAT') {
+      setCurrentPage('chatPage');
+      return;
+    }
+
+    if (notificationType === 'MEETING_REQUEST' || notificationType === 'MEETING_APPROVED') {
+      setCurrentPage('meetingScheduler');
+    }
+  };
+
+  // =============================
+  // 🔥 AUTHENTICATED AREA
+  // =============================
   if (isLoggedIn) {
-    // ADMIN CHECK - MUST BE FIRST
-    if (userData.role === 'Admin') {
+
+    // ✅ ADMIN PANEL
+    if (currentPage === "admin") {
       return (
         <AdminPanel
           userRole={userData.role}
@@ -86,19 +107,7 @@ const App = () => {
       );
     }
 
-    // GUIDE CHECK - SECOND
-    if (userData.role === 'Guide' || userData.role === 'Teacher') {
-      return (
-        <GuideDashboard
-          userRole={userData.role}
-          username={userData.username}
-          onLogout={handleLogout}
-          onNavigate={handleNavigation}
-        />
-      );
-    }
-
-    // STUDENT - Other pages
+    // Profile Page
     if (currentPage === "profile") {
       return (
         <ProfilePage
@@ -110,6 +119,7 @@ const App = () => {
       );
     }
 
+    // Project Management
     if (currentPage === "projectManagement") {
       return (
         <ProjectManagement
@@ -121,6 +131,7 @@ const App = () => {
       );
     }
 
+    // Group Formation
     if (currentPage === "groupFormation") {
       return (
         <GroupFormation
@@ -132,6 +143,7 @@ const App = () => {
       );
     }
 
+    // Guide Selection
     if (currentPage === "guideSelection") {
       return (
         <GuideSelection
@@ -143,6 +155,7 @@ const App = () => {
       );
     }
 
+    // Project Idea Submission
     if (currentPage === "projectIdeaSubmission") {
       return (
         <ProjectIdeaSubmission
@@ -154,6 +167,7 @@ const App = () => {
       );
     }
 
+    // Meeting Scheduler
     if (currentPage === "meetingScheduler") {
       return (
         <MeetingScheduler
@@ -165,27 +179,46 @@ const App = () => {
       );
     }
 
-    if (currentPage === "about") {
+    if (currentPage === "notification") {
       return (
-        <AboutPage
-          userRole={userData.role}
-          username={userData.username}
-          onLogout={handleLogout}
-          onNavigate={handleNavigation}
-          SidebarComponent={require('./components/Sidebar').default}
-          sidebarProps={{
-            userRole: userData.role,
-            username: userData.username,
-            onLogout: handleLogout,
-            onNavigate: handleNavigation,
-            onSearchToggle: () => {},
-            currentPage: 'about'
-          }}
+        <NotificationPage
+          roleLabel={userData.role || "Student"}
+          onBack={() => handleNavigation('dashboard')}
+          onNotificationOpen={handleNotificationOpen}
         />
       );
     }
 
-    // Default Student Dashboard
+    if (currentPage === "chatPage") {
+      return (
+        <ChatPage
+          onClose={() => handleNavigation('dashboard')}
+        />
+      );
+    }
+
+    if (currentPage === "meetingRoom") {
+      return (
+        <MeetingRoom
+          username={userData.username}
+          onBack={() => handleNavigation('meetingScheduler')}
+        />
+      );
+    }
+
+    // Guide dashboard
+    if (currentPage === 'guideDashboard') {
+      return (
+        <GuideDashboard
+          userRole={userData.role}
+          username={userData.username}
+          onLogout={handleLogout}
+          onNavigate={handleNavigation}
+        />
+      );
+    }
+
+    // ✅ DEFAULT → STUDENT DASHBOARD
     return (
       <Dashboard
         userRole={userData.role}
@@ -196,6 +229,9 @@ const App = () => {
     );
   }
 
+  // =============================
+  // 🔓 LOGIN / REGISTER AREA
+  // =============================
   return (
     <>
       <link 

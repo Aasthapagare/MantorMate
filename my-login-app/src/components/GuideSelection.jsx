@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 const GuideSelection = ({ userRole, username, onLogout, onNavigate }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'default');
   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
-  const [selectedGuide, setSelectedGuide] = useState(null);
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
@@ -63,7 +62,6 @@ const GuideSelection = ({ userRole, username, onLogout, onNavigate }) => {
   ];
 
   const handleSelectGuide = (guide) => {
-    setSelectedGuide(guide);
     console.log('Guide selected:', guide);
     // TODO: Implement guide selection logic
   };

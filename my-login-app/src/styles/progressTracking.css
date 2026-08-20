@@ -222,21 +222,3 @@
   .progress-cards-grid { grid-template-columns: 1fr; }
   .card-top { flex-wrap: wrap; }
 }
-
-/* ── Dark theme explicit fixes ──────────── */
-:root[data-theme="dark"] .progress-tracking-container {
-  background: var(--bg-primary);
-}
-
-:root[data-theme="dark"] .pt-title,
-:root[data-theme="dark"] .pt-team-name,
-:root[data-theme="dark"] .pt-metric-value,
-:root[data-theme="dark"] .pt-section-title {
-  color: #f7fafc;
-}
-
-:root[data-theme="dark"] .pt-team-project,
-:root[data-theme="dark"] .pt-metric-label,
-:root[data-theme="dark"] .pt-subtitle {
-  color: #cbd5e0;
-}
